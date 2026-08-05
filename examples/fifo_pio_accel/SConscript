@@ -28,8 +28,14 @@ env.Append(CPPPATH=[
 
 if os.path.exists(str(lib_path)):
     env.Append(CPPDEFINES=['VM_TRACE=1'])
-    env.Prepend(LIBPATH=[obj_dir])
-    env.Append(LIBS=['Vfifo_pio_top__ALL', 'z'])
+    # Vfifo_pio_top__ALL.a is only the model itself; the FST/trace and
+    # threading runtime support (VerilatedFst, VerilatedTraceBuffer<...>,
+    # ...) that verilated_fst_c.cpp/verilated_trace.cpp provide lives in
+    # the separate libverilated.a Verilator's --build also produces --
+    # both are needed. lib_path has no "lib" prefix (Verilator's own
+    # naming), so it can't be found via a plain -l flag; pass the File
+    # node directly so SCons/ld links it by explicit path.
+    env.Append(LIBS=[lib_path, obj_dir.File('libverilated.a'), 'z'])
 
     SimObject('FifoPioAccel.py', sim_objects=['FifoPioAccel'])
     Source('fifo_pio_device.cc')

@@ -31,6 +31,7 @@
 #include "axi/axi4_master_engine.hh"
 #include "axi/axi4_types.hh"
 #include "cpu/base.hh"
+#include "mem/port.hh"
 #include "params/RTLBaseCpu.hh"
 
 namespace gem5

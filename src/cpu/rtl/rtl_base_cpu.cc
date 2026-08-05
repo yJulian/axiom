@@ -17,7 +17,12 @@ RTLBaseCpu::RtlCorePort::RtlCorePort(const std::string &name, RTLBaseCpu &cpu,
 void
 RTLBaseCpu::RtlCorePort::bindPins(axion::Axi4MasterPins &pins)
 {
-    engine_ = std::make_unique<axion::Axi4MasterEngine>(pins, *this);
+    // Not std::make_unique: the Backend upcast of *this needs to happen
+    // textually inside this member function to see the private
+    // inheritance -- make_unique's implicit conversion happens inside
+    // <memory>'s own template code, which has no such access, and gcc
+    // (correctly) rejects it there.
+    engine_.reset(new axion::Axi4MasterEngine(pins, *this));
 }
 
 void

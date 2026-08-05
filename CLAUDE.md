@@ -39,18 +39,21 @@ the **DUT** (Design Under Test) -- see Terminology below.
 verification-industry term -- use it consistently in code, comments, and file/module
 naming (`*_top.sv` for harnesses, plain descriptive names for DUTs).
 
-## Source layout -- read before editing anything under `ext/gem5/src/rtl_axion*`
+## Source layout -- read before editing anything under `ext/gem5/src/{axi,cpu/rtl,dev/rtl,examples}`
 
 `ext/gem5` is a git submodule (pinned, shallow). AXION's own C++ sources live at the
 repo root under `src/` (and the worked example under `examples/`) -- **never** edit
-anything under `ext/gem5/src/rtl_axion/` or `ext/gem5/src/rtl_axion_examples/`
-directly. Those are mirrors created by `scripts/build_gem5.sh` (`cp -rs`: real
-directories, individual files symlinked back to the true source) so gem5's own build
-can see them -- gem5's `src/SConscript` walks with `followlinks=False`, so a plain
-symlinked directory would be invisible to the build, and each mirror uses a distinct
-basename (`rtl_axion`, not `src`) because SCons keys build-variant dirs by basename and
-an identical name would collide with gem5's own tree. Edits under the mirror are
-overwritten (or simply invisible to git) the next time the mirror re-runs.
+anything under `ext/gem5/src/axi/`, `ext/gem5/src/cpu/rtl/`, `ext/gem5/src/dev/rtl/`,
+or `ext/gem5/src/examples/` directly. Those are mirrors created by
+`scripts/build_gem5.sh` (`cp -rs`: real directories, individual files symlinked back to
+the true source) so gem5's own build can see them -- gem5's `src/SConscript` walks
+with `followlinks=False`, so a plain symlinked directory would be invisible to the
+build. Each of our subdirectories mirrors at the *same relative path* it would occupy
+inside gem5's own tree (`src/axi` -> `ext/gem5/src/axi`, `src/cpu/rtl` ->
+`ext/gem5/src/cpu/rtl`, ...) -- this matters because our own headers use gem5-style
+`#include "axi/verilated_model.hh"` paths resolved against gem5's `src/` as the include
+root; none of these four paths exist in stock gem5, so there's no collision. Edits
+under a mirror are overwritten (or simply invisible to git) the next time it re-runs.
 
 ## Build & run commands
 

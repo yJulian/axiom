@@ -43,4 +43,4 @@ run-fifo-example: gem5
 
 clean:
 	$(MAKE) -C examples/fifo_pio_accel clean
-	rm -rf $(GEM5_DIR)/src/rtl_axion $(GEM5_DIR)/src/rtl_axion_examples
+	rm -rf $(GEM5_DIR)/src/axi $(GEM5_DIR)/src/cpu/rtl $(GEM5_DIR)/src/dev/rtl $(GEM5_DIR)/src/examples

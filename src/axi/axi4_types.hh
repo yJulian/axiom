@@ -4,8 +4,8 @@
  * Defines the pin-accessor contracts (Axi4SlavePins / Axi4MasterPins) that
  * a leaf SimObject implements against a specific Verilator-generated top
  * module, plus the small value types the bridge engines pass around. The
- * contracts mirror hw/axi4/axi4_pins.sv's flat s_axi_*/m_axi_* port lists
- * one-for-one -- one virtual method per pin.
+ * contracts mirror hw/axi4/axi4_pins.sv's flat s_axi_* / m_axi_* port
+ * lists one-for-one -- one virtual method per pin.
  */
 
 #ifndef __AXI_AXI4_TYPES_HH__
@@ -26,6 +26,24 @@ enum class AxiBurst : uint8_t { Fixed = 0, Incr = 1, Wrap = 2 };
 enum class AxiResp : uint8_t { Okay = 0, ExOkay = 1, SlvErr = 2, DecErr = 3 };
 
 /**
+ * Clock/reset/eval, factored out of Axi4SlavePins/Axi4MasterPins so a
+ * leaf implementing both (e.g. RTLDmaDevice, which has a slave register
+ * port and a master DMA port on the same underlying RTL model) has
+ * exactly one of each -- both inherit this virtually, so
+ * axiSetClk()/axiSetRstN()/axiEval() stay unambiguous even under
+ * multiple inheritance from both pin contracts.
+ */
+class Axi4ClockPins
+{
+  public:
+    virtual ~Axi4ClockPins() = default;
+
+    virtual void axiSetClk(uint8_t val) = 0;
+    virtual void axiSetRstN(uint8_t val) = 0;
+    virtual void axiEval() = 0;
+};
+
+/**
  * Pin contract for an AXI4 SLAVE port: the pins a device exposes when
  * something else (gem5, or another RTL master) is the sole requester --
  * e.g. a control/status register port. Implemented by the leaf SimObject
@@ -36,14 +54,10 @@ enum class AxiResp : uint8_t { Okay = 0, ExOkay = 1, SlvErr = 2, DecErr = 3 };
  * is nothing to reorder here -- Axi4SlaveEngine drives one transaction at
  * a time and simply echoes back whatever ID it was given.
  */
-class Axi4SlavePins
+class Axi4SlavePins : public virtual Axi4ClockPins
 {
   public:
     virtual ~Axi4SlavePins() = default;
-
-    virtual void axiSetClk(uint8_t val) = 0;
-    virtual void axiSetRstN(uint8_t val) = 0;
-    virtual void axiEval() = 0;
 
     // Write address (AW)
     virtual void axiSlaveSetAwId(AxiId id) = 0;
@@ -95,14 +109,10 @@ class Axi4SlavePins
  * implements the AXI4 ordering rule (same ID completes in issue order,
  * different IDs may complete in any order) on top of this pin contract.
  */
-class Axi4MasterPins
+class Axi4MasterPins : public virtual Axi4ClockPins
 {
   public:
     virtual ~Axi4MasterPins() = default;
-
-    virtual void axiSetClk(uint8_t val) = 0;
-    virtual void axiSetRstN(uint8_t val) = 0;
-    virtual void axiEval() = 0;
 
     // Write address (AW) -- driven by the DUT, sampled here
     virtual AxiId axiMasterGetAwId() = 0;
