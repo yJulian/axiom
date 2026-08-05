@@ -1,0 +1,8 @@
+# SConscript for AXION's shared AXI4 bridge engines (no SimObjects here --
+# axi4_types.hh/verilated_model.hh are header-only, the two engines are
+# plain C++ classes composed into RTLPioDevice/RTLDmaDevice/RTLBaseCpu).
+
+Import('*')
+
+Source('axi4_slave_engine.cc')
+Source('axi4_master_engine.cc')
