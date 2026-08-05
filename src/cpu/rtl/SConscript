@@ -1,0 +1,4 @@
+Import('*')
+
+SimObject('RTLBaseCpu.py', sim_objects=['RTLBaseCpu'])
+Source('rtl_base_cpu.cc')

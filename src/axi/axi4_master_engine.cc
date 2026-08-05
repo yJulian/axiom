@@ -203,9 +203,10 @@ Axi4MasterEngine::driveB()
 }
 
 void
-Axi4MasterEngine::tick()
+Axi4MasterEngine::tick(bool driveClock)
 {
-    pins_.axiSetClk(0);
+    if (driveClock)
+        pins_.axiSetClk(0);
 
     sampleAr();
     sampleAwAndW();
@@ -214,9 +215,11 @@ Axi4MasterEngine::tick()
 
     pins_.axiEval();
 
-    pins_.axiSetClk(1);
-    pins_.axiEval();
-    pins_.axiSetClk(0);
+    if (driveClock) {
+        pins_.axiSetClk(1);
+        pins_.axiEval();
+        pins_.axiSetClk(0);
+    }
 }
 
 } // namespace axion

@@ -51,8 +51,16 @@ class Axi4MasterEngine
     void completeRead(uint64_t seq, const uint8_t *data, unsigned size);
     void completeWrite(uint64_t seq);
 
-    /** Advance the state machine by exactly one clock cycle. */
-    void tick();
+    /**
+     * Advance the state machine by exactly one clock cycle. Pass
+     * `driveClock = false` when multiple engines share one underlying
+     * Verilated model (e.g. RTLBaseCpu's inst/data ports both fed by a
+     * single RTL core) and another engine already owns toggling that
+     * model's actual clk pin this cycle -- this engine's own combinational
+     * drive/sample/eval still runs, it just skips the rising-edge toggle
+     * so the shared model's registers don't advance twice per cycle.
+     */
+    void tick(bool driveClock = true);
 
   private:
     struct ReadXact
