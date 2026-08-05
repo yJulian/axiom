@@ -1,0 +1,7 @@
+Import('*')
+
+SimObject('RTLPioDevice.py', sim_objects=['RTLPioDevice'])
+Source('rtl_pio_device.cc')
+
+SimObject('RTLDmaDevice.py', sim_objects=['RTLDmaDevice'])
+Source('rtl_dma_device.cc')
