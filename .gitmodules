@@ -1,0 +1,8 @@
+[submodule "ext/gem5"]
+	path = ext/gem5
+	url = https://github.com/gem5/gem5.git
+	shallow = true
+	# AXION's own sources are mirrored into ext/gem5/src/rtl_axion by
+	# scripts/build_gem5.sh (cp -rs) so they survive submodule updates;
+	# don't report that mirror dir as dirty here.
+	ignore = untracked
