@@ -1,0 +1,16 @@
+# Verilator build output
+examples/**/obj_dir/
+examples/**/obj_dir_tb/
+examples/**/*.vcd
+examples/**/*.fst
+
+# gem5 build output (scons -C ext/gem5 places build/ at the invocation
+# directory, i.e. here -- not inside the submodule) and mirrored sources
+# (recreated by scripts/build_gem5.sh)
+/build/
+ext/gem5/build/
+ext/gem5/src/rtl_axion/
+ext/gem5/src/rtl_axion_examples/
+
+# gem5 run output
+m5out/

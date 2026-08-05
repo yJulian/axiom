@@ -1,0 +1,40 @@
+# SConscript for the fifo_pio_accel worked example. Requires
+# `make -C examples/fifo_pio_accel` to have already produced
+# obj_dir/Vfifo_pio_top__ALL.a (see that Makefile) -- Verilator is not
+# invoked from within the gem5 build itself, matching the "build the RTL
+# lib first, then gem5" pattern used by both sibling co-simulation repos
+# on this machine (gem5_cva6, gem5-verilator-ghdl).
+
+Import('*')
+
+import os
+
+example_dir = Dir('.').srcnode()
+obj_dir = example_dir.Dir('obj_dir')
+lib_path = obj_dir.File('Vfifo_pio_top__ALL.a')
+
+verilator_root = os.environ.get(
+    'VERILATOR_ROOT',
+    os.popen('verilator --getenv VERILATOR_ROOT 2>/dev/null').read().strip()
+    or '/usr/share/verilator',
+)
+
+env.Append(CPPPATH=[
+    example_dir,
+    obj_dir,
+    os.path.join(verilator_root, 'include'),
+    os.path.join(verilator_root, 'include', 'vltstd'),
+])
+
+if os.path.exists(str(lib_path)):
+    env.Append(CPPDEFINES=['VM_TRACE=1'])
+    env.Prepend(LIBPATH=[obj_dir])
+    env.Append(LIBS=['Vfifo_pio_top__ALL', 'z'])
+
+    SimObject('FifoPioAccel.py', sim_objects=['FifoPioAccel'])
+    Source('fifo_pio_device.cc')
+else:
+    print(
+        "[AXION] fifo_pio_accel: %s not found -- run "
+        "`make -C examples/fifo_pio_accel` before building gem5." % lib_path
+    )
