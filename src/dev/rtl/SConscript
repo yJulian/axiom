@@ -5,3 +5,13 @@ Source('rtl_pio_device.cc')
 
 SimObject('RTLDmaDevice.py', sim_objects=['RTLDmaDevice'])
 Source('rtl_dma_device.cc')
+
+# Opt-in "plugin" path (dlopen-based, see plugin/rtl_plugin.mk): needs
+# libdl for the dlopen/dlsym/dlclose calls in rtl_{pio,dma}_device_plugin.cc.
+SimObject('RTLPioDevicePlugin.py', sim_objects=['RTLPioDevicePlugin'])
+Source('rtl_pio_device_plugin.cc')
+
+SimObject('RTLDmaDevicePlugin.py', sim_objects=['RTLDmaDevicePlugin'])
+Source('rtl_dma_device_plugin.cc')
+
+env.Append(LIBS=['dl'])

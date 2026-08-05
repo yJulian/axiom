@@ -14,15 +14,20 @@ GEM5_DIR   := ext/gem5
 GEM5_BUILD := build/RISCV/gem5.opt
 JOBS       ?= $(shell nproc)
 
-.PHONY: submodules verilate gem5 run-fifo-example tb clean help
+.PHONY: submodules verilate gem5 run-fifo-example tb clean help \
+        verilate-plugin tb-plugin
 
 help:
 	@echo "Targets: submodules verilate gem5 run-fifo-example tb clean"
+	@echo "         verilate-plugin tb-plugin"
 	@echo "  make submodules            # git submodule update --init ext/gem5"
 	@echo "  make verilate              # build examples/fifo_pio_accel's RTL"
 	@echo "  make gem5                  # mirror src/ into gem5 + scons build"
 	@echo "  make tb                    # standalone AXI4 testbench (no gem5)"
 	@echo "  make run-fifo-example ARGS='--binary <elf>'"
+	@echo "  make verilate-plugin       # build the FIFO DUT as a plugin .so"
+	@echo "                             #   (opt-in dlopen path, see plugin/)"
+	@echo "  make tb-plugin             # standalone plugin-ABI testbench"
 	@echo "  make clean                 # remove RTL build artifacts + mirrors"
 
 submodules:
@@ -41,6 +46,17 @@ gem5: verilate
 run-fifo-example: gem5
 	$(GEM5_BUILD) examples/fifo_pio_accel/configs/run_fifo_pio.py $(ARGS)
 
+# Opt-in "plugin" path (dlopen-based, see plugin/rtl_plugin.mk): builds the
+# same fifo_pio_accel DUT into a .so instead of linking it into gem5.opt,
+# and verifies it standalone -- independent of both `verilate`/`gem5`
+# above and of each other.
+verilate-plugin:
+	$(MAKE) -C examples/fifo_pio_accel_plugin
+
+tb-plugin:
+	$(MAKE) -C examples/fifo_pio_accel_plugin run-tb
+
 clean:
 	$(MAKE) -C examples/fifo_pio_accel clean
+	$(MAKE) -C examples/fifo_pio_accel_plugin clean
 	rm -rf $(GEM5_DIR)/src/axi $(GEM5_DIR)/src/cpu/rtl $(GEM5_DIR)/src/dev/rtl $(GEM5_DIR)/src/examples

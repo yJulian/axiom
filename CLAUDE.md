@@ -22,6 +22,10 @@ protocol/timing engines that drive it (`Axi4SlaveEngine`, `Axi4MasterEngine`,
 a specific Verilator-generated top module (see `examples/fifo_pio_accel/` for the one
 worked example). RTL is linked directly (no `dlopen`/abstract-backend indirection) --
 that's a deliberate simplification versus prior art on this machine, not an oversight.
+A second, additive, opt-in path now also exists for cases that want a new RTL model
+without writing that leaf class at all -- see "The plugin path" under Architecture below
+(`RTLPioDevicePlugin` / `RTLDmaDevicePlugin`, `src/axi/axi4_plugin_abi.h`) -- but it does
+not change anything about the default path described above.
 
 `hw/axi4/` is the reusable SystemVerilog side: `axi4_pkg.sv` (typedefs), `axi4_if.sv`
 (the actual 5-channel interface DUTs connect to), `axi4_pins.sv` (flat-port adapters --
@@ -55,6 +59,11 @@ inside gem5's own tree (`src/axi` -> `ext/gem5/src/axi`, `src/cpu/rtl` ->
 root; none of these four paths exist in stock gem5, so there's no collision. Edits
 under a mirror are overwritten (or simply invisible to git) the next time it re-runs.
 
+`plugin/` (the opt-in plugin path's Makefile template + generic shim, see Architecture
+below) is a fifth top-level source area, but unlike the four above it is **never**
+mirrored into `ext/gem5/src` at all -- it's build tooling that produces a `.so` outside
+gem5's own build, not something gem5's SConscript needs to see.
+
 ## Build & run commands
 
 ```bash
@@ -66,6 +75,9 @@ make gem5                     # re-mirror (now including the verilated .a) + sco
                                #   inside the submodule -- same convention gem5_cva6 uses)
 make tb                       # standalone AXI4 testbench, no gem5 needed (see below)
 make run-fifo-example ARGS='--binary <path/to/riscv/elf>'
+make verilate-plugin          # build the FIFO DUT as a .so via plugin/rtl_plugin.mk
+                               #   (opt-in dlopen path, see Architecture below)
+make tb-plugin                # standalone plugin-ABI testbench, no gem5 needed
 make clean                    # remove RTL build artifacts + the src mirrors
 ```
 
@@ -84,6 +96,16 @@ independent of gem5, use `make tb`: `examples/fifo_pio_accel/tb_fifo_pio.cc` dri
 `fifo_pio_top`'s AXI4 slave pins directly (full AW/W/B write burst, AR/R read burst,
 including distinct AWID/ARID values to exercise the ID field), pushes a value into the
 FIFO and pops it back, and asserts it round-trips.
+
+### Verifying the plugin path without gem5
+
+`make tb-plugin` is the plugin-path analog: it builds the *same* `fifo_pio_accel` DUT
+into a `.so` via `plugin/rtl_plugin.mk` instead of linking it into `gem5.opt`, then runs
+`examples/fifo_pio_accel_plugin/tb_fifo_pio_plugin.cc`, which `dlopen`s that `.so` and
+drives it purely through `src/axi/axi4_plugin_abi.h` -- no `Vfifo_pio_top.h`, no
+Verilator headers at all, no compile-time knowledge of the DUT. It performs the same
+push/pop round-trip as `tb_fifo_pio.cc`; this is the concrete proof the plugin ABI is
+usable generically, not just in theory.
 
 ## Architecture
 
@@ -113,7 +135,9 @@ inheritance through `RTLDmaDevice` and `RTLPioDevice` both) or make no sense for
   `RTLDmaDevice`'s DMA port and `RTLBaseCpu`'s inst/data ports.
 - **`VerilatedRtlModel<TopT>`**: thin RAII wrapper (`VerilatedContext` +
   `clockEdge()`/`settle()`/trace hooks). No `dlopen` indirection -- a leaf class
-  `#include`s its `Vxxx_top.h` directly and owns one of these.
+  `#include`s its `Vxxx_top.h` directly and owns one of these. Left completely
+  untouched by the plugin path below, which uses its own loading mechanism instead of
+  modifying this class's deliberate simplicity.
 
 ### Per-cycle protocol pattern
 
@@ -124,6 +148,55 @@ state. `Axi4MasterEngine::tick()` takes a `driveClock` parameter for the case wh
 multiple engines share one underlying Verilated model (e.g. `RTLBaseCpu`'s inst/data
 ports both fed by a single RTL core) -- only one of them should toggle the shared
 model's actual clock pin per gem5 cycle.
+
+### The plugin path (opt-in, dlopen-based)
+
+`RTLPioDevicePlugin` / `RTLDmaDevicePlugin` (`src/dev/rtl/rtl_{pio,dma}_device_plugin.{hh,cc}`)
+are concrete subclasses of `RTLPioDevice`/`RTLDmaDevice` that satisfy the same
+`Axi4SlavePins`/`Axi4MasterPins` contract as any direct-link leaf, but by `dlopen`ing a
+`.so` at construction and driving it through a small, ABI-stable C interface
+(`src/axi/axi4_plugin_abi.h`) instead of binding to a `Vxxx_top.h` at compile time.
+Motivation: every DUT is wired through the same `hw/axi4/axi4_pins.sv` adapter, so the
+flat `s_axi_*`/`m_axi_*` pin names are identical across every possible model -- only the
+generated Verilator class name differs. That makes a runtime-generic loading path
+feasible without losing any of the per-pin fidelity the direct-link path has.
+
+- **The ABI** (`src/axi/axi4_plugin_abi.h`): plain C, not C++ -- `dlopen` crosses a
+  shared-library boundary between two independently compiled binaries, and C++
+  vtable/ABI layout isn't guaranteed stable across that boundary the way a plain C
+  struct/function ABI is. This is the one deliberate deviation from `gem5_cva6`'s
+  `AccelInterface` (see "Prior art" below), which does `dlopen` a C++ vtable and relies
+  on both sides being built with a matching compiler/stdlib. Every `Set*`/`Get*` pin
+  access on the leaf class's C++ side is cached locally into a POD struct and only
+  actually crosses the ABI boundary, batched, inside `axiEval()` -- one `*_drive()` +
+  one `axion_rtl_eval()` + one `*_sample()` per port role per `axiEval()` call, instead
+  of one crossing per individual pin.
+- **`plugin/rtl_plugin.mk`**: a reusable, `include`-able Makefile template (locates
+  itself via `$(dir $(lastword $(MAKEFILE_LIST)))`, so it works regardless of the
+  caller's nesting depth). A caller sets `TOP_MODULE`/`PLUGIN_SOURCES` (their own DUT +
+  TOP wrapper `.sv` only -- the template prepends `hw/axi4`'s three shared files) and
+  `PLUGIN_HAS_SLAVE`/`PLUGIN_HAS_MASTER`, and gets a `.so` back. Build recipe follows
+  the proven Verilator-to-`.so` pattern from `~/gem5_cva6/accelerator/Makefile`:
+  `verilator --cc` (not `--build`, since a *shared* object needs its own link step),
+  then `make -f Vxxx.mk` for the static archive of Verilated model objects, then a
+  manual `g++ -shared -fPIC` link of `plugin/rtl_plugin_shim.cc` + the Verilator
+  runtime (`verilated.cpp` **and** `verilated_threads.cpp` -- omitting the latter links
+  but leaves an undefined `VlThreadPool` symbol at `dlopen` time) + that archive into
+  the final `.so`.
+- **`plugin/rtl_plugin_shim.cc`**: the one piece of generated-per-model C++ that
+  remains, but as a single non-templated file compiled repeatedly with different
+  `-D`/`-include` flags (`AXION_TOP_CLASS`, `AXION_PLUGIN_HAS_{SLAVE,MASTER}`) --
+  nothing to hand-edit per model. Field access is the same one-line-per-pin mapping
+  already hand-written in `fifo_pio_device.cc`, written once generically.
+- **`RTLPioDevicePlugin`/`RTLDmaDevicePlugin`**: `dlopen`s the `.so` named by the
+  `rtl_library` param at construction (matching `gem5_cva6`'s `RtlAccelerator`
+  precedent -- not deferred to `init()`), resolves every `axion_rtl_*` symbol via
+  `dlsym` into cached member function pointers, and `fatal()`s on any missing symbol,
+  an ABI version mismatch, or a missing required port role
+  (`axion_rtl_has_slave_port()`/`has_master_port()`).
+- See `examples/fifo_pio_accel_plugin/` for the worked example (the same
+  `fifo_pio_accel` DUT, built through this path instead) and "Verifying the plugin path
+  without gem5" above for its standalone testbench.
 
 ### RTLBaseCpu scope note
 
@@ -146,7 +219,10 @@ designing AXION -- worth checking if something here seems to be reinventing a wh
   core, using a `dlopen`'d abstract-interface pattern (`AccelInterface`,
   `RtlCoreInterface`) instead of AXION's direct-link pin contracts. Its
   `RtlAccelerator` (a `DmaDevice`) and `dma_master_engine.cc` are the direct models for
-  `RTLDmaDevice` and `Axi4MasterEngine` respectively.
+  `RTLDmaDevice` and `Axi4MasterEngine` respectively. Its `AccelInterface`/
+  `RtlAccelerator` `dlopen` mechanics are also the direct model for AXION's own opt-in
+  plugin path ("The plugin path" under Architecture above) -- with one deliberate
+  deviation: a plain C ABI instead of a `dlopen`'d C++ vtable.
 - `~/Development/gem5-verilator-ghdl`: earlier, less mature prototype. Its
   "flatten AXI inside the RTL, cross the C++ boundary with scalars" design is
   explicitly what AXION does *not* do (loses ID/OoO semantics) -- but its build-system

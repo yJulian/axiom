@@ -4,6 +4,11 @@ examples/**/obj_dir_tb/
 examples/**/*.vcd
 examples/**/*.fst
 
+# Plugin path build output (plugin/rtl_plugin.mk)
+examples/**/obj_dir_plugin/
+examples/**/*.so
+examples/**/tb_fifo_pio_plugin
+
 # gem5 build output (scons -C ext/gem5 places build/ at the invocation
 # directory, i.e. here -- not inside the submodule) and mirrored sources
 # (recreated by scripts/build_gem5.sh)
