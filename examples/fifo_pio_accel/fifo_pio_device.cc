@@ -56,6 +56,36 @@ FifoPioAccel::axiSlaveSetAwBurst(uint8_t burst)
 }
 
 void
+FifoPioAccel::axiSlaveSetAwLock(uint8_t lock)
+{
+    rtl_.top()->s_axi_awlock = lock;
+}
+
+void
+FifoPioAccel::axiSlaveSetAwCache(uint8_t cache)
+{
+    rtl_.top()->s_axi_awcache = cache;
+}
+
+void
+FifoPioAccel::axiSlaveSetAwProt(uint8_t prot)
+{
+    rtl_.top()->s_axi_awprot = prot;
+}
+
+void
+FifoPioAccel::axiSlaveSetAwQos(uint8_t qos)
+{
+    rtl_.top()->s_axi_awqos = qos;
+}
+
+void
+FifoPioAccel::axiSlaveSetAwRegion(uint8_t region)
+{
+    rtl_.top()->s_axi_awregion = region;
+}
+
+void
 FifoPioAccel::axiSlaveSetAwValid(uint8_t val)
 {
     rtl_.top()->s_axi_awvalid = val;
@@ -149,6 +179,36 @@ void
 FifoPioAccel::axiSlaveSetArBurst(uint8_t burst)
 {
     rtl_.top()->s_axi_arburst = burst;
+}
+
+void
+FifoPioAccel::axiSlaveSetArLock(uint8_t lock)
+{
+    rtl_.top()->s_axi_arlock = lock;
+}
+
+void
+FifoPioAccel::axiSlaveSetArCache(uint8_t cache)
+{
+    rtl_.top()->s_axi_arcache = cache;
+}
+
+void
+FifoPioAccel::axiSlaveSetArProt(uint8_t prot)
+{
+    rtl_.top()->s_axi_arprot = prot;
+}
+
+void
+FifoPioAccel::axiSlaveSetArQos(uint8_t qos)
+{
+    rtl_.top()->s_axi_arqos = qos;
+}
+
+void
+FifoPioAccel::axiSlaveSetArRegion(uint8_t region)
+{
+    rtl_.top()->s_axi_arregion = region;
 }
 
 void

@@ -67,6 +67,11 @@ class Axi4SlaveEngine
     unsigned totalBeats_ = 0;
     unsigned beatsDone_ = 0;
 
+    // Worst RRESP seen across all beats of the in-flight read (AxiResp's
+    // values are already ordered by severity: Okay < ExOkay < SlvErr <
+    // DecErr), applied to the gem5 packet once the last beat completes.
+    uint8_t worstResp_ = 0;
+
     void driveInputs();
     void sampleAndAdvance();
 

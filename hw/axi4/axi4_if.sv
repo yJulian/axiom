@@ -31,6 +31,11 @@ interface axi4_if #(
   axi_len_t              awlen;
   axi_size_t              awsize;
   axi_burst_t              awburst;
+  axi_lock_t               awlock;
+  axi_cache_t               awcache;
+  axi_prot_t                awprot;
+  axi_qos_t                  awqos;
+  axi_region_t                awregion;
   logic                    awvalid;
   logic                    awready;
 
@@ -53,6 +58,11 @@ interface axi4_if #(
   axi_len_t                arlen;
   axi_size_t                arsize;
   axi_burst_t                arburst;
+  axi_lock_t                 arlock;
+  axi_cache_t                 arcache;
+  axi_prot_t                   arprot;
+  axi_qos_t                     arqos;
+  axi_region_t                   arregion;
   logic                      arvalid;
   logic                      arready;
 
@@ -65,26 +75,30 @@ interface axi4_if #(
   logic                    rready;
 
   modport master (
-    output awid, awaddr, awlen, awsize, awburst, awvalid,
+    output awid, awaddr, awlen, awsize, awburst, awlock, awcache, awprot,
+           awqos, awregion, awvalid,
     input  awready,
     output wdata, wstrb, wlast, wvalid,
     input  wready,
     input  bid, bresp, bvalid,
     output bready,
-    output arid, araddr, arlen, arsize, arburst, arvalid,
+    output arid, araddr, arlen, arsize, arburst, arlock, arcache, arprot,
+           arqos, arregion, arvalid,
     input  arready,
     input  rid, rdata, rresp, rlast, rvalid,
     output rready
   );
 
   modport slave (
-    input  awid, awaddr, awlen, awsize, awburst, awvalid,
+    input  awid, awaddr, awlen, awsize, awburst, awlock, awcache, awprot,
+           awqos, awregion, awvalid,
     output awready,
     input  wdata, wstrb, wlast, wvalid,
     output wready,
     output bid, bresp, bvalid,
     input  bready,
-    input  arid, araddr, arlen, arsize, arburst, arvalid,
+    input  arid, araddr, arlen, arsize, arburst, arlock, arcache, arprot,
+           arqos, arregion, arvalid,
     output arready,
     output rid, rdata, rresp, rlast, rvalid,
     input  rready
@@ -92,10 +106,12 @@ interface axi4_if #(
 
   // Read-only view of every signal, for tracing/protocol-checker modules.
   modport monitor (
-    input awid, awaddr, awlen, awsize, awburst, awvalid, awready,
+    input awid, awaddr, awlen, awsize, awburst, awlock, awcache, awprot,
+          awqos, awregion, awvalid, awready,
     input wdata, wstrb, wlast, wvalid, wready,
     input bid, bresp, bvalid, bready,
-    input arid, araddr, arlen, arsize, arburst, arvalid, arready,
+    input arid, araddr, arlen, arsize, arburst, arlock, arcache, arprot,
+          arqos, arregion, arvalid, arready,
     input rid, rdata, rresp, rlast, rvalid, rready
   );
 

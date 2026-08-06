@@ -41,3 +41,38 @@ make tb-plugin         # standalone plugin-ABI testbench, no gem5 needed
 ```
 
 See `CLAUDE.md` for the architecture behind both paths (the stable C ABI, why it's a plain C interface rather than a dlopen'd C++ vtable, and how the two paths relate).
+
+---
+
+## AXI4 signal coverage
+
+`AXI4_signals.md` tracks the full AXI4 pin-level signal set this bridge is
+expected to generate correctly. `RTLPioDevice`/`RTLDmaDevice` (and their
+plugin-path counterparts) have been audited and brought to completion:
+AWLOCK/AWCACHE/AWPROT/AWQOS/AWREGION and their AR equivalents are now driven
+end-to-end (SV interface, pins adapter, C++ pin contract, both engines, the
+`fifo_pio_accel` example, and the plugin ABI); `Axi4SlaveEngine` now
+propagates real BRESP/RRESP error codes from the RTL into the gem5 packet
+instead of silently dropping them; `Axi4MasterEngine` now streams true
+multi-beat read completions (RLAST only on the final beat, not every beat)
+and rejects non-INCR bursts loudly instead of silently mis-executing them.
+
+`RTLBaseCpu` (`src/cpu/rtl/`) has **not** been covered by this pass and is
+an explicit follow-up -- its master/slave port roles are reversed relative
+to `RTLDmaDevice`'s DMA port (the RTL core is the AXI4 master on both its
+inst and data ports), so the same signal-completeness work needs to be
+redone against that role split rather than assumed to carry over.
+
+Two gaps found during the audit are **documented, not fixed**, because
+gem5's `DmaDevice::dmaRead()`/`dmaWrite()` convenience API only takes a
+completion `Event*` and never exposes packet/error status back to the
+caller:
+
+- `Axi4MasterEngine` always drives BRESP/RRESP as `OKAY` -- there is
+  currently no path for a real gem5 memory-system error to reach the DMA
+  master port's response, short of bypassing `dmaRead`/`dmaWrite` for raw
+  packet-level DMA.
+- `Axi4MasterEngine` `panic`s on FIXED/WRAP bursts rather than executing
+  them -- `Backend::issueRead`/`issueWrite` model one linear memory access
+  per burst (exactly INCR addressing); real FIXED/WRAP support needs
+  per-beat addressing, the same category of rework as the point above.

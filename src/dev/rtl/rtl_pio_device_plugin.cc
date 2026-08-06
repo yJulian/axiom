@@ -129,6 +129,36 @@ RTLPioDevicePlugin::axiSlaveSetAwBurst(uint8_t burst)
 }
 
 void
+RTLPioDevicePlugin::axiSlaveSetAwLock(uint8_t lock)
+{
+    in_.awlock = lock;
+}
+
+void
+RTLPioDevicePlugin::axiSlaveSetAwCache(uint8_t cache)
+{
+    in_.awcache = cache;
+}
+
+void
+RTLPioDevicePlugin::axiSlaveSetAwProt(uint8_t prot)
+{
+    in_.awprot = prot;
+}
+
+void
+RTLPioDevicePlugin::axiSlaveSetAwQos(uint8_t qos)
+{
+    in_.awqos = qos;
+}
+
+void
+RTLPioDevicePlugin::axiSlaveSetAwRegion(uint8_t region)
+{
+    in_.awregion = region;
+}
+
+void
 RTLPioDevicePlugin::axiSlaveSetAwValid(uint8_t val)
 {
     in_.awvalid = val;
@@ -222,6 +252,36 @@ void
 RTLPioDevicePlugin::axiSlaveSetArBurst(uint8_t burst)
 {
     in_.arburst = burst;
+}
+
+void
+RTLPioDevicePlugin::axiSlaveSetArLock(uint8_t lock)
+{
+    in_.arlock = lock;
+}
+
+void
+RTLPioDevicePlugin::axiSlaveSetArCache(uint8_t cache)
+{
+    in_.arcache = cache;
+}
+
+void
+RTLPioDevicePlugin::axiSlaveSetArProt(uint8_t prot)
+{
+    in_.arprot = prot;
+}
+
+void
+RTLPioDevicePlugin::axiSlaveSetArQos(uint8_t qos)
+{
+    in_.arqos = qos;
+}
+
+void
+RTLPioDevicePlugin::axiSlaveSetArRegion(uint8_t region)
+{
+    in_.arregion = region;
 }
 
 void

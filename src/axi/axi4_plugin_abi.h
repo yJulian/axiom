@@ -35,7 +35,7 @@ extern "C" {
 /* Bump on any addition/change; a .so reporting a lower version than the
  * gem5-side loader expects is rejected rather than driven with stale
  * assumptions about struct layout. */
-#define AXION_RTL_PLUGIN_ABI_VERSION 1u
+#define AXION_RTL_PLUGIN_ABI_VERSION 2u
 
 /* Opaque handle to one instantiated RTL model (one VerilatedContext + one
  * top-module instance inside the .so). */
@@ -50,6 +50,11 @@ typedef struct
     uint8_t awlen;
     uint8_t awsize;
     uint8_t awburst;
+    uint8_t awlock;
+    uint8_t awcache;
+    uint8_t awprot;
+    uint8_t awqos;
+    uint8_t awregion;
     uint8_t awvalid;
 
     uint64_t wdata;
@@ -64,6 +69,11 @@ typedef struct
     uint8_t arlen;
     uint8_t arsize;
     uint8_t arburst;
+    uint8_t arlock;
+    uint8_t arcache;
+    uint8_t arprot;
+    uint8_t arqos;
+    uint8_t arregion;
     uint8_t arvalid;
 
     uint8_t rready;
@@ -98,6 +108,11 @@ typedef struct
     uint8_t awlen;
     uint8_t awsize;
     uint8_t awburst;
+    uint8_t awlock;
+    uint8_t awcache;
+    uint8_t awprot;
+    uint8_t awqos;
+    uint8_t awregion;
     uint8_t awvalid;
 
     uint64_t wdata;
@@ -112,6 +127,11 @@ typedef struct
     uint8_t arlen;
     uint8_t arsize;
     uint8_t arburst;
+    uint8_t arlock;
+    uint8_t arcache;
+    uint8_t arprot;
+    uint8_t arqos;
+    uint8_t arregion;
     uint8_t arvalid;
 
     uint8_t rready;

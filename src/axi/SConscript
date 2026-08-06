@@ -6,3 +6,9 @@ Import('*')
 
 Source('axi4_slave_engine.cc')
 Source('axi4_master_engine.cc')
+
+GTest('axi4_slave_engine.test', 'axi4_slave_engine.test.cc',
+      'axi4_slave_engine.cc', '../mem/packet.cc', '../sim/cur_tick.cc',
+      '../sim/bufval.cc')
+GTest('axi4_master_engine.test', 'axi4_master_engine.test.cc',
+      'axi4_master_engine.cc')

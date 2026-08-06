@@ -3,6 +3,8 @@
 #include <algorithm>
 #include <cstring>
 
+#include "mem/request.hh"
+
 namespace gem5
 {
 namespace axion
@@ -25,6 +27,7 @@ Axi4SlaveEngine::issue(PacketPtr pkt, const std::function<void()> &onDone)
     if (totalBeats_ == 0)
         totalBeats_ = 1;
     beatsDone_ = 0;
+    worstResp_ = 0;
     state_ = pkt->isWrite() ? State::AwHandshake : State::ArHandshake;
     return true;
 }
@@ -41,15 +44,24 @@ Axi4SlaveEngine::driveInputs()
         pins_.axiSlaveSetRReady(0);
         break;
 
-      case State::AwHandshake:
+      case State::AwHandshake: {
         pins_.axiSlaveSetAwId(id_);
         pins_.axiSlaveSetAwAddr(addr_);
         pins_.axiSlaveSetAwLen(static_cast<uint8_t>(totalBeats_ - 1));
         pins_.axiSlaveSetAwSize(3); // 1 << 3 == 8 bytes/beat
         pins_.axiSlaveSetAwBurst(static_cast<uint8_t>(AxiBurst::Incr));
+        const RequestPtr &req = pkt_->req;
+        pins_.axiSlaveSetAwLock(req->isLockedRMW() ? 1 : 0);
+        pins_.axiSlaveSetAwCache(req->isUncacheable() ? 0x0 : 0x3);
+        pins_.axiSlaveSetAwProt((req->isPriv() ? 1 : 0) |
+                                 (req->isSecure() ? 0 : 2) |
+                                 (req->isInstFetch() ? 4 : 0));
+        pins_.axiSlaveSetAwQos(pkt_->qosValue());
+        pins_.axiSlaveSetAwRegion(0); // no gem5 equivalent; single region
         pins_.axiSlaveSetAwValid(1);
         pins_.axiSlaveSetWValid(0);
         break;
+      }
 
       case State::WBeats: {
         pins_.axiSlaveSetAwValid(0);
@@ -69,15 +81,24 @@ Axi4SlaveEngine::driveInputs()
         pins_.axiSlaveSetBReady(1);
         break;
 
-      case State::ArHandshake:
+      case State::ArHandshake: {
         pins_.axiSlaveSetArId(id_);
         pins_.axiSlaveSetArAddr(addr_);
         pins_.axiSlaveSetArLen(static_cast<uint8_t>(totalBeats_ - 1));
         pins_.axiSlaveSetArSize(3);
         pins_.axiSlaveSetArBurst(static_cast<uint8_t>(AxiBurst::Incr));
+        const RequestPtr &req = pkt_->req;
+        pins_.axiSlaveSetArLock(req->isLockedRMW() ? 1 : 0);
+        pins_.axiSlaveSetArCache(req->isUncacheable() ? 0x0 : 0x3);
+        pins_.axiSlaveSetArProt((req->isPriv() ? 1 : 0) |
+                                 (req->isSecure() ? 0 : 2) |
+                                 (req->isInstFetch() ? 4 : 0));
+        pins_.axiSlaveSetArQos(pkt_->qosValue());
+        pins_.axiSlaveSetArRegion(0); // no gem5 equivalent; single region
         pins_.axiSlaveSetArValid(1);
         pins_.axiSlaveSetRReady(0);
         break;
+      }
 
       case State::RBeats:
         pins_.axiSlaveSetArValid(0);
@@ -108,7 +129,12 @@ Axi4SlaveEngine::sampleAndAdvance()
 
       case State::BHandshake:
         if (pins_.axiSlaveGetBValid()) {
+            uint8_t resp = pins_.axiSlaveGetBResp();
             pkt_->makeResponse();
+            if (resp == static_cast<uint8_t>(AxiResp::SlvErr))
+                pkt_->setBadCommand();
+            else if (resp == static_cast<uint8_t>(AxiResp::DecErr))
+                pkt_->setBadAddress();
             pendingDone_ = onDone_;
             pkt_ = nullptr;
             onDone_ = nullptr;
@@ -128,10 +154,15 @@ Axi4SlaveEngine::sampleAndAdvance()
             unsigned n = std::min<unsigned>(beatBytes_,
                                              pkt_->getSize() - off);
             std::memcpy(pkt_->getPtr<uint8_t>() + off, &data, n);
+            worstResp_ = std::max(worstResp_, pins_.axiSlaveGetRResp());
             beatsDone_++;
             bool last = pins_.axiSlaveGetRLast() || beatsDone_ == totalBeats_;
             if (last) {
                 pkt_->makeResponse();
+                if (worstResp_ == static_cast<uint8_t>(AxiResp::SlvErr))
+                    pkt_->setBadCommand();
+                else if (worstResp_ == static_cast<uint8_t>(AxiResp::DecErr))
+                    pkt_->setBadAddress();
                 pendingDone_ = onDone_;
                 pkt_ = nullptr;
                 onDone_ = nullptr;

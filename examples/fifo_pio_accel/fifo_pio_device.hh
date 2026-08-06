@@ -32,6 +32,11 @@ class FifoPioAccel : public RTLPioDevice
     void axiSlaveSetAwLen(uint8_t len) override;
     void axiSlaveSetAwSize(uint8_t size) override;
     void axiSlaveSetAwBurst(uint8_t burst) override;
+    void axiSlaveSetAwLock(uint8_t lock) override;
+    void axiSlaveSetAwCache(uint8_t cache) override;
+    void axiSlaveSetAwProt(uint8_t prot) override;
+    void axiSlaveSetAwQos(uint8_t qos) override;
+    void axiSlaveSetAwRegion(uint8_t region) override;
     void axiSlaveSetAwValid(uint8_t val) override;
     uint8_t axiSlaveGetAwReady() override;
 
@@ -51,6 +56,11 @@ class FifoPioAccel : public RTLPioDevice
     void axiSlaveSetArLen(uint8_t len) override;
     void axiSlaveSetArSize(uint8_t size) override;
     void axiSlaveSetArBurst(uint8_t burst) override;
+    void axiSlaveSetArLock(uint8_t lock) override;
+    void axiSlaveSetArCache(uint8_t cache) override;
+    void axiSlaveSetArProt(uint8_t prot) override;
+    void axiSlaveSetArQos(uint8_t qos) override;
+    void axiSlaveSetArRegion(uint8_t region) override;
     void axiSlaveSetArValid(uint8_t val) override;
     uint8_t axiSlaveGetArReady() override;
 

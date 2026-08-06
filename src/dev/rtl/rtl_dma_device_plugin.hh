@@ -43,6 +43,11 @@ class RTLDmaDevicePlugin : public RTLDmaDevice
     void axiSlaveSetAwLen(uint8_t len) override;
     void axiSlaveSetAwSize(uint8_t size) override;
     void axiSlaveSetAwBurst(uint8_t burst) override;
+    void axiSlaveSetAwLock(uint8_t lock) override;
+    void axiSlaveSetAwCache(uint8_t cache) override;
+    void axiSlaveSetAwProt(uint8_t prot) override;
+    void axiSlaveSetAwQos(uint8_t qos) override;
+    void axiSlaveSetAwRegion(uint8_t region) override;
     void axiSlaveSetAwValid(uint8_t val) override;
     uint8_t axiSlaveGetAwReady() override;
 
@@ -62,6 +67,11 @@ class RTLDmaDevicePlugin : public RTLDmaDevice
     void axiSlaveSetArLen(uint8_t len) override;
     void axiSlaveSetArSize(uint8_t size) override;
     void axiSlaveSetArBurst(uint8_t burst) override;
+    void axiSlaveSetArLock(uint8_t lock) override;
+    void axiSlaveSetArCache(uint8_t cache) override;
+    void axiSlaveSetArProt(uint8_t prot) override;
+    void axiSlaveSetArQos(uint8_t qos) override;
+    void axiSlaveSetArRegion(uint8_t region) override;
     void axiSlaveSetArValid(uint8_t val) override;
     uint8_t axiSlaveGetArReady() override;
 
@@ -78,6 +88,11 @@ class RTLDmaDevicePlugin : public RTLDmaDevice
     uint8_t axiMasterGetAwLen() override;
     uint8_t axiMasterGetAwSize() override;
     uint8_t axiMasterGetAwBurst() override;
+    uint8_t axiMasterGetAwLock() override;
+    uint8_t axiMasterGetAwCache() override;
+    uint8_t axiMasterGetAwProt() override;
+    uint8_t axiMasterGetAwQos() override;
+    uint8_t axiMasterGetAwRegion() override;
     uint8_t axiMasterGetAwValid() override;
     void axiMasterSetAwReady(uint8_t val) override;
 
@@ -97,6 +112,11 @@ class RTLDmaDevicePlugin : public RTLDmaDevice
     uint8_t axiMasterGetArLen() override;
     uint8_t axiMasterGetArSize() override;
     uint8_t axiMasterGetArBurst() override;
+    uint8_t axiMasterGetArLock() override;
+    uint8_t axiMasterGetArCache() override;
+    uint8_t axiMasterGetArProt() override;
+    uint8_t axiMasterGetArQos() override;
+    uint8_t axiMasterGetArRegion() override;
     uint8_t axiMasterGetArValid() override;
     void axiMasterSetArReady(uint8_t val) override;
 

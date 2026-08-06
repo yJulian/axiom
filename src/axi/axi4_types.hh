@@ -65,6 +65,11 @@ class Axi4SlavePins : public virtual Axi4ClockPins
     virtual void axiSlaveSetAwLen(uint8_t len) = 0;
     virtual void axiSlaveSetAwSize(uint8_t size) = 0;
     virtual void axiSlaveSetAwBurst(uint8_t burst) = 0;
+    virtual void axiSlaveSetAwLock(uint8_t lock) = 0;
+    virtual void axiSlaveSetAwCache(uint8_t cache) = 0;
+    virtual void axiSlaveSetAwProt(uint8_t prot) = 0;
+    virtual void axiSlaveSetAwQos(uint8_t qos) = 0;
+    virtual void axiSlaveSetAwRegion(uint8_t region) = 0;
     virtual void axiSlaveSetAwValid(uint8_t val) = 0;
     virtual uint8_t axiSlaveGetAwReady() = 0;
 
@@ -87,6 +92,11 @@ class Axi4SlavePins : public virtual Axi4ClockPins
     virtual void axiSlaveSetArLen(uint8_t len) = 0;
     virtual void axiSlaveSetArSize(uint8_t size) = 0;
     virtual void axiSlaveSetArBurst(uint8_t burst) = 0;
+    virtual void axiSlaveSetArLock(uint8_t lock) = 0;
+    virtual void axiSlaveSetArCache(uint8_t cache) = 0;
+    virtual void axiSlaveSetArProt(uint8_t prot) = 0;
+    virtual void axiSlaveSetArQos(uint8_t qos) = 0;
+    virtual void axiSlaveSetArRegion(uint8_t region) = 0;
     virtual void axiSlaveSetArValid(uint8_t val) = 0;
     virtual uint8_t axiSlaveGetArReady() = 0;
 
@@ -120,6 +130,11 @@ class Axi4MasterPins : public virtual Axi4ClockPins
     virtual uint8_t axiMasterGetAwLen() = 0;
     virtual uint8_t axiMasterGetAwSize() = 0;
     virtual uint8_t axiMasterGetAwBurst() = 0;
+    virtual uint8_t axiMasterGetAwLock() = 0;
+    virtual uint8_t axiMasterGetAwCache() = 0;
+    virtual uint8_t axiMasterGetAwProt() = 0;
+    virtual uint8_t axiMasterGetAwQos() = 0;
+    virtual uint8_t axiMasterGetAwRegion() = 0;
     virtual uint8_t axiMasterGetAwValid() = 0;
     virtual void axiMasterSetAwReady(uint8_t val) = 0;
 
@@ -142,6 +157,11 @@ class Axi4MasterPins : public virtual Axi4ClockPins
     virtual uint8_t axiMasterGetArLen() = 0;
     virtual uint8_t axiMasterGetArSize() = 0;
     virtual uint8_t axiMasterGetArBurst() = 0;
+    virtual uint8_t axiMasterGetArLock() = 0;
+    virtual uint8_t axiMasterGetArCache() = 0;
+    virtual uint8_t axiMasterGetArProt() = 0;
+    virtual uint8_t axiMasterGetArQos() = 0;
+    virtual uint8_t axiMasterGetArRegion() = 0;
     virtual uint8_t axiMasterGetArValid() = 0;
     virtual void axiMasterSetArReady(uint8_t val) = 0;
 

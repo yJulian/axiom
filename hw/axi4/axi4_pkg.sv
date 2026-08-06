@@ -35,6 +35,22 @@ package axi4_pkg;
   // AxLEN: burst_length - 1 (AXI4 allows up to 256 beats on INCR)
   typedef logic [7:0] axi_len_t;
 
+  // AxLOCK: 1 bit in AXI4 (exclusive access; AXI3's 2-bit locked/exclusive
+  // encoding was collapsed going into AXI4)
+  typedef logic axi_lock_t;
+
+  // AxCACHE: memory-type/bufferable/cacheable/allocate attributes
+  typedef logic [3:0] axi_cache_t;
+
+  // AxPROT: privileged / secure / instruction-vs-data access attributes
+  typedef logic [2:0] axi_prot_t;
+
+  // AxQOS: per-transaction quality-of-service priority
+  typedef logic [3:0] axi_qos_t;
+
+  // AxREGION: multi-region slave decode
+  typedef logic [3:0] axi_region_t;
+
   function automatic int unsigned beat_bytes(axi_size_t size);
     return 32'(1) << size;
   endfunction

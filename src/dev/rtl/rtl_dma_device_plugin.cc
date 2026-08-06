@@ -143,6 +143,36 @@ RTLDmaDevicePlugin::axiSlaveSetAwBurst(uint8_t burst)
 }
 
 void
+RTLDmaDevicePlugin::axiSlaveSetAwLock(uint8_t lock)
+{
+    slaveIn_.awlock = lock;
+}
+
+void
+RTLDmaDevicePlugin::axiSlaveSetAwCache(uint8_t cache)
+{
+    slaveIn_.awcache = cache;
+}
+
+void
+RTLDmaDevicePlugin::axiSlaveSetAwProt(uint8_t prot)
+{
+    slaveIn_.awprot = prot;
+}
+
+void
+RTLDmaDevicePlugin::axiSlaveSetAwQos(uint8_t qos)
+{
+    slaveIn_.awqos = qos;
+}
+
+void
+RTLDmaDevicePlugin::axiSlaveSetAwRegion(uint8_t region)
+{
+    slaveIn_.awregion = region;
+}
+
+void
 RTLDmaDevicePlugin::axiSlaveSetAwValid(uint8_t val)
 {
     slaveIn_.awvalid = val;
@@ -239,6 +269,36 @@ RTLDmaDevicePlugin::axiSlaveSetArBurst(uint8_t burst)
 }
 
 void
+RTLDmaDevicePlugin::axiSlaveSetArLock(uint8_t lock)
+{
+    slaveIn_.arlock = lock;
+}
+
+void
+RTLDmaDevicePlugin::axiSlaveSetArCache(uint8_t cache)
+{
+    slaveIn_.arcache = cache;
+}
+
+void
+RTLDmaDevicePlugin::axiSlaveSetArProt(uint8_t prot)
+{
+    slaveIn_.arprot = prot;
+}
+
+void
+RTLDmaDevicePlugin::axiSlaveSetArQos(uint8_t qos)
+{
+    slaveIn_.arqos = qos;
+}
+
+void
+RTLDmaDevicePlugin::axiSlaveSetArRegion(uint8_t region)
+{
+    slaveIn_.arregion = region;
+}
+
+void
 RTLDmaDevicePlugin::axiSlaveSetArValid(uint8_t val)
 {
     slaveIn_.arvalid = val;
@@ -316,6 +376,36 @@ uint8_t
 RTLDmaDevicePlugin::axiMasterGetAwBurst()
 {
     return masterOut_.awburst;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetAwLock()
+{
+    return masterOut_.awlock;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetAwCache()
+{
+    return masterOut_.awcache;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetAwProt()
+{
+    return masterOut_.awprot;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetAwQos()
+{
+    return masterOut_.awqos;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetAwRegion()
+{
+    return masterOut_.awregion;
 }
 
 uint8_t
@@ -412,6 +502,36 @@ uint8_t
 RTLDmaDevicePlugin::axiMasterGetArBurst()
 {
     return masterOut_.arburst;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetArLock()
+{
+    return masterOut_.arlock;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetArCache()
+{
+    return masterOut_.arcache;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetArProt()
+{
+    return masterOut_.arprot;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetArQos()
+{
+    return masterOut_.arqos;
+}
+
+uint8_t
+RTLDmaDevicePlugin::axiMasterGetArRegion()
+{
+    return masterOut_.arregion;
 }
 
 uint8_t

@@ -63,6 +63,22 @@ class Axi4MasterEngine
     void tick(bool driveClock = true);
 
   private:
+    // AxLOCK/AxCACHE/AxPROT/AxQOS/AxREGION sampled off the DUT-driven address
+    // channel for pin-accuracy. Nothing downstream consumes them yet --
+    // Backend::issueRead/issueWrite models a single linear gem5 memory
+    // access per burst, with no cache/QoS/region-aware access path -- so
+    // these are captured-but-currently-unused, same spirit as AWID/ARID
+    // being captured for echo-back even before any reordering logic needed
+    // them.
+    struct AxAttrs
+    {
+        uint8_t lock = 0;
+        uint8_t cache = 0;
+        uint8_t prot = 0;
+        uint8_t qos = 0;
+        uint8_t region = 0;
+    };
+
     struct ReadXact
     {
         uint64_t seq;
@@ -73,6 +89,7 @@ class Axi4MasterEngine
         bool dataReady = false;
         std::vector<uint8_t> data;
         unsigned beatsSent = 0;
+        AxAttrs attrs;
     };
 
     struct WriteXact
@@ -82,6 +99,7 @@ class Axi4MasterEngine
         Addr addr;
         std::vector<uint8_t> data;
         bool respReady = false;
+        AxAttrs attrs;
     };
 
     Axi4MasterPins &pins_;

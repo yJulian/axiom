@@ -96,6 +96,11 @@ axion_rtl_slave_drive(AxionRtlInstance *inst, const AxionAxi4SlaveInputs *in)
     top->s_axi_awlen = in->awlen;
     top->s_axi_awsize = in->awsize;
     top->s_axi_awburst = in->awburst;
+    top->s_axi_awlock = in->awlock;
+    top->s_axi_awcache = in->awcache;
+    top->s_axi_awprot = in->awprot;
+    top->s_axi_awqos = in->awqos;
+    top->s_axi_awregion = in->awregion;
     top->s_axi_awvalid = in->awvalid;
 
     top->s_axi_wdata = in->wdata;
@@ -110,6 +115,11 @@ axion_rtl_slave_drive(AxionRtlInstance *inst, const AxionAxi4SlaveInputs *in)
     top->s_axi_arlen = in->arlen;
     top->s_axi_arsize = in->arsize;
     top->s_axi_arburst = in->arburst;
+    top->s_axi_arlock = in->arlock;
+    top->s_axi_arcache = in->arcache;
+    top->s_axi_arprot = in->arprot;
+    top->s_axi_arqos = in->arqos;
+    top->s_axi_arregion = in->arregion;
     top->s_axi_arvalid = in->arvalid;
 
     top->s_axi_rready = in->rready;
@@ -178,6 +188,11 @@ axion_rtl_master_sample(AxionRtlInstance *inst, AxionAxi4MasterOutputs *out)
     out->awlen = top->m_axi_awlen;
     out->awsize = top->m_axi_awsize;
     out->awburst = top->m_axi_awburst;
+    out->awlock = top->m_axi_awlock;
+    out->awcache = top->m_axi_awcache;
+    out->awprot = top->m_axi_awprot;
+    out->awqos = top->m_axi_awqos;
+    out->awregion = top->m_axi_awregion;
     out->awvalid = top->m_axi_awvalid;
 
     out->wdata = top->m_axi_wdata;
@@ -192,6 +207,11 @@ axion_rtl_master_sample(AxionRtlInstance *inst, AxionAxi4MasterOutputs *out)
     out->arlen = top->m_axi_arlen;
     out->arsize = top->m_axi_arsize;
     out->arburst = top->m_axi_arburst;
+    out->arlock = top->m_axi_arlock;
+    out->arcache = top->m_axi_arcache;
+    out->arprot = top->m_axi_arprot;
+    out->arqos = top->m_axi_arqos;
+    out->arregion = top->m_axi_arregion;
     out->arvalid = top->m_axi_arvalid;
 
     out->rready = top->m_axi_rready;
