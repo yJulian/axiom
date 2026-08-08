@@ -130,11 +130,26 @@ RTLBaseCpu::wakeup(ThreadID tid)
 void
 RTLBaseCpu::driveResetInputs()
 {
+    // Must toggle the clock each reset cycle, not just eval once with
+    // clk left wherever it was -- synchronous-reset flops only actually
+    // sample rst_n on a real clock edge (matches RTLPioDevice's own
+    // driveResetInputs(), which does the same axiSetClk(1)/eval/
+    // axiSetClk(0) sequence; this one predates that pattern and never
+    // toggled the clock at all during the whole reset-hold phase, so a
+    // leaf's RTL only ever saw a single, solitary rising edge exactly
+    // when reset_cycles elapsed -- functionally close to no reset at
+    // all for a real synchronous design).
     instAxiPins().axiSetRstN(0);
     instAxiPins().axiEval();
+    instAxiPins().axiSetClk(1);
+    instAxiPins().axiEval();
+    instAxiPins().axiSetClk(0);
     if (&dataAxiPins() != &instAxiPins()) {
         dataAxiPins().axiSetRstN(0);
         dataAxiPins().axiEval();
+        dataAxiPins().axiSetClk(1);
+        dataAxiPins().axiEval();
+        dataAxiPins().axiSetClk(0);
     }
 }
 
