@@ -90,6 +90,17 @@ class RTLBaseCpu : public BaseCPU
     void tick();
     void driveResetInputs();
 
+    /**
+     * Hook for a leaf CPU to run per-cycle debug/exit logic once both
+     * AXI4 ports have ticked for this cycle (e.g. polling core-specific
+     * ebreak/illegal-instruction pins and calling exitSimLoop(), or
+     * updating numInsts_/numOps_ from a commit-count pin). No-op by
+     * default. Only called once reset has completed -- tick() returns
+     * early during the reset-hold phase, so postTick() never observes
+     * pins that are still held in reset.
+     */
+    virtual void postTick() {}
+
   public:
     /**
      * Pin-accessor hooks a concrete leaf must implement, each wrapping a

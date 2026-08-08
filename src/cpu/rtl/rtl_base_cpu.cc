@@ -156,6 +156,7 @@ RTLBaseCpu::tick()
     bool sharedPins = &dataAxiPins() == &instAxiPins();
     instPort_.tick(/*driveClock=*/true);
     dataPort_.tick(/*driveClock=*/!sharedPins);
+    postTick();
 
     schedule(tickEvent, clockEdge(Cycles(1)));
 }
