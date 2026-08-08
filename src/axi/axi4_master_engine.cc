@@ -86,12 +86,19 @@ Axi4MasterEngine::sampleAr()
     unsigned size = 1u << pins_.axiMasterGetArSize();
     unsigned totalBytes = (len + 1) * size;
 
+    // FIXED bursts only matter for multi-beat address computation (every
+    // beat targets the same address instead of incrementing); a
+    // single-beat (len==0) transaction -- as AXI4 exclusive-access reads
+    // for LR/SC typically are -- is address-computation-identical to
+    // INCR either way, so only reject FIXED/WRAP when it would actually
+    // change per-beat addressing.
     uint8_t burst = pins_.axiMasterGetArBurst();
-    panic_if(burst != static_cast<uint8_t>(AxiBurst::Incr),
-             "Axi4MasterEngine: ARBURST=%d (FIXED/WRAP) requested, but "
-             "only INCR is supported -- Backend::issueRead() models a "
-             "single linear gem5 memory access per burst, not per-beat "
-             "addressing.", burst);
+    panic_if(len > 0 && burst != static_cast<uint8_t>(AxiBurst::Incr),
+             "Axi4MasterEngine: ARBURST=%d (FIXED/WRAP) requested for a "
+             "%u-beat burst, but only INCR is supported for multi-beat "
+             "bursts -- Backend::issueRead() models a single linear gem5 "
+             "memory access per burst, not per-beat addressing.", burst,
+             len + 1);
 
     uint64_t seq = nextSeq_++;
     ReadXact x;
@@ -122,12 +129,15 @@ Axi4MasterEngine::sampleAwAndW()
         unsigned len = pins_.axiMasterGetAwLen();
         unsigned size = 1u << pins_.axiMasterGetAwSize();
 
+        // See the matching ARBURST comment in sampleAr(): a single-beat
+        // burst is address-computation-identical under FIXED or INCR.
         uint8_t burst = pins_.axiMasterGetAwBurst();
-        panic_if(burst != static_cast<uint8_t>(AxiBurst::Incr),
-                 "Axi4MasterEngine: AWBURST=%d (FIXED/WRAP) requested, but "
-                 "only INCR is supported -- Backend::issueWrite() models a "
-                 "single linear gem5 memory access per burst, not per-beat "
-                 "addressing.", burst);
+        panic_if(len > 0 && burst != static_cast<uint8_t>(AxiBurst::Incr),
+                 "Axi4MasterEngine: AWBURST=%d (FIXED/WRAP) requested for a "
+                 "%u-beat burst, but only INCR is supported for multi-beat "
+                 "bursts -- Backend::issueWrite() models a single linear "
+                 "gem5 memory access per burst, not per-beat addressing.",
+                 burst, len + 1);
 
         uint64_t seq = nextSeq_++;
         WriteXact x;
