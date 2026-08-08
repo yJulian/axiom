@@ -155,7 +155,21 @@ RTLBaseCpu::tick()
 
     bool sharedPins = &dataAxiPins() == &instAxiPins();
     instPort_.tick(/*driveClock=*/true);
-    dataPort_.tick(/*driveClock=*/!sharedPins);
+    // When the pins are shared (one unified AXI4 master port), dataPort_
+    // must not tick its own engine at all -- not even with driveClock
+    // false. Axi4MasterEngine::tick() unconditionally runs
+    // sampleAr()/sampleAwAndW()/driveR()/driveB() regardless of
+    // driveClock (that parameter only gates the clk_i toggle); two
+    // independent engines both sampling/driving the *same* physical AXI
+    // channel every cycle race each other for the same transactions --
+    // both accept the same AR, both issue their own Backend::issueRead(),
+    // and whichever engine's driveR() runs last silently overwrites the
+    // other's R data on the shared pins. Only instPort_'s engine may
+    // touch the pins in the shared case; dataPort_ stays a live gem5
+    // RequestPort (still usable for icache_port/dcache_port wiring) but
+    // simply never issues anything.
+    if (!sharedPins)
+        dataPort_.tick(/*driveClock=*/true);
     postTick();
 
     schedule(tickEvent, clockEdge(Cycles(1)));

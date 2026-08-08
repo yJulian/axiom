@@ -44,9 +44,15 @@ class RTLBaseCpu : public BaseCPU
      * A RequestPort fronting one Axi4MasterEngine. Two instances exist
      * (inst, data); if a leaf's instAxiPins()/dataAxiPins() happen to
      * return the same underlying pin set (a core with one unified AXI4
-     * master port), RTLBaseCpu::tick() ticks the data port's engine with
-     * driveClock=false so the shared model's registers don't advance
-     * twice in one cycle -- see Axi4MasterEngine::tick()'s doc comment.
+     * master port), RTLBaseCpu::tick() only ticks instPort_'s engine at
+     * all -- dataPort_.tick() is skipped entirely in that case, not just
+     * clock-suppressed, since Axi4MasterEngine::tick() unconditionally
+     * samples/drives the AR/AW/W/R/B channels regardless of its
+     * driveClock argument (that parameter only gates the clk_i toggle).
+     * Two independent engines both sampling/driving the *same* physical
+     * AXI channel every cycle would race each other for the same
+     * transactions. dataPort_ stays a live, connectable gem5 RequestPort
+     * in the shared case; it simply never issues anything.
      */
     class RtlCorePort : public RequestPort, private axion::Axi4MasterEngine::Backend
     {
