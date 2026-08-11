@@ -4,6 +4,9 @@ examples/**/obj_dir_tb/
 examples/**/*.vcd
 examples/**/*.fst
 
+# RISC-V test binaries (compiled with an external toolchain, not checked in)
+examples/**/riscv_test/*.elf
+
 # Plugin path build output (plugin/rtl_plugin.mk)
 examples/**/obj_dir_plugin/
 examples/**/*.so

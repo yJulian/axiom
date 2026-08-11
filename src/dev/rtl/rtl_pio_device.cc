@@ -46,7 +46,11 @@ RTLPioDevice::getPort(const std::string &if_name, PortID idx)
 void
 RTLPioDevice::init()
 {
-    PioDevice::init();
+    // Deliberately not calling PioDevice::init(): it checks its own
+    // pioPort member, which getPort("pio") above never binds to (rtlPio is
+    // bound instead) -- calling it would panic on every config, connected
+    // or not. Do the equivalent check/range-change against the port that
+    // actually gets used.
     panic_if(!rtlPio.isConnected(),
              "Pio port of %s not connected to anything!", name());
     rtlPio.sendRangeChange();

@@ -49,7 +49,14 @@ RTLDmaDevice::getPort(const std::string &if_name, PortID idx)
 void
 RTLDmaDevice::init()
 {
-    DmaDevice::init();
+    // Deliberately not calling DmaDevice::init(): it transitively calls
+    // PioDevice::init(), which checks its own pioPort member -- but
+    // getPort("pio") above never binds to that, rtlPio is bound instead,
+    // so PioDevice::init() would panic on every config, connected or not.
+    // Do the equivalent checks/range-change against the ports that
+    // actually get used (dmaPort is DmaDevice's own, still valid to check
+    // directly; it's just DmaDevice::init()'s call into PioDevice::init()
+    // that's the problem).
     panic_if(!rtlPio.isConnected(),
              "Pio port of %s not connected to anything!", name());
     panic_if(!dmaPort.isConnected(),
