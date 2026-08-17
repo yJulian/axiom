@@ -8,10 +8,11 @@ DmaMemcopyAccel with NUM_CH concurrent copy channels) in SE
 exercising it end-to-end needs a compiled RISC-V binary driving the
 accelerator's control/status registers (see DMA_BASE below) via
 --binary; this sandbox has no RISC-V cross-toolchain to produce one. See
-examples/dma_memcopy_accel/tb_dma_memcopy.cc for a standalone Verilator
-testbench that exercises the same DUT's control port *and* its DMA
-master port -- including out-of-order completion across concurrent
-channels -- directly, without needing gem5 or a compiled workload.
+examples/dma_memcopy_accel/cocotb/test_dma_memcopy.py (run via
+`make tb-dma` at the repo root) for a standalone cocotb testbench that
+exercises the same DUT's control port *and* its DMA master port --
+concurrent channels tagged by distinct AXI IDs -- directly, without
+needing gem5 or a compiled workload.
 
 Usage:
     <gem5.opt> run_dma_memcopy.py --binary <path/to/riscv/elf>

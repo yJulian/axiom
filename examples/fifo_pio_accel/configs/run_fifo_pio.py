@@ -7,9 +7,10 @@ is the integration wiring only -- exercising it end-to-end needs a
 compiled RISC-V binary performing loads/stores against the accelerator's
 MMIO range (see FIFO_BASE below) via --binary; this sandbox has no
 RISC-V cross-toolchain to produce one. See
-examples/fifo_pio_accel/tb_fifo_pio.cc for a standalone Verilator
-testbench that exercises the same DUT's AXI4 protocol directly, without
-needing gem5 or a compiled workload.
+examples/fifo_pio_accel/cocotb/test_fifo_pio.py (run via `make tb` at the
+repo root) for a standalone cocotb testbench that exercises the same
+DUT's AXI4 protocol directly, without needing gem5 or a compiled
+workload.
 
 Usage:
     <gem5.opt> run_fifo_pio.py --binary <path/to/riscv/elf>

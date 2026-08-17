@@ -2,6 +2,9 @@
 # into a standalone static library + generated headers under obj_dir/,
 # linked directly into gem5 (no dlopen) via this example's SConscript.
 # Run this before `make gem5` at the repo root.
+#
+# Standalone (no-gem5) verification of this DUT lives in cocotb/ (cocotb +
+# cocotbext-axi -- see cocotb/Makefile and the repo root's `make tb`).
 
 VERILATOR  ?= verilator
 TOP_MODULE  = fifo_pio_top
@@ -25,30 +28,12 @@ VERILATOR_FLAGS = \
 
 LIB = $(OBJ_DIR)/V$(TOP_MODULE)__ALL.a
 
-TB_OBJ_DIR = obj_dir_tb
-TB_EXE     = $(TB_OBJ_DIR)/tb_fifo_pio
-
-.PHONY: all tb run-tb clean
+.PHONY: all clean
 
 all: $(LIB)
 
 $(LIB): $(SOURCES)
 	$(VERILATOR) $(VERILATOR_FLAGS) $(SOURCES)
 
-# Standalone testbench (tb_fifo_pio.cc): drives the DUT's AXI4 pins
-# directly, independent of gem5 -- see that file's header comment.
-tb: $(TB_EXE)
-
-$(TB_EXE): $(SOURCES) tb_fifo_pio.cc
-	$(VERILATOR) --cc --build -j 0 --top-module $(TOP_MODULE) \
-		--exe -o tb_fifo_pio \
-		-Wno-fatal -Wno-DECLFILENAME -Wno-UNUSEDSIGNAL \
-		-CFLAGS "-fPIC -std=c++17" \
-		-Mdir $(TB_OBJ_DIR) \
-		$(SOURCES) tb_fifo_pio.cc
-
-run-tb: tb
-	$(TB_EXE)
-
 clean:
-	rm -rf $(OBJ_DIR) $(TB_OBJ_DIR)
+	rm -rf $(OBJ_DIR)

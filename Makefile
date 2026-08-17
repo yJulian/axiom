@@ -15,23 +15,26 @@ GEM5_BUILD := build/RISCV/gem5.opt
 JOBS       ?= $(shell nproc)
 
 .PHONY: submodules verilate verilate-dma gem5 run-fifo-example \
-        run-dma-example tb tb-dma clean help verilate-plugin tb-plugin
+        run-dma-example tb tb-dma clean help verilate-plugin tb-plugin \
+        cocotb-env
 
 help:
 	@echo "Targets: submodules verilate verilate-dma gem5 run-fifo-example"
 	@echo "         run-dma-example tb tb-dma clean verilate-plugin tb-plugin"
+	@echo "         cocotb-env"
 	@echo "  make submodules            # git submodule update --init ext/gem5"
 	@echo "  make verilate              # build examples/fifo_pio_accel's RTL"
 	@echo "  make verilate-dma          # build examples/dma_memcopy_accel's RTL"
 	@echo "  make gem5                  # mirror src/ into gem5 + scons build"
 	@echo "                             #   (includes both examples once verilated)"
-	@echo "  make tb                    # standalone FIFO/PIO AXI4 testbench"
-	@echo "  make tb-dma                # standalone DMA memcopy AXI4 testbench"
+	@echo "  make tb                    # cocotb FIFO/PIO AXI4 testbench, no gem5 needed"
+	@echo "  make tb-dma                # cocotb DMA memcopy AXI4 testbench, no gem5 needed"
 	@echo "  make run-fifo-example ARGS='--binary <elf>'"
 	@echo "  make run-dma-example ARGS='--binary <elf>'"
 	@echo "  make verilate-plugin       # build the FIFO DUT as a plugin .so"
 	@echo "                             #   (opt-in dlopen path, see plugin/)"
 	@echo "  make tb-plugin             # standalone plugin-ABI testbench"
+	@echo "  make cocotb-env            # create .venv/ + install cocotb deps"
 	@echo "  make clean                 # remove RTL build artifacts + mirrors"
 
 submodules:
@@ -42,12 +45,6 @@ verilate:
 
 verilate-dma:
 	$(MAKE) -C examples/dma_memcopy_accel
-
-tb:
-	$(MAKE) -C examples/fifo_pio_accel run-tb
-
-tb-dma:
-	$(MAKE) -C examples/dma_memcopy_accel run-tb
 
 gem5: verilate verilate-dma
 	scripts/build_gem5.sh
@@ -69,8 +66,24 @@ verilate-plugin:
 tb-plugin:
 	$(MAKE) -C examples/fifo_pio_accel_plugin run-tb
 
+# Standalone (no-gem5) AXI4 protocol testbenches, cocotb + cocotbext-axi
+# (examples/*/cocotb/), independent of both gem5 and each other. Needs the
+# venv from `make cocotb-env` (see scripts/setup_cocotb_env.sh) on PATH.
+VENV_BIN := .venv/bin
+
+cocotb-env:
+	scripts/setup_cocotb_env.sh
+
+tb: cocotb-env
+	PATH="$(abspath $(VENV_BIN)):$$PATH" $(MAKE) -C examples/fifo_pio_accel/cocotb
+
+tb-dma: cocotb-env
+	PATH="$(abspath $(VENV_BIN)):$$PATH" $(MAKE) -C examples/dma_memcopy_accel/cocotb
+
 clean:
 	$(MAKE) -C examples/fifo_pio_accel clean
 	$(MAKE) -C examples/dma_memcopy_accel clean
 	$(MAKE) -C examples/fifo_pio_accel_plugin clean
+	rm -rf examples/fifo_pio_accel/cocotb/sim_build examples/fifo_pio_accel/cocotb/results.xml
+	rm -rf examples/dma_memcopy_accel/cocotb/sim_build examples/dma_memcopy_accel/cocotb/results.xml
 	rm -rf $(GEM5_DIR)/src/axi $(GEM5_DIR)/src/cpu/rtl $(GEM5_DIR)/src/dev/rtl $(GEM5_DIR)/src/examples

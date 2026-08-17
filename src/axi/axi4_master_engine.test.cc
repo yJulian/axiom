@@ -10,8 +10,12 @@
  * per-ID-in-order/cross-ID-out-of-order selection rule described in this
  * engine's header comment -- which every other test here leaves untouched
  * (single outstanding transaction at a time). See also
- * examples/dma_memcopy_accel/tb_dma_memcopy.cc for the same property
- * proven against real Verilated RTL instead of these mocks.
+ * examples/dma_memcopy_accel/cocotb/test_dma_memcopy.py, which proves
+ * three concurrent channels (distinct AXI IDs) against real Verilated RTL
+ * instead of these mocks -- though its AxiRam responder completes
+ * requests in arrival order, so explicit *out-of-order* completion
+ * against real RTL (as opposed to concurrent-outstanding correctness) is
+ * only covered here, against the mocks below.
  */
 
 #include <gtest/gtest.h>

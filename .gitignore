@@ -1,6 +1,5 @@
 # Verilator build output
 examples/**/obj_dir/
-examples/**/obj_dir_tb/
 examples/**/*.vcd
 examples/**/*.fst
 
@@ -24,3 +23,10 @@ ext/gem5/src/examples/
 
 # gem5 run output
 m5out/
+
+# cocotb testbenches (examples/*/cocotb/): Python venv + Verilator/cocotb
+# build & result output (scripts/setup_cocotb_env.sh, requirements-cocotb.txt)
+.venv/
+examples/**/cocotb/sim_build/
+examples/**/cocotb/results.xml
+examples/**/cocotb/__pycache__/
