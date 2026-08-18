@@ -23,3 +23,11 @@ class RTLDmaDevice(DmaDevice):
         "AXI4 handshake latency (models device-side bus overhead)",
     )
     reset_cycles = Param.Unsigned(10, "Cycles to hold rst_n low at startup")
+    idle_gate_cycles = Param.Unsigned(
+        16,
+        "Consecutive cycles the RTL must report isIdle() with no pending "
+        "PIO/DMA work before the clock is gated (stops ticking until the "
+        "next PIO request or DMA completion); 0 disables gating. No "
+        "effect on a leaf that doesn't override isIdle() (default: never "
+        "idle).",
+    )

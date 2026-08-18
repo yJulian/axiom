@@ -13,6 +13,7 @@ RTLDmaDevice::RTLDmaDevice(const Params &p)
       pioSize(p.pio_size),
       pioDelay(p.pio_latency),
       resetCycles(p.reset_cycles),
+      idleGateCycles(p.idle_gate_cycles),
       rtlPio(name() + ".pio", *this),
       slaveEngine(*this),
       masterEngine(*this, *this),
@@ -49,7 +50,14 @@ RTLDmaDevice::getPort(const std::string &if_name, PortID idx)
 void
 RTLDmaDevice::init()
 {
-    DmaDevice::init();
+    // Deliberately not calling DmaDevice::init(): it transitively calls
+    // PioDevice::init(), which checks its own pioPort member -- but
+    // getPort("pio") above never binds to that, rtlPio is bound instead,
+    // so PioDevice::init() would panic on every config, connected or not.
+    // Do the equivalent checks/range-change against the ports that
+    // actually get used (dmaPort is DmaDevice's own, still valid to check
+    // directly; it's just DmaDevice::init()'s call into PioDevice::init()
+    // that's the problem).
     panic_if(!rtlPio.isConnected(),
              "Pio port of %s not connected to anything!", name());
     panic_if(!dmaPort.isConnected(),
@@ -88,6 +96,7 @@ RTLDmaDevice::RtlPioPort::recvAtomic(PacketPtr pkt)
 void
 RTLDmaDevice::wakeUp()
 {
+    idleCycles = 0;
     if (!tickEvent.scheduled())
         schedule(tickEvent, clockEdge(Cycles(1)));
 }
@@ -165,7 +174,32 @@ RTLDmaDevice::tick()
 
     pioStart();
     slaveEngine.tick();
-    masterEngine.tick();
+    // slaveEngine.tick() already toggled the shared Verilated model's one
+    // clk pin for this cycle (see its own tick()'s clk 0->1->0 sequence);
+    // masterEngine shares the same underlying model, so it must NOT toggle
+    // the clock a second time here, or the RTL's registers advance twice
+    // per device cycle -- silently skipping every single-cycle handshake
+    // window (e.g. an AXI4-Lite register slave's one-cycle AWREADY/ARREADY
+    // pulse), which looks like a permanent protocol deadlock from the
+    // gem5 side. See Axi4MasterEngine::tick()'s driveClock docstring.
+    masterEngine.tick(false);
+
+    // Idle clock gating: once the device has been quiescent (nothing
+    // queued, no PIO/DMA transaction in flight, and the leaf reports the
+    // RTL itself idle) for idleGateCycles consecutive cycles, stop the
+    // clock; wakeUp() restarts it on the next PIO request or DMA
+    // completion. Gating preserves all RTL state, so skipping cycles in a
+    // stable quiescent state is behaviorally invisible; the hysteresis
+    // covers the internal kick-off latency between a register write and
+    // the RTL's busy indication actually rising.
+    if (pioQueue.empty() && !slaveEngine.busy() && masterEngine.idle() &&
+        isIdle()) {
+        idleCycles++;
+        if (idleGateCycles > 0 && idleCycles >= idleGateCycles)
+            return;
+    } else {
+        idleCycles = 0;
+    }
 
     schedule(tickEvent, clockEdge(Cycles(1)));
 }

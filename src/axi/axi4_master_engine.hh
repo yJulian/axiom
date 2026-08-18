@@ -62,6 +62,21 @@ class Axi4MasterEngine
      */
     void tick(bool driveClock = true);
 
+    /**
+     * True when there is no outstanding read or write this engine is still
+     * tracking (issued-but-not-yet-completed, or completed-but-not-yet-
+     * drained off the R/B channel). Used by RTLDmaDevice's idle clock
+     * gating: this alone doesn't mean the DUT itself is idle (it may be
+     * computing autonomously with no AXI traffic in flight -- see
+     * RTLDmaDevice::isIdle()), only that this engine has nothing left to
+     * service.
+     */
+    bool
+    idle() const
+    {
+        return reads_.empty() && writes_.empty();
+    }
+
   private:
     // AxLOCK/AxCACHE/AxPROT/AxQOS/AxREGION sampled off the DUT-driven address
     // channel for pin-accuracy. Nothing downstream consumes them yet --
