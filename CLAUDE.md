@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **AXION** is a gem5 extension that bridges gem5's event-driven `SimObject`s to RTL
 blocks simulated by Verilator, over a genuine, pin-level AXI4 (5 channels, ID-tagged,
-same-ID-in-order / cross-ID-out-of-order). Three C++ classes give a real,
+same-ID-in-order / cross-ID-out-of-order). Four C++ classes give a real,
 API-accurate inheritance hierarchy onto gem5's own class tree:
 
 - `RTLBaseCpu : BaseCPU` (`src/cpu/rtl/`)
@@ -14,14 +14,18 @@ API-accurate inheritance hierarchy onto gem5's own class tree:
 - `RTLDmaDevice : DmaDevice` (`src/dev/rtl/`) -- gem5's own `DmaDevice` already
   extends `PioDevice`, so `RTLDmaDevice` is transitively a `PioDevice` too; no
   multiple inheritance from `RTLPioDevice` is needed or used.
+- `RTLPciDevice : PciEndpoint` (`src/dev/rtl/`) -- a PCIe endpoint, where gem5 owns
+  config space/BARs/INTx and the RTL sees only AXI4, the same split a PCIe hard IP
+  block and its user logic have on real hardware. See "The PCIe path" below.
 
-All three are abstract: they define the AXI4 pin-accessor contract
+All four are abstract: they define the AXI4 pin-accessor contract
 (`axion::Axi4SlavePins` / `axion::Axi4MasterPins`, `src/axi/axi4_types.hh`) and the
 protocol/timing engines that drive it (`Axi4SlaveEngine`, `Axi4MasterEngine`,
 `src/axi/`), but a concrete leaf `SimObject` must implement the pin accessors against
-a specific Verilator-generated top module (see `examples/fifo_pio_accel/` for the one
-worked example). RTL is linked directly (no `dlopen`/abstract-backend indirection) --
-that's a deliberate simplification versus prior art on this machine, not an oversight.
+a specific Verilator-generated top module (see `examples/fifo_pio_accel/` for the
+simplest worked example, and `examples/pcie_template_accel/` for the PCIe one). RTL is
+linked directly (no `dlopen`/abstract-backend indirection) -- that's a deliberate
+simplification versus prior art on this machine, not an oversight.
 A second, additive, opt-in path now also exists for cases that want a new RTL model
 without writing that leaf class at all -- see "The plugin path" under Architecture below
 (`RTLPioDevicePlugin` / `RTLDmaDevicePlugin`, `src/axi/axi4_plugin_abi.h`) -- but it does
@@ -75,7 +79,10 @@ make gem5                     # re-mirror (now including the verilated .a) + sco
                                #   inside the submodule -- same convention gem5_cva6 uses)
 make tb                       # cocotb AXI4 testbench (FIFO/PIO), no gem5 needed (see below)
 make tb-dma                   # cocotb AXI4 testbench (DMA memcopy), no gem5 needed
+make tb-pcie                  # cocotb testbench (PCIe template endpoint), no gem5 needed
 make run-fifo-example ARGS='--binary <path/to/riscv/elf>'
+make run-pcie-example         # bare-metal PCIe end-to-end test (builds its own guest
+                               #   ELF; needs no disk image, see "The PCIe path")
 make verilate-plugin          # build the FIFO DUT as a .so via plugin/rtl_plugin.mk
                                #   (opt-in dlopen path, see Architecture below)
 make tb-plugin                # standalone plugin-ABI testbench, no gem5 needed
@@ -215,6 +222,70 @@ feasible without losing any of the per-pin fidelity the direct-link path has.
 - See `examples/fifo_pio_accel_plugin/` for the worked example (the same
   `fifo_pio_accel` DUT, built through this path instead) and "Verifying the plugin path
   without gem5" above for its standalone testbench.
+
+### The PCIe path (`RTLPciDevice`, `examples/pcie_template_accel/`)
+
+A fourth abstract base alongside `RTLPioDevice`/`RTLDmaDevice`/`RTLBaseCpu`:
+`RTLPciDevice : PciEndpoint` (`src/dev/rtl/rtl_pci_device.{hh,cc}`). The split it
+implements is the one real FPGA designs have -- gem5 plays the **PCIe hard IP block**
+(Xilinx PCIe-to-AXI Bridge / XDMA and friends), owning config space, BAR decode and INTx;
+the RTL is the **user logic behind it** and sees only ordinary AXI4 plus an interrupt pin.
+Nothing in `hw/axi4/` or in the DUT knows PCIe exists, which is exactly the point.
+
+- **BAR-relative addressing.** `pioStart()` runs the guest-visible address through
+  `PciDevice::getBAR()` and drives the resulting *offset* onto AWADDR/ARADDR, via a
+  second `Axi4SlaveEngine::issue()` overload taking an explicit address. So the DUT's
+  register map is a fixed set of offsets no matter where enumeration maps BAR0.
+- **DMA** goes through the same `Axi4MasterEngine`, with addresses translated by
+  `pciToDma()` before reaching gem5's memory system.
+- **Interrupts**: a leaf implements `rtlGetIrq()`; the tick loop samples it and turns
+  *edges* into `intrPost()`/`intrClear()`. Note that on RISC-V the PLIC source is derived
+  from the device's **slot**, not from its `InterruptLine` param --
+  `GenericRiscvPciHost::mapPciInterrupt()` returns `int_base + (pci_dev % int_count)`,
+  i.e. `0x10 + pci_dev` under HiFive's defaults. Getting this wrong looks like "the
+  interrupt never arrives".
+- **The range-forwarder.** The one genuinely non-obvious piece. gem5's own config-space
+  code calls `pioPort.sendRangeChange()` *directly* at seven places in
+  `ext/gem5/src/dev/pci/device.cc` -- on every BAR write and every COMMAND write, which
+  is how a BAR window becomes visible on the bus at all. But like the other RTL bases,
+  `getPort("pio")` hands out `rtlPio` and leaves the inherited `pioPort` unbound, and
+  `ResponsePort::sendRangeChange()` dereferences its peer unconditionally. Rather than
+  reimplementing (and forever re-syncing) gem5's BAR-decode logic just to redirect those
+  calls, `init()` binds `pioPort` to a `RangeForwardPort` stub whose only behavior is
+  `recvRangeChange() -> rtlPio.sendRangeChange()`. No packet ever traverses it. With that
+  in place `PioDevice::init()` is not merely safe but correct, so unlike
+  `RTLPioDevice`/`RTLDmaDevice` this class *does* call up to its parent's `init()`.
+
+`hw/axi4/` is reused verbatim -- a PCIe example needs no new SystemVerilog building
+blocks. The worked example (`examples/pcie_template_accel/`) is a deliberately minimal
+"does it work at all" endpoint: an ID/VERSION/SCRATCH/COUNTER register block, a 4 KiB
+scratchpad RAM for multi-beat bursts and byte strobes, a single-channel bus-master DMA
+engine (read ID 0, write ID 1), and an interrupt source. Its register file sits on an
+**8-byte stride** on purpose: `Axi4SlaveEngine` is LSB-aligned while a strict AXI4
+requester (cocotb's `AxiMaster`, real hardware) is byte-lane-aligned, and the two
+conventions only agree when every access starts at a beat boundary -- see
+`pcie_template_accel.sv`'s header comment. `fifo_pio_accel.sv` and `dma_memcopy.sv`
+sidestep the same issue the same way.
+
+Three ways to run it, in increasing cost:
+
+- `make tb-pcie` -- cocotb, no gem5. Registers, burst + strobes, DMA against an `AxiRam`,
+  interrupt assert/ack.
+- `make run-pcie-example` -- **the actual proof**. Bare-metal RISC-V on the HiFive
+  platform: the guest enumerates the endpoint over ECAM, programs BAR0, enables memory
+  space, drives the RTL, has it bus-master a DMA inside DRAM, and reads the resulting
+  INTx back out of the PLIC's pending register. Full system (a PCI device has no fixed
+  address to `Process.map()`, so SE mode cannot work) but with `RiscvBareMetal` -- no
+  kernel, no disk image, nothing to download. The guest ELF is built here by
+  `riscv_test/Makefile` with the host's `riscv64-linux-gnu-gcc`; `-static -no-pie` is
+  load-bearing (without it the dynamic sections displace `.tohost` from the address the
+  config script polls).
+- `make run-pcie-linux-example ARGS='--disk-image <img>'` -- boots Ubuntu on `RiscvBoard`
+  and lets **Linux** enumerate and assign the BAR; the guest program just mmap()s
+  `/sys/bus/pci/devices/0000:00:01.0/resource0`. Needs the multi-GiB Ubuntu image, which
+  is not fetched by default. Note a PCIe endpoint needs no device-tree node of its own --
+  which sidesteps the trap the MMIO example hits, where
+  `RiscvBoard.generate_device_tree()` ignores per-device `generateDeviceTree()` entirely.
 
 ### RTLBaseCpu scope note
 

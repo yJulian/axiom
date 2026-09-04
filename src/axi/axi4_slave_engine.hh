@@ -40,6 +40,17 @@ class Axi4SlaveEngine
      */
     bool issue(PacketPtr pkt, const std::function<void()> &onDone);
 
+    /**
+     * As above, but drives `axiAddr` onto AWADDR/ARADDR instead of the
+     * packet's own address. RTLPciDevice uses this to hand the DUT a
+     * BAR-relative offset, so the RTL sees the same fixed offsets it
+     * would behind a real PCIe hard IP block rather than wherever the
+     * guest's enumeration happened to map the BAR. Only the address
+     * driven on the wire differs; the packet still carries the data.
+     */
+    bool issue(PacketPtr pkt, Addr axiAddr,
+               const std::function<void()> &onDone);
+
     bool busy() const { return state_ != State::Idle; }
 
     /** Advance the state machine by exactly one clock cycle. */
