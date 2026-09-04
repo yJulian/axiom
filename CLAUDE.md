@@ -73,11 +73,13 @@ make gem5                     # re-mirror (now including the verilated .a) + sco
                                #   -> build/RISCV/gem5.opt at the repo root (scons -C
                                #   ext/gem5 places build/ at the invocation dir, not
                                #   inside the submodule -- same convention gem5_cva6 uses)
-make tb                       # standalone AXI4 testbench, no gem5 needed (see below)
+make tb                       # cocotb AXI4 testbench (FIFO/PIO), no gem5 needed (see below)
+make tb-dma                   # cocotb AXI4 testbench (DMA memcopy), no gem5 needed
 make run-fifo-example ARGS='--binary <path/to/riscv/elf>'
 make verilate-plugin          # build the FIFO DUT as a .so via plugin/rtl_plugin.mk
                                #   (opt-in dlopen path, see Architecture below)
 make tb-plugin                # standalone plugin-ABI testbench, no gem5 needed
+make cocotb-env               # create .venv/ + install cocotb/cocotbext-axi
 make clean                    # remove RTL build artifacts + the src mirrors
 ```
 
@@ -92,10 +94,26 @@ re-runs the mirror itself, so once verilated, `make gem5` alone is always safe.
 it needs a compiled RISC-V SE-mode binary that performs loads/stores against the
 accelerator's MMIO range -- this environment has no RISC-V cross-toolchain to produce
 one. For genuine, fully-automated verification of the RTL + AXI4 protocol logic itself,
-independent of gem5, use `make tb`: `examples/fifo_pio_accel/tb_fifo_pio.cc` drives
-`fifo_pio_top`'s AXI4 slave pins directly (full AW/W/B write burst, AR/R read burst,
-including distinct AWID/ARID values to exercise the ID field), pushes a value into the
-FIFO and pops it back, and asserts it round-trips.
+independent of gem5, use `make tb`: `examples/fifo_pio_accel/cocotb/test_fifo_pio.py`
+(cocotb + [cocotbext-axi](https://github.com/alexforencich/cocotbext-axi)'s `AxiMaster`,
+Verilator underneath) drives `fifo_pio_top`'s AXI4 slave pins directly (full AW/W/B
+write burst, AR/R read burst, including distinct AWID/ARID values to exercise the ID
+field), pushes a value into the FIFO and pops it back, and asserts it round-trips.
+`make tb-dma` is the DMA-memcopy analog (`examples/dma_memcopy_accel/cocotb/test_dma_memcopy.py`):
+drives the control/status port the same way, and plays gem5's role on the DMA AXI4
+master port with an `AxiRam` memory model -- three channels started concurrently, each
+tagged by its own channel index as AXI ID, prove the RTL demuxes R/B responses back to
+the right channel by ID (see `dma_memcopy.sv`'s header comment). Note: `AxiRam` services
+requests in arrival order, so this proves concurrent-outstanding-by-ID correctness
+against real RTL, not literal out-of-order completion -- that half is covered only by
+the mocked `CrossId*CompleteOutOfOrder*` gtests in `src/axi/axi4_master_engine.test.cc`.
+
+Both `make tb`/`make tb-dma` need the venv from `make cocotb-env`
+(`scripts/setup_cocotb_env.sh` -- creates `.venv/`, installs `requirements-cocotb.txt`:
+`cocotb`, `cocotbext-axi`, never system-wide) and create it themselves if missing. Each
+`examples/*/cocotb/` directory has its own `Makefile` (cocotb's own `Makefile.verilator`,
+same `VERILOG_SOURCES`/`-Wno-*` pattern as the RTL-only `Makefile` one level up that
+`make verilate`/`verilate-dma` use).
 
 ### Verifying the plugin path without gem5
 
@@ -104,7 +122,7 @@ into a `.so` via `plugin/rtl_plugin.mk` instead of linking it into `gem5.opt`, t
 `examples/fifo_pio_accel_plugin/tb_fifo_pio_plugin.cc`, which `dlopen`s that `.so` and
 drives it purely through `src/axi/axi4_plugin_abi.h` -- no `Vfifo_pio_top.h`, no
 Verilator headers at all, no compile-time knowledge of the DUT. It performs the same
-push/pop round-trip as `tb_fifo_pio.cc`; this is the concrete proof the plugin ABI is
+push/pop round-trip as `test_fifo_pio.py`; this is the concrete proof the plugin ABI is
 usable generically, not just in theory.
 
 ## Architecture

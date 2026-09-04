@@ -13,3 +13,10 @@ class FifoPioAccel(RTLPioDevice):
     cxx_class = "gem5::FifoPioAccel"
 
     pio_size = 0x1000
+
+    def generateDeviceTree(self, state):
+        node = self.generateBasicPioDeviceNode(
+            state, "fifo_pio_accel", self.pio_addr, self.pio_size
+        )
+        node.appendCompatible(["axion,fifo-pio-accel"])
+        yield node

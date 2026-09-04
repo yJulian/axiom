@@ -1,0 +1,5 @@
+# Python deps for the cocotb-based testbenches under examples/*/cocotb/.
+# Install into a venv via `scripts/setup_cocotb_env.sh` (creates .venv/) --
+# do not install these system-wide.
+cocotb==2.0.1
+cocotbext-axi==0.1.28

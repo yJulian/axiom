@@ -7,9 +7,10 @@ is the integration wiring only -- exercising it end-to-end needs a
 compiled RISC-V binary performing loads/stores against the accelerator's
 MMIO range (see FIFO_BASE below) via --binary; this sandbox has no
 RISC-V cross-toolchain to produce one. See
-examples/fifo_pio_accel/tb_fifo_pio.cc for a standalone Verilator
-testbench that exercises the same DUT's AXI4 protocol directly, without
-needing gem5 or a compiled workload.
+examples/fifo_pio_accel/cocotb/test_fifo_pio.py (run via `make tb` at the
+repo root) for a standalone cocotb testbench that exercises the same
+DUT's AXI4 protocol directly, without needing gem5 or a compiled
+workload.
 
 Usage:
     <gem5.opt> run_fifo_pio.py --binary <path/to/riscv/elf>
@@ -44,7 +45,11 @@ system.clk_domain.clock = "1GHz"
 system.clk_domain.voltage_domain = VoltageDomain()
 
 system.mem_mode = "timing"
-system.mem_ranges = [AddrRange("512MB")]
+# Must stay below FIFO_BASE (0x10010000): SystemXBar routes by address
+# range, and a 512MB DRAM range [0, 0x20000000) would overlap the
+# accelerator's PIO window sitting inside it -- caught at m5.instantiate()
+# time ("system.membus has two ports responding within range ...").
+system.mem_ranges = [AddrRange("256MB")]
 
 system.cpu = RiscvTimingSimpleCPU()
 system.membus = SystemXBar()
@@ -72,6 +77,16 @@ system.workload = SEWorkload.init_compatible(args.binary)
 
 root = Root(full_system=False, system=system)
 m5.instantiate()
+
+# SE mode gives the process a normal demand-paged virtual address space --
+# raw physical MMIO addresses like FIFO_BASE are NOT reachable by just
+# writing to them (GenericPageTableFault: Process::fixupFault() only knows
+# how to grow the stack/heap, not map arbitrary device ranges). Identity-map
+# the accelerator's PIO window into the process's own page table so its
+# loads/stores against FIFO_BASE actually reach system.fifo instead of
+# faulting. Must happen after m5.instantiate() -- Process.map() is a
+# @cxxMethod, only callable once the underlying C++ object exists.
+system.cpu.workload[0].map(FIFO_BASE, FIFO_BASE, 0x1000)
 
 print("Beginning simulation, FIFO/PIO accelerator at 0x%x" % FIFO_BASE)
 exit_event = m5.simulate()

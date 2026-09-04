@@ -1,8 +1,8 @@
 // tb_fifo_pio_plugin.cc
 //
-// Plugin-path analog of examples/fifo_pio_accel/tb_fifo_pio.cc: exercises
-// the exact same AXI4 slave protocol (AW/W/B write, AR/R read) and the
-// exact same push/pop round-trip against the exact same DUT
+// Plugin-path analog of examples/fifo_pio_accel/cocotb/test_fifo_pio.py:
+// exercises the exact same AXI4 slave protocol (AW/W/B write, AR/R read)
+// and the exact same push/pop round-trip against the exact same DUT
 // (fifo_pio_accel.sv, wired through fifo_pio_top.sv) -- but drives it
 // purely through the .so built by `make -C examples/fifo_pio_accel_plugin
 // plugin-so` (via plugin/rtl_plugin.mk), dlopen()'d at runtime through
@@ -89,15 +89,16 @@ tick(const Abi &abi, AxionRtlInstance *inst, const AxionAxi4SlaveInputs &in,
     abi.slaveSample(inst, out);
 }
 
-// `in`/`out` persist across calls (mirroring tb_fifo_pio.cc's single
-// persistent `top` object): a *ready pin can legitimately drop the very
-// cycle a request is accepted (the slave going briefly "busy"), so
-// readiness must be checked against the sample from *before* this
-// section starts driving its valid signal, not re-polled after each new
-// edge -- otherwise a legitimately-busy-after-accepting slave looks
-// indistinguishable from "still hasn't accepted" and the wait never ends.
-// The pattern below is exactly tb_fifo_pio.cc's: skip the wait loop if
-// already ready, then always take exactly one committing edge.
+// `in`/`out` persist across calls (a single persistent instance, same
+// idea as the Verilog-side `top` object in other testbenches in this
+// repo): a *ready pin can legitimately drop the very cycle a request is
+// accepted (the slave going briefly "busy"), so readiness must be
+// checked against the sample from *before* this section starts driving
+// its valid signal, not re-polled after each new edge -- otherwise a
+// legitimately-busy-after-accepting slave looks indistinguishable from
+// "still hasn't accepted" and the wait never ends. The pattern below:
+// skip the wait loop if already ready, then always take exactly one
+// committing edge.
 
 // Drives one full single-beat AXI4 write burst (AW -> W -> B).
 void

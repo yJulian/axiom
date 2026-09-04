@@ -60,6 +60,7 @@ class RTLDmaDevice : public DmaDevice,
     Addr pioSize;
     Tick pioDelay;
     unsigned resetCycles;
+    unsigned idleGateCycles;
 
     RtlPioPort rtlPio;
     axion::Axi4SlaveEngine slaveEngine;
@@ -76,10 +77,42 @@ class RTLDmaDevice : public DmaDevice,
     bool resetDone = false;
     unsigned resetCyclesLeft;
 
+    // Consecutive quiescent cycles (see isIdle() below); once it reaches
+    // idleGateCycles the tick loop stops rescheduling itself instead of
+    // ticking the RTL clock every cycle for the rest of the simulation.
+    // wakeUp() resets it and re-arms the tick event.
+    unsigned idleCycles = 0;
+
     void tick();
     void wakeUp();
     void pioStart();
     void driveResetInputs();
+
+    /**
+     * Optional hint from the concrete leaf: true when the RTL model has no
+     * autonomous internal work in flight (e.g. a DMA-engine "busy" output
+     * pin is low) and it is safe to stop ticking until the next external
+     * event (a new PIO request, or a DMA completion) calls wakeUp().
+     *
+     * This is genuinely necessary in addition to "no pending gem5-side
+     * work" (empty pioQueue, slaveEngine/masterEngine both idle): a DUT can
+     * be busy purely internally -- e.g. mid-compute between finishing its
+     * operand DMA reads and starting its result DMA write -- with zero AXI
+     * traffic in flight the whole time. Gating on gem5-side idleness alone
+     * would freeze the clock right there and nothing would ever call
+     * wakeUp() again, since nothing gem5-visible triggers it. Default
+     * false (never idle) preserves today's always-ticking behavior for
+     * leaves that don't override it -- gating is opt-in per leaf, not a
+     * behavior change unless the leaf asks for it.
+     *
+     * Mirrors gem5_cva6's src/accel/accel_interface.hh AccelInterface::
+     * is_idle() / src/accel/rtl_accel.cc RtlAccelerator::phaseAdvance().
+     */
+    virtual bool
+    isIdle()
+    {
+        return false;
+    }
 
     // Axi4MasterEngine::Backend -- issues the actual gem5 DMA operations
     // once the master engine has accepted a full AW/W or AR burst.

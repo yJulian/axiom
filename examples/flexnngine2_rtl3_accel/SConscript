@@ -1,0 +1,38 @@
+# SConscript for the flexnngine2_rtl3_accel worked example. Requires
+# `make -C examples/flexnngine2_rtl3_accel` to have already produced
+# obj_dir/Vflexnngine2_rtl3_axion_top__ALL.a (see that Makefile) --
+# Verilator is not invoked from within the gem5 build itself, matching the
+# pattern used by examples/dma_memcopy_accel's SConscript.
+
+Import('*')
+
+import os
+
+example_dir = Dir('.').srcnode()
+obj_dir = example_dir.Dir('obj_dir')
+lib_path = obj_dir.File('Vflexnngine2_rtl3_axion_top__ALL.a')
+
+verilator_root = os.environ.get(
+    'VERILATOR_ROOT',
+    os.popen('verilator --getenv VERILATOR_ROOT 2>/dev/null').read().strip()
+    or '/usr/share/verilator',
+)
+
+env.Append(CPPPATH=[
+    example_dir,
+    obj_dir,
+    os.path.join(verilator_root, 'include'),
+    os.path.join(verilator_root, 'include', 'vltstd'),
+])
+
+if os.path.exists(str(lib_path)):
+    env.Append(CPPDEFINES=['VM_TRACE=1'])
+    env.Append(LIBS=[lib_path, obj_dir.File('libverilated.a'), 'z'])
+
+    SimObject('Flexnngine2Rtl3Accel.py', sim_objects=['Flexnngine2Rtl3Accel'])
+    Source('flexnngine2_rtl3_device.cc')
+else:
+    print(
+        "[AXION] flexnngine2_rtl3_accel: %s not found -- run "
+        "`make -C examples/flexnngine2_rtl3_accel` before building gem5." % lib_path
+    )

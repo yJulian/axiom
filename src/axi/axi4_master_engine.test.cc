@@ -4,6 +4,18 @@
  * engine's multi-beat read streaming and non-INCR burst guard can only be
  * exercised against a mock Axi4MasterPins + mock Backend, as gem5 gtests
  * (`scons build/RISCV/unittests.opt`).
+ *
+ * CrossId{Reads,Writes}CompleteOutOfOrderSameIdStaysInOrder below are the
+ * ones that actually exercise pickOldestEligibleRead()/Write() -- the
+ * per-ID-in-order/cross-ID-out-of-order selection rule described in this
+ * engine's header comment -- which every other test here leaves untouched
+ * (single outstanding transaction at a time). See also
+ * examples/dma_memcopy_accel/cocotb/test_dma_memcopy.py, which proves
+ * three concurrent channels (distinct AXI IDs) against real Verilated RTL
+ * instead of these mocks -- though its AxiRam responder completes
+ * requests in arrival order, so explicit *out-of-order* completion
+ * against real RTL (as opposed to concurrent-outstanding correctness) is
+ * only covered here, against the mocks below.
  */
 
 #include <gtest/gtest.h>
@@ -106,7 +118,15 @@ class MockBackend : public axion::Axi4MasterEngine::Backend
         unsigned size;
     };
 
+    struct WriteCall
+    {
+        uint64_t seq;
+        Addr addr;
+        unsigned size;
+    };
+
     std::vector<ReadCall> reads;
+    std::vector<WriteCall> writes;
 
     void
     issueRead(uint64_t seq, Addr addr, unsigned size) override
@@ -115,8 +135,11 @@ class MockBackend : public axion::Axi4MasterEngine::Backend
     }
 
     void
-    issueWrite(uint64_t, Addr, unsigned, const uint8_t *) override
-    {}
+    issueWrite(uint64_t seq, Addr addr, unsigned size,
+               const uint8_t *) override
+    {
+        writes.push_back({seq, addr, size});
+    }
 };
 
 TEST(Axi4MasterEngineTest, MultiBeatReadStreamsRlastOnlyOnFinalBeat)
@@ -212,6 +235,143 @@ TEST(Axi4MasterEngineTest, WrapAwBurstThrows)
     pins.awValid = 1;
 
     EXPECT_THROW(engine.tick(), GTestException);
+}
+
+// Three single-beat reads issued back to back: id=1 (seq0), id=2 (seq1),
+// id=1 again (seq2). Completing them out of issue order (seq1, then seq2,
+// then seq0) must still present id=2's transaction on R before id=1's
+// earlier-issued seq0 -- proving cross-ID out-of-order -- while id=1's
+// seq2 must not appear until seq0 (the older transaction sharing its ID)
+// has been presented, even though seq2 became ready first -- proving
+// same-ID in-order.
+TEST(Axi4MasterEngineTest, CrossIdReadsCompleteOutOfOrderSameIdStaysInOrder)
+{
+    MockMasterPins pins;
+    MockBackend backend;
+    axion::Axi4MasterEngine engine(pins, backend);
+
+    pins.arSize = 3; // 8 bytes/beat
+    pins.arLen = 0;  // single beat
+    pins.arBurst = 1; // INCR
+
+    pins.arId = 1;
+    pins.arAddr = 0x1000;
+    pins.arValid = 1;
+    engine.tick(); // issues seq0 (id 1)
+
+    pins.arId = 2;
+    pins.arAddr = 0x2000;
+    engine.tick(); // issues seq1 (id 2)
+
+    pins.arId = 1;
+    pins.arAddr = 0x3000;
+    engine.tick(); // issues seq2 (id 1, second outstanding)
+    pins.arValid = 0;
+
+    ASSERT_EQ(backend.reads.size(), 3u);
+    uint64_t seq0 = backend.reads[0].seq;
+    uint64_t seq1 = backend.reads[1].seq;
+    uint64_t seq2 = backend.reads[2].seq;
+
+    uint8_t dataA[8], dataB[8], dataC[8];
+    std::memset(dataA, 0xAA, sizeof(dataA));
+    std::memset(dataB, 0xBB, sizeof(dataB));
+    std::memset(dataC, 0xCC, sizeof(dataC));
+
+    // id 2 (seq1) becomes ready first -- id 1's front (seq0) is still
+    // outstanding.
+    engine.completeRead(seq1, dataB, 8);
+    engine.tick();
+    EXPECT_EQ(pins.rValid, 1);
+    EXPECT_EQ(pins.rId, 2u) << "cross-ID: a later-issued but ready "
+                                "transaction on a different ID must not "
+                                "wait for an unrelated ID's older one";
+    EXPECT_EQ(std::memcmp(&pins.rData, dataB, 8), 0);
+
+    engine.tick(); // seq1 handshakes (rReady==1) and is popped
+    EXPECT_EQ(pins.rValid, 0) << "nothing else is ready yet";
+
+    // id 1's second transaction (seq2) becomes ready, but seq0 -- the
+    // older transaction sharing its ID -- has not.
+    engine.completeRead(seq2, dataC, 8);
+    engine.tick();
+    EXPECT_EQ(pins.rValid, 0) << "same-ID: seq2 must not present before "
+                                  "seq0, its own ID's older outstanding "
+                                  "transaction, even though seq2 is ready";
+
+    engine.completeRead(seq0, dataA, 8);
+    engine.tick();
+    EXPECT_EQ(pins.rId, 1u);
+    EXPECT_EQ(std::memcmp(&pins.rData, dataA, 8), 0);
+
+    engine.tick(); // seq0 handshakes and is popped; seq2 (already ready)
+                    // is immediately presented next, same-ID, in order.
+    EXPECT_EQ(pins.rValid, 1);
+    EXPECT_EQ(pins.rId, 1u);
+    EXPECT_EQ(std::memcmp(&pins.rData, dataC, 8), 0);
+}
+
+// Write-side mirror of the read test above, using the B channel /
+// pickOldestEligibleWrite() instead of R / pickOldestEligibleRead().
+TEST(Axi4MasterEngineTest, CrossIdWritesCompleteOutOfOrderSameIdStaysInOrder)
+{
+    MockMasterPins pins;
+    MockBackend backend;
+    axion::Axi4MasterEngine engine(pins, backend);
+
+    pins.awSize = 3;
+    pins.awLen = 0;
+    pins.awBurst = 1; // INCR
+    pins.wStrb = 0xff;
+    pins.wLast = 1;
+
+    pins.awId = 1;
+    pins.awAddr = 0x1000;
+    pins.wData = 0xAAAAAAAAAAAAAAAAull;
+    pins.awValid = 1;
+    pins.wValid = 1;
+    engine.tick(); // issues seq0 (id 1)
+
+    pins.awId = 2;
+    pins.awAddr = 0x2000;
+    pins.wData = 0xBBBBBBBBBBBBBBBBull;
+    engine.tick(); // issues seq1 (id 2)
+
+    pins.awId = 1;
+    pins.awAddr = 0x3000;
+    pins.wData = 0xCCCCCCCCCCCCCCCCull;
+    engine.tick(); // issues seq2 (id 1, second outstanding)
+    pins.awValid = 0;
+    pins.wValid = 0;
+
+    ASSERT_EQ(backend.writes.size(), 3u);
+    uint64_t seq0 = backend.writes[0].seq;
+    uint64_t seq1 = backend.writes[1].seq;
+    uint64_t seq2 = backend.writes[2].seq;
+
+    // id 2 (seq1) completes first -- id 1's front (seq0) has not.
+    engine.completeWrite(seq1);
+    engine.tick();
+    EXPECT_EQ(pins.bValid, 1);
+    EXPECT_EQ(pins.bId, 2u) << "cross-ID: id 2's write must not wait for "
+                                "id 1's older, still-incomplete write";
+
+    engine.tick(); // BREADY is hardwired 1 in the mock: seq1 pops here.
+    EXPECT_EQ(pins.bValid, 0);
+
+    // id 1's second write (seq2) completes, but seq0 has not.
+    engine.completeWrite(seq2);
+    engine.tick();
+    EXPECT_EQ(pins.bValid, 0) << "same-ID: seq2 must not present on B "
+                                  "before seq0, its own ID's older write";
+
+    engine.completeWrite(seq0);
+    engine.tick();
+    EXPECT_EQ(pins.bId, 1u);
+
+    engine.tick(); // seq0 pops; seq2 (already complete) presents next.
+    EXPECT_EQ(pins.bValid, 1);
+    EXPECT_EQ(pins.bId, 1u);
 }
 
 } // namespace axi4_master_engine_test

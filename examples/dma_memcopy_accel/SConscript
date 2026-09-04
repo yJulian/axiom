@@ -1,0 +1,44 @@
+# SConscript for the dma_memcopy_accel worked example. Requires
+# `make -C examples/dma_memcopy_accel` to have already produced
+# obj_dir/Vdma_memcopy_top__ALL.a (see that Makefile) -- Verilator is not
+# invoked from within the gem5 build itself, matching the pattern used by
+# examples/fifo_pio_accel's SConscript.
+
+Import('*')
+
+import os
+
+example_dir = Dir('.').srcnode()
+obj_dir = example_dir.Dir('obj_dir')
+lib_path = obj_dir.File('Vdma_memcopy_top__ALL.a')
+
+verilator_root = os.environ.get(
+    'VERILATOR_ROOT',
+    os.popen('verilator --getenv VERILATOR_ROOT 2>/dev/null').read().strip()
+    or '/usr/share/verilator',
+)
+
+env.Append(CPPPATH=[
+    example_dir,
+    obj_dir,
+    os.path.join(verilator_root, 'include'),
+    os.path.join(verilator_root, 'include', 'vltstd'),
+])
+
+if os.path.exists(str(lib_path)):
+    env.Append(CPPDEFINES=['VM_TRACE=1'])
+    # Vdma_memcopy_top__ALL.a is only the model itself; the FST/trace and
+    # threading runtime support that verilated_fst_c.cpp/verilated_trace.cpp
+    # provide lives in the separate libverilated.a Verilator's --build also
+    # produces -- both are needed. lib_path has no "lib" prefix (Verilator's
+    # own naming), so it can't be found via a plain -l flag; pass the File
+    # node directly so SCons/ld links it by explicit path.
+    env.Append(LIBS=[lib_path, obj_dir.File('libverilated.a'), 'z'])
+
+    SimObject('DmaMemcopyAccel.py', sim_objects=['DmaMemcopyAccel'])
+    Source('dma_memcopy_device.cc')
+else:
+    print(
+        "[AXION] dma_memcopy_accel: %s not found -- run "
+        "`make -C examples/dma_memcopy_accel` before building gem5." % lib_path
+    )
