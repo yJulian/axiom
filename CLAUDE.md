@@ -6,8 +6,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **AXION** is a gem5 extension that bridges gem5's event-driven `SimObject`s to RTL
 blocks simulated by Verilator, over a genuine, pin-level AXI4 (5 channels, ID-tagged,
-same-ID-in-order / cross-ID-out-of-order). Four C++ classes give a real,
-API-accurate inheritance hierarchy onto gem5's own class tree:
+same-ID-in-order / cross-ID-out-of-order), and -- for the PCIe paths -- onto gem5's own
+PCI endpoint model. Five C++ classes give a real, API-accurate inheritance hierarchy
+onto gem5's class tree:
 
 - `RTLBaseCpu : BaseCPU` (`src/cpu/rtl/`)
 - `RTLPioDevice : PioDevice` (`src/dev/rtl/`)
@@ -17,11 +18,17 @@ API-accurate inheritance hierarchy onto gem5's own class tree:
 - `RTLPciDevice : PciEndpoint` (`src/dev/rtl/`) -- a PCIe endpoint, where gem5 owns
   config space/BARs/INTx and the RTL sees only AXI4, the same split a PCIe hard IP
   block and its user logic have on real hardware. See "The PCIe path" below.
+- `RTLPcieTlpDevice : PciEndpoint` (`src/dev/rtl/`) -- the same, one protocol layer
+  deeper: the RTL receives genuine PCIe transaction-layer packets and parses them
+  itself. See "The TLP-level PCIe path" below, and prefer `RTLPciDevice` unless the
+  PCIe protocol itself is what's being modelled.
 
-All four are abstract: they define the AXI4 pin-accessor contract
-(`axion::Axi4SlavePins` / `axion::Axi4MasterPins`, `src/axi/axi4_types.hh`) and the
-protocol/timing engines that drive it (`Axi4SlaveEngine`, `Axi4MasterEngine`,
-`src/axi/`), but a concrete leaf `SimObject` must implement the pin accessors against
+All five are abstract: they define a pin-accessor contract -- AXI4
+(`axion::Axi4SlavePins` / `axion::Axi4MasterPins`, `src/axi/axi4_types.hh`) for the
+first four, TLP streams (`axion::PcieTlp*Pins`, `src/pcie/pcie_tlp_types.hh`) for the
+fifth -- and the protocol/timing engines that drive it (`Axi4SlaveEngine`,
+`Axi4MasterEngine`, `src/axi/`; `PcieTlp{Completer,Requester}Engine`, `src/pcie/`),
+but a concrete leaf `SimObject` must implement the pin accessors against
 a specific Verilator-generated top module (see `examples/fifo_pio_accel/` for the
 simplest worked example, and `examples/pcie_template_accel/` for the PCIe one). RTL is
 linked directly (no `dlopen`/abstract-backend indirection) -- that's a deliberate
@@ -31,13 +38,22 @@ without writing that leaf class at all -- see "The plugin path" under Architectu
 (`RTLPioDevicePlugin` / `RTLDmaDevicePlugin`, `src/axi/axi4_plugin_abi.h`) -- but it does
 not change anything about the default path described above.
 
-`hw/axi4/` is the reusable SystemVerilog side: `axi4_pkg.sv` (typedefs), `axi4_if.sv`
+`hw/` holds the reusable SystemVerilog side, one directory per interface.
+
+`hw/axi4/`: `axi4_pkg.sv` (typedefs), `axi4_if.sv`
 (the actual 5-channel interface DUTs connect to), `axi4_pins.sv` (flat-port adapters --
 the only form Verilator's generated C++ model exposes to code -- in both roles:
 `axi4_pins_slave_port` for a DUT-as-slave PIO/register port, `axi4_pins_master_port`
 for a DUT-as-master DMA port). A `TOP` module (e.g.
 `examples/fifo_pio_accel/fifo_pio_top.sv`) wires one or more `axi4_pins` instances to
 the **DUT** (Design Under Test) -- see Terminology below.
+
+`hw/pcie/` is the same idea one protocol layer up, for the TLP-level PCIe path:
+`pcie_tlp_pkg.sv` (TLP header field encode/decode), `pcie_tlp_if.sv` (the four
+AXI4-Stream channels a PCIe hard IP block exposes -- completer request/completion,
+requester request/completion), `pcie_tlp_pins.sv` (the flat-port adapter, only one
+needed since an endpoint's stream directions are fixed). See "The TLP-level PCIe path"
+under Architecture.
 
 ## Terminology
 
@@ -47,12 +63,12 @@ the **DUT** (Design Under Test) -- see Terminology below.
 verification-industry term -- use it consistently in code, comments, and file/module
 naming (`*_top.sv` for harnesses, plain descriptive names for DUTs).
 
-## Source layout -- read before editing anything under `ext/gem5/src/{axi,cpu/rtl,dev/rtl,examples}`
+## Source layout -- read before editing anything under `ext/gem5/src/{axi,pcie,cpu/rtl,dev/rtl,examples}`
 
 `ext/gem5` is a git submodule (pinned, shallow). AXION's own C++ sources live at the
 repo root under `src/` (and the worked example under `examples/`) -- **never** edit
-anything under `ext/gem5/src/axi/`, `ext/gem5/src/cpu/rtl/`, `ext/gem5/src/dev/rtl/`,
-or `ext/gem5/src/examples/` directly. Those are mirrors created by
+anything under `ext/gem5/src/axi/`, `ext/gem5/src/pcie/`, `ext/gem5/src/cpu/rtl/`,
+`ext/gem5/src/dev/rtl/`, or `ext/gem5/src/examples/` directly. Those are mirrors created by
 `scripts/build_gem5.sh` (`cp -rs`: real directories, individual files symlinked back to
 the true source) so gem5's own build can see them -- gem5's `src/SConscript` walks
 with `followlinks=False`, so a plain symlinked directory would be invisible to the
@@ -60,11 +76,11 @@ build. Each of our subdirectories mirrors at the *same relative path* it would o
 inside gem5's own tree (`src/axi` -> `ext/gem5/src/axi`, `src/cpu/rtl` ->
 `ext/gem5/src/cpu/rtl`, ...) -- this matters because our own headers use gem5-style
 `#include "axi/verilated_model.hh"` paths resolved against gem5's `src/` as the include
-root; none of these four paths exist in stock gem5, so there's no collision. Edits
+root; none of these five paths exist in stock gem5, so there's no collision. Edits
 under a mirror are overwritten (or simply invisible to git) the next time it re-runs.
 
 `plugin/` (the opt-in plugin path's Makefile template + generic shim, see Architecture
-below) is a fifth top-level source area, but unlike the four above it is **never**
+below) is a sixth top-level source area, but unlike the five above it is **never**
 mirrored into `ext/gem5/src` at all -- it's build tooling that produces a `.so` outside
 gem5's own build, not something gem5's SConscript needs to see.
 
@@ -80,9 +96,11 @@ make gem5                     # re-mirror (now including the verilated .a) + sco
 make tb                       # cocotb AXI4 testbench (FIFO/PIO), no gem5 needed (see below)
 make tb-dma                   # cocotb AXI4 testbench (DMA memcopy), no gem5 needed
 make tb-pcie                  # cocotb testbench (PCIe template endpoint), no gem5 needed
+make tb-pcie-tlp              # cocotb testbench (TLP-level endpoint), no gem5 needed
 make run-fifo-example ARGS='--binary <path/to/riscv/elf>'
 make run-pcie-example         # bare-metal PCIe end-to-end test (builds its own guest
                                #   ELF; needs no disk image, see "The PCIe path")
+make run-pcie-tlp-example     # the same test against the TLP-level RTL variant
 make verilate-plugin          # build the FIFO DUT as a .so via plugin/rtl_plugin.mk
                                #   (opt-in dlopen path, see Architecture below)
 make tb-plugin                # standalone plugin-ABI testbench, no gem5 needed
@@ -286,6 +304,63 @@ Three ways to run it, in increasing cost:
   is not fetched by default. Note a PCIe endpoint needs no device-tree node of its own --
   which sidesteps the trap the MMIO example hits, where
   `RiscvBoard.generate_device_tree()` ignores per-device `generateDeviceTree()` entirely.
+
+### The TLP-level PCIe path (`RTLPcieTlpDevice`, `examples/pcie_tlp_template_accel/`)
+
+The second, deeper PCIe path, layered on top of the first rather than replacing it.
+`RTLPciDevice` above hands the RTL an AXI4 slave port and keeps every trace of PCIe on
+the gem5 side. `RTLPcieTlpDevice` (`src/dev/rtl/rtl_pcie_tlp_device.{hh,cc}`) instead
+hands the RTL **genuine transaction-layer packets** on the four AXI4-Stream channels a
+hard block exposes (CQ/CC/RQ/RC), and the RTL parses and builds the headers itself:
+fmt, type, length, requester ID, tag, byte enables, 64-bit address on the way in;
+completer ID, completion status, byte count, lower address on the way out.
+
+**Which to use.** The AXI4-bridge path, unless the PCIe protocol itself is the thing
+being modelled. It is what a real FPGA design uses, it reuses both existing engines,
+and its DUTs are far simpler. This path exists to make the protocol visible *to the
+RTL* -- worth it when that is the subject, not a better way to attach an accelerator.
+
+- **Engines** (`src/pcie/pcie_tlp_engine.{hh,cc}`, a fifth mirrored source area):
+  `PcieTlpCompleterEngine` turns a `PacketPtr` into a MemRd/MemWr TLP on CQ and decodes
+  the CplD on CC; `PcieTlpRequesterEngine` decodes the DUT's own requests on RQ, hands
+  them to a `Backend` (gem5's DMA), and returns CplD on RC. Two protocol facts show up
+  here that the AXI4 path has no equivalent for: **memory writes are posted**, so a
+  write packet is answered the moment its last request beat is accepted rather than
+  waiting for any response; and **completions are tagged**, with different tags free to
+  complete in any order -- the same property `Axi4MasterEngine` implements per AXI ID.
+- **Pin contract** (`src/pcie/pcie_tlp_types.hh`): 16 pins, against AXI4's 88, because
+  the streams carry addressing/length/byte-enables inside the packet. The parsing that
+  buys has to happen somewhere; on this path it happens in the RTL.
+- **Two documented simplifications**, both in `hw/pcie/pcie_tlp_pkg.sv`'s header
+  comment. Requests use the 4-DW (64-bit address) header form only, so payload always
+  starts on a beat boundary. Completion headers are 3 DW and are padded to 4 with one
+  reserved DW, so their payload stays beat-aligned too -- a packing convention on the
+  local stream, not a change to any header field. A production endpoint must handle
+  both header sizes and the misalignment they imply. Separately, these streams carry
+  **no TKEEP**: it would be a second encoding of what `length` plus the byte enables
+  already state exactly, and two encodings of one fact can disagree.
+- Structurally `RTLPcieTlpDevice` is near-identical to `RTLPciDevice` -- same deferred
+  timing port, same range-forwarder, same interrupt-edge sampling, same idle gating,
+  only the engines differ. That is deliberate: it makes the two examples a comparison
+  of abstraction levels rather than of two unrelated implementations.
+
+The worked example (`examples/pcie_tlp_template_accel/`) is the *same device* as
+`pcie_template_accel` -- same registers, same scratchpad RAM, same DMA engine, same
+interrupt -- so the pair can be compared directly. Its guest test is the AXI4 variant's
+test with two constants changed (DeviceID, VERSION), and that is the headline result:
+from software the two are indistinguishable, because the difference is confined to
+where the TLP encoding happens.
+
+- `make tb-pcie-tlp` -- cocotb, no gem5. Hand-builds real TLPs and decodes the
+  completion headers the RTL produces. Its TLP encoding is written out longhand rather
+  than shared with `pcie_tlp_engine.cc` on purpose: an independent second
+  implementation of the layout makes it a test of the RTL's parser, not a test that two
+  copies of one helper agree.
+- `scons build/RISCV/unittests.opt` -- `PcieTlpEngineTest` covers the engines' own
+  header encode/decode, posted-write behaviour, completion-status mapping, and
+  out-of-order completion across tags.
+- `make run-pcie-tlp-example` -- the bare-metal end-to-end run, same shape as
+  `make run-pcie-example`.
 
 ### RTLBaseCpu scope note
 
