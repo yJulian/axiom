@@ -12,10 +12,10 @@
 # ext/gem5/src/axi, src/cpu/rtl -> ext/gem5/src/cpu/rtl, etc.) -- this
 # matters because our own code uses gem5-style include paths like
 # #include "axi/verilated_model.hh", resolved against gem5's src/ as
-# the include root. None of these paths (axi/, cpu/rtl/, dev/rtl/,
-# examples/) exist in stock gem5, so there's no collision; matches how
-# gem5_cva6 mirrors its own custom sources (gem5/src/cpu/rtl/, not a
-# wrapped/prefixed location).
+# the include root. None of these paths (axi/, pcie/, cpu/rtl/,
+# dev/rtl/, examples/) exist in stock gem5, so there's no collision;
+# matches how gem5_cva6 mirrors its own custom sources
+# (gem5/src/cpu/rtl/, not a wrapped/prefixed location).
 #
 # Run this AFTER `make -C examples/fifo_pio_accel` (or any other example)
 # has produced its obj_dir/*.a -- otherwise those generated files won't
@@ -42,6 +42,7 @@ mirror() {
 }
 
 mirror src/axi axi
+mirror src/pcie pcie
 mirror src/cpu/rtl cpu/rtl
 mirror src/dev/rtl dev/rtl
 mirror examples examples

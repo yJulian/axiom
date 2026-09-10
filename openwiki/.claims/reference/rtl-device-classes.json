@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:bf26795c9d31d0a36f12094353d7a0fa03e268cddc4b43c351fdb13023629c61",
+  "claims": [
+    {
+      "id": "claim_9e8aaa651f044e6a87bd84b51078c388",
+      "statement": "RTLPioDevice.py declares pio_addr (required), pio_size (default 0x1000), pio_latency (default 0ns, extra latency on top of the RTL AXI4 handshake), and reset_cycles (default 10), and its RtlPioPort answers requests only once the AXI4 handshake with the RTL has actually completed.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/RTLPioDevice.py#L17-L24",
+          "version": "repo-lines-v1:sha256:96d33e0fb0693a327717cce4ef51344dbfe96c1924b27afb7bba411766b5bf44:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWYyYzI4ZjYxNjM0NzczMzdjZGRkOTQzYWJmYmYwMDQ0MDFmNDIzMWUwYmM5Y2QxZGUyMzZiYTdmOGQ2N2RlMCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDY1NDViNzQ1OWVhYTZmNGZkZDM2NWNiZTY1M2YxNWExYTU4ZGU2YmFkZTY2NmVjODQxMjExZWQwNGRkNWI3MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGVjNzU5YzIyMWM3NzQ5MTVkMjVjNTc1YjA4OGJkOTk1YWZlMGRjNjFhMzU3MjAyZGMwMjY4MjkyOWYxNjgyMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://src/dev/rtl/rtl_pio_device.hh#L30-L34",
+          "version": "repo-lines-v1:sha256:6c9d9df0a24ddf34aa3b85421df2386abc57673082531b98246d52752b7a2a0e:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjMxOGY3ZTFmNjA0OWE3MGU1MDgxNTM5NTkwODg5NjM1OWE1YjVmZjQzZjY1NmYzNDQzYWExMGYxOGFlNTJjNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiY2E1YTM4OTFkZDBlODI1MmIzYWNmNTIwMGM0OGQwNzBiZWU3M2JhNjg0NzRhZDNkNGE1ODkyZjc3MmZmZjA0ZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjhjYjRiMDA0YTY4MWVkMzEyMWM5NGMwODc1NDNmYzcyNzVkYjM1YmE1MTYyMmEyOGJmNGUwZDJhYzQ0OGNmNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDVmNzE1OTE2NDgwNzY3MTI3NjA5YWQ1MzQyYzIwYjE0YTQ3YTA2MDNhMWU5OTk4NGVkZDg3NTkyNmVmY2RhZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_c5d402673aec46d899e7adb5071cde43",
+      "statement": "RTLDmaDevice extends DmaDevice (which already extends PioDevice in gem5) rather than separately inheriting RTLPioDevice, to avoid creating a duplicate PioDevice base; the two share code via composing the same engine classes instead.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_dma_device.hh#L1-L10",
+          "version": "repo-lines-v1:sha256:8efaac215d74f54ea230fed2d1fb55bed9df7f870e02921c56c40669e82cb79b:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3MzI3NzVlZWU3NzAwMThkYjdkNzlkMDM1YTAxNjMwMTVhMDE2ZGUxN2ViYmY4ODg0OTAyZWM2ZDFkOWZjZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZmZTk5YTE2M2EwMzAxNDRhMDc1ZDVjN2NmZjIxMjgzMDRlNmVlMjBjODMwNmMzNTI3NDk1MmViNGNhNDk3NjgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQ1OGI2ZmFjMzYxMTY2MzY4MjE5NzkxOTNlMGY3Mzg1NzhmNjg5ODM0OTRkYmZmNTY4MGQzMGFjZTNiY2RiNzgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1b89b2a4e24a4875ae137fdc0a82f5b3",
+      "statement": "RTLDmaDevice.py declares idle_gate_cycles (default 16): consecutive cycles the RTL must report isIdle() with no pending PIO/DMA work before the clock is gated, 0 disables gating, and it has no effect on a leaf that doesn't override isIdle() (default never idle).",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/RTLDmaDevice.py#L26-L33",
+          "version": "repo-lines-v1:sha256:1eb85ae16e90d8aeca027f3f22627284015d174ee96b647d55a61e309aa1548b:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTFjNTZhMTAxMjljZDA3MGFkZjA2ODAwMzZjZjFlZjMzNjc1N2MzODliNTEyZjZlNWExMzM2ZjhiOWIzOTNmNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzBjMWYxODhmMTQyZWQ3YTgyNDY4MGIyMDcxNzJjNTUxOWJjNjE0YTQ4ZmRhN2NmMTY3ZWRiOGRkZjc5OTU2YyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmU1ZjkwYTIxY2FlZTk5MDkyY2NhNjI4YTYzZjlkZGE0Y2I5OTNhMDAwZWZkYTg1N2JjZWUzYTFjYjI1ZWY4OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_e8500adc9497416b93aea84bd295748c",
+      "statement": "RTLBaseCpu bridges a Verilator-simulated RTL core over two full AXI4 master ports (instruction and data), each with its own Axi4MasterEngine, and its tick loop is modeled on BaseKvmCPU rather than AtomicSimpleCPU because actual instruction execution happens inside the RTL, not gem5.",
+      "evidence": [
+        {
+          "resource": "repo://src/cpu/rtl/rtl_base_cpu.hh#L1-L21",
+          "version": "repo-lines-v1:sha256:d0ed63c0ddf9b04f8893eff1682a7eac374e59092f84be02282d016e53952109:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3MzI3NzVlZWU3NzAwMThkYjdkNzlkMDM1YTAxNjMwMTVhMDE2ZGUxN2ViYmY4ODg0OTAyZWM2ZDFkOWZjZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZjZGIwMzZmNDQ0ZGFlZDY1ZDMwMDYwMGUxMmM1MmNkMTIzMDc2MWFhYjYwNmUzOGQxMTdmYmQ5ZmZiYjM3NzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwNDIxMTg0ZDI5MWI2MjUxMjc5ZjZjN2IzZDQ0ZjdkOGJmNDUzODZhZGY2YzZmZWQ2YzNhMTQ0N2Y0Nzk2YjkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_3eaa52fd48bc4f85980ba4b4935b3744",
+      "statement": "RTLBaseCpu's instAxiPins()/dataAxiPins() may alias the same underlying pin object for a core with one unified AXI4 master port; in that case RTLBaseCpu::tick() only ticks instPort_'s engine and skips dataPort_.tick() entirely, because Axi4MasterEngine::tick() unconditionally samples/drives the AR/AW/W/R/B channels regardless of its driveClock argument, which only gates the clk_i toggle.",
+      "evidence": [
+        {
+          "resource": "repo://src/cpu/rtl/rtl_base_cpu.hh#L117-L118",
+          "version": "repo-lines-v1:sha256:9b33504d051c4cdec9dc850c91f38b2032bdd91bddce8cf13deed36f097e5294:eyJzZWxlY3RlZExpbmVDb3VudCI6MiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTkwOWZjYjUxMWQwZjdlNzBmMmQ0NWUxMDYxNmYyYTk0YzA0MTQ2OGIzM2M0NmJjODcyMjE4NzZlMDU3ZmE0MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzMzNDlkY2VkYjg1ODNmM2IwMjcwMDRkMzM3MjU5MTgxYmI5NGZmMTMwZjExYjA3ZTRjY2JhNzhiYzkzOWQyOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZmRjNjhkZmM5ZmUxNjY3ZWNhMmEzNGMzYmQ3NDIwMmQ0ZDVkNzI5YWMzM2NiMDNjYzI5Yzg1ODMzYWI4ZTM1MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNGQ5Nzc5ZTUzMzMwZGFiOGRkYjcxOTkxNmUzNDIzZDY3NDhlOWVjODQ0NjRiZDc3YWRiOTUxZTJiM2UzMWY1YyJ9"
+        },
+        {
+          "resource": "repo://src/cpu/rtl/rtl_base_cpu.hh#L43-L56",
+          "version": "repo-lines-v1:sha256:aa4c3af6b9f7131a69d178284f110082c741b032ac3c3e6181ecf18cadea5e7d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5Y2JiYzY1NDY5ZGIxY2EyODQyZWZkOTdkZjdlZTJjZTZjYzE1NzE0ODJkMDFhMThiNzkwYTEwYzdjNTEwZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNkMWUxZTI2MGJkYTc3MmZhYTk4MTU1ZDM4MDhmMDk1YzhiZDJhN2U5YTUzNmNiNzdiOWE0N2M3MTQ0NjE2NzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImMzNzVkOWM5YTYyNTNkNmM1NjBmMzNiYmU3Yzk4NDBmZDA4NmY2MTI1NzMzYjZkYTgzZTZmMWE2ZmFlODE0NWMiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA0MmY3ZTY5NDE2OTFmMzJhM2YzNzIxZjM5YWViNDFhNDI3OGY5YmEyZjIxZTYwMmIyODk4NjZkNTc5NTI2ODEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6e7a94fac29e42e5a10c1d933dcc1f9a",
+      "statement": "RTLBaseCpu.py deliberately does not redeclare icache_port/dcache_port (inherited from BaseCPU) because shadowing an inherited Param creates a disconnected field in the generated C++ params struct that the parent's C++ constructor never sees, and only declares reset_cycles (default 10) itself, leaving ISA/decoder/interrupt/MMU wiring to a concrete leaf's own __init__.",
+      "evidence": [
+        {
+          "resource": "repo://src/cpu/rtl/RTLBaseCpu.py#L1-L25",
+          "version": "repo-lines-v1:sha256:d8f66f6cf80a8b52adf86f9bbcc40721668481711b7070338de324815b8a7a88:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVmN2RhYTNkNzcxNWU4ZmJjY2E5M2RmMmY5OGNmZTY5MWIzMzVlMzdjZDM4MTQzYzVkMzJjMWUzNTFmZDk3MzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ2NTQ1Yjc0NTllYWE2ZjRmZGQzNjVjYmU2NTNmMTVhMWE1OGRlNmJhZGU2NjZlYzg0MTIxMWVkMDRkZDViNzEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a4976f52d7dc433b8c17fcfe935c3d50",
+      "statement": "RTLBaseCpu ships as a structurally complete, compiling abstract base with no worked example core in this repository, since there is no CPU-core-shaped RTL to hand in this pass, only the FIFO/PIO accelerator.",
+      "evidence": [
+        {
+          "resource": "repo://src/cpu/rtl/rtl_base_cpu.hh#L12-L21",
+          "version": "repo-lines-v1:sha256:c7bf6cca1d294974dbfbba538b256f0d94465f840dd36dccbdf337bb25239f57:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRkZjZiMGM5ODM5MjEwNmYwMWJjMjU2ZGM1MmMwZTk3ZWRhNTFkZWM3MTM2N2QyMDRiMDQwMTk0ZjM4YmU1NjUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZjZGIwMzZmNDQ0ZGFlZDY1ZDMwMDYwMGUxMmM1MmNkMTIzMDc2MWFhYjYwNmUzOGQxMTdmYmQ5ZmZiYjM3NzkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjBhN2E0MjJhYWMwYjAwM2Q5ODI5NzI1N2Q2YTU4NTYwZDEyYWJlYjBhNGExYjQyMDQ2NjY1MTk5N2YzOTNlMDciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIwNDIxMTg0ZDI5MWI2MjUxMjc5ZjZjN2IzZDQ0ZjdkOGJmNDUzODZhZGY2YzZmZWQ2YzNhMTQ0N2Y0Nzk2YjkifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

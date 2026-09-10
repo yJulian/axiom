@@ -16,12 +16,19 @@ Axi4SlaveEngine::Axi4SlaveEngine(Axi4SlavePins &pins) : pins_(pins)
 bool
 Axi4SlaveEngine::issue(PacketPtr pkt, const std::function<void()> &onDone)
 {
+    return issue(pkt, pkt->getAddr(), onDone);
+}
+
+bool
+Axi4SlaveEngine::issue(PacketPtr pkt, Addr axiAddr,
+                        const std::function<void()> &onDone)
+{
     if (state_ != State::Idle)
         return false;
 
     pkt_ = pkt;
     onDone_ = onDone;
-    addr_ = pkt->getAddr();
+    addr_ = axiAddr;
     id_ = 0;
     totalBeats_ = (pkt->getSize() + beatBytes_ - 1) / beatBytes_;
     if (totalBeats_ == 0)

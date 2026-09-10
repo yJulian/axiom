@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:13e47155d0a3cd52924f5f0d97b5741b5c7247089d6c54fca329ae44e7368fef",
+  "claims": [
+    {
+      "id": "claim_cfe63f19a0ee45e69d23831e95f92928",
+      "statement": "examples/fifo_pio_accel_plugin/Makefile builds the same fifo_pio_accel DUT files (fifo_pio_accel.sv and fifo_pio_top.sv) into a .so via plugin/rtl_plugin.mk with TOP_MODULE=fifo_pio_top, PLUGIN_HAS_SLAVE=1, PLUGIN_HAS_MASTER=0, and this directory has no SConscript so it is never linked into gem5.opt.",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel_plugin/Makefile#L1-L20",
+          "version": "repo-lines-v1:sha256:3adaa208d4f76dcc0b51ff7ef5affb7a574b3ffae729a0540a41b6afbb6b1988:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0NTMxZmJjMzhjYzcyM2JjYjA2NjVhYTM3NTczYjc1YzIyMmNkZjVmZTdhODg0MmIwNjBhMjc3OGIwOTdkNTciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImMxNTVhZDljM2NlOTFlYTFkNWY4NTYyODIyYzc1NWQ5ZTgwZGZiY2EzNWMzZDU5ZjA1YTM5ZDZjYTMxMTE4OTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjljN2NkNDY0MjE3M2Y1NDRlZmU5MDZmMjgyYjM1Y2Q3MDg5ZTYxOWRjY2Y4ZWQzMzRhMjcyYWIxMDBhZGJkNWQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e0c90f7b0ae34fb989c03cbc982f60b8",
+      "statement": "tb_fifo_pio_plugin.cc dlopens the plugin .so and drives it purely through axi4_plugin_abi.h with no Vfifo_pio_top.h or Verilator headers, resolving every axion_rtl_* symbol via dlsym and checking abiVersion() and hasSlavePort() before use.",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel_plugin/tb_fifo_pio_plugin.cc#L1-L11",
+          "version": "repo-lines-v1:sha256:2acb8c9da3e5bfb533884cd08f3f22809a62f24ce93de964f7d47a5257b74628:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMjdlNWE2OTdkODIyMjlmMzYwYTdiZjIyZDI5NDNmMTJhZWQ5NmYyYTY5YWRlMTliMjY2YmRmMmRkNzRmM2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFiNDA0YTZlNjZhODczYTllNDVhZTRmOGQ5MjdhMmU2ZTFjODAwY2RmNDQwNmFhYWQ0N2I5NzkxZGJiMGM3YTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImM5YTk5OTE5OTcxZjhkMGYyODk2OTAwOWYxMjU3ODRhODE5NmEwYTMzZjJhMWMzYmM4MDlkYWRkOGU1YzBmOWIifQ"
+        },
+        {
+          "resource": "repo://examples/fifo_pio_accel_plugin/tb_fifo_pio_plugin.cc#L166-L191",
+          "version": "repo-lines-v1:sha256:c3c39ea537e847d56a29f3e9706eb2dc1434295a8d0369d4d5ec8e17568fe994:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYzZjY0MzEyYWU2Yzc3NzE4NTFkNmQxYWI1N2QxMzRhYzE5M2U1NDY0MGE1Y2E2MjNlMTEzMmUzYzQwMGY4MzciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQ4OTNmNDBlMzc4MWViODk2YzgyZDA0NmEwODA2N2ExMWUzNWNkZjJmMWRmYWYyNmZlYTkwYjhkYjY2NzY0MTMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNhNTc3Y2JjNmE4ZDY3MzE2ZmVmOWEwZDdmNTVkMzMxNzliOGY2ODg5ZDQxYWRlNzk5YmFjOGFjNzg0NjllZDUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFmN2ExM2E2MTRiNDU0NWU1OTc2NThkYTkwZTAzZTNkMjljY2VlOWFjYzkzMjkzMzFkMDA3MzM4MjVmZGI3NmEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_5962c6dcb347499c987a3b82b83ce487",
+      "statement": "tb_fifo_pio_plugin.cc's test writes 0xdeadbeefcafef00d to FIFO_DATA at offset 0x08 with AWID 5, reads it back with ARID 7 and asserts the value round-trips, using distinct AWID/ARID values specifically to exercise the AXI ID field itself.",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel_plugin/tb_fifo_pio_plugin.cc#L204-L223",
+          "version": "repo-lines-v1:sha256:c7eb164f9cba06ea3a9916f0c3073b9d183c3b32327d5a3b84be060e43ec3e3c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFlMjg5YzliOWQxYWMyNGJkMzRhMjg3ZDQwY2NiNDNhMDE2YTMxMGNlNDlmODM0M2Y4MTAxMTNkMDdmODZhMGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYwZmYzODA5YTEzYzNmNjA2NTAxZTFjYjE3YTVlZTQ4MTdhOTlmNTRmY2Y1Zjg4NzQxMWRkNzRjMmU0NDMyNjgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc3YTQyMDljZjJkYmUyY2EyNGFkOWFhNWI5ODU3ODYxNmM3NjRiMmZkYThjNjRmYThkMjNlZWJhODU5NzVjMDAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ac689659e1e64c3d991efba0dbf89468",
+      "statement": "run_fifo_pio_plugin.py builds identical System wiring to fifo_pio_accel's run_fifo_pio.py but replaces the hand-written FifoPioAccel C++ leaf with RTLPioDevicePlugin constructed with rtl_library pointing at the built libfifo_pio_top_plugin.so, requiring no new C++ or Python for this DUT.",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel_plugin/configs/run_fifo_pio_plugin.py#L1-L14",
+          "version": "repo-lines-v1:sha256:d711746bde4588956e40014c1f47db1aa761d0317c4ab2e76fde79d44538dddb:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMDNlY2RkNGE0ZDEwZjE5YzczZmQ0MmZkMTI0MzdmZDMzNTRhODI2ODE2MDVkYTUyNTVhOTdhMzkwNjhkYmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmYTFkNmY3MTc0Mjk2YTU4NDhiY2U1NjE2OTljNDhjYjdhZDExMjBkYjI0MTAxMDMyMzMwZjExNjE5YTJlNTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY5NjNhZDk0NzllYjA4MTk1YWJlZjQ3MzQxMTQ2ZTU5MWE1ZmJjZTExMzg4ZGUxMDE1ZDFhMzk0NjljZmUxOTUifQ"
+        },
+        {
+          "resource": "repo://examples/fifo_pio_accel_plugin/configs/run_fifo_pio_plugin.py#L57-L60",
+          "version": "repo-lines-v1:sha256:77f637698f2ed59efa84e29bd5fefa77c53ff447e1e7c93ef4f3db188c1ea011:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDZhY2NkYTRjNzgzMzVlYTYwMjM3MzUwNDAwN2UwZjJmYzY2YzNkMDNjZDQ2OGJiZjZjMWQxYjA5NzQ4MDcxYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmFmYmEwNTI3YzM5NTNjNGI2ZTBlNWI1NzM5YmE4MzYxMmY4MDUzYmNkYzk0NjY3MzAxOTNjZDFkNTkwYjQwOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNDhiMzljMTY3NThiMWMzNmM3NjEyOTM5NGNlNzAzN2M3N2I1M2RkNTI5MTMyYTQwOGEwZTc3M2YxOWFiOTU4YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiY2Q3NDZlMWZmMWIxOTI1N2U3MWMwZDA1ZmYzY2RjOWQwYzczNDc2ZTkyYWM4MTcxYjAwN2M2ZDJmMjE2ZWI1MCJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

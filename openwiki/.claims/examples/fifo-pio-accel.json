@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:7bde9cf3ef4998c751da455dcaf1be2fcb94340e354295ff5377e4d122014afd",
+  "claims": [
+    {
+      "id": "claim_72bd192240e34442969728b416b7233f",
+      "statement": "fifo_pio_accel.sv is adapted from gem5_cva6's accelerator/fifo_accel.sv, with the AXI4 master/DMA half dropped and the register interface upgraded from AXI4-Lite to full AXI4, and exposes an 8-byte-aligned register map: STATUS (RO, offset 0x00, bit0=empty bit1=full bits[N_BITS+1:2]=count) and FIFO_DATA (RW, offset 0x08, write=push read=pop).",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel/fifo_pio_accel.sv#L1-L14",
+          "version": "repo-lines-v1:sha256:8f9ad25f5c544242bb4830f88d1cbd47a792bdb9d85c44129b6042b1151ae241:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5NjNhNmNhYjU3NjZkNmIwMDQ2YmYyYWFmMDdmNTcyYjQxZDI4MTk5ZTJlOTk2NzBlMjY4MWVkMzE3OWVmMWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkwYzJlZDJmYWY1Y2ZlY2E4YjgzMTc5ZDY5YzZkYTczZjk2NGQ5YmMyNTVhMThmMDc4NDk1ZGYxZDU1MzFmOTciLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRlYWIzOTgxZTk2OGNmMTk1MTJhZjdlN2FlYjVkNjhhMzQ1YWM0OTM5MDFjZjRlMDNmZDk2YzZmOTUyZGQ3OWMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_89d2d9cbdce94ddc9450c7b17eb6dfcc",
+      "statement": "FifoPioAccel implements axion::Axi4SlavePins directly against the Verilator-generated Vfifo_pio_top with no dlopen/abstract-interface indirection, and FifoPioAccel.py sets pio_size=0x1000 and tags the device tree node axion,fifo-pio-accel.",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel/FifoPioAccel.py#L1-L22",
+          "version": "repo-lines-v1:sha256:9904e2bbc2fede52afc96f3532d4bc6ab1d1a2307ed64859ec54168c34e6b681:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJmNjBhYjY1OTA1NTE3NzJjODg3NmUwM2UxNTM4NzMyMjk1MmNjMGY3NDQ1OWZlNjJlNzVhMmE4MWZkYmRiNjciLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg2M2QyMTljNmI3NDc2NmQ3MWJmY2M1OGQ4ZDc2ODNkM2NmNjVkNWIwZDQ2ZTIwYjk3ZDFlNzBkN2E1YjJhYTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://examples/fifo_pio_accel/fifo_pio_device.hh#L1-L14",
+          "version": "repo-lines-v1:sha256:fe0e21707476ab23575dee8fd4522570541206b3019cf4df081d1c75d17ca24f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3MzI3NzVlZWU3NzAwMThkYjdkNzlkMDM1YTAxNjMwMTVhMDE2ZGUxN2ViYmY4ODg0OTAyZWM2ZDFkOWZjZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImM3NGVlM2JiMDVmYTQ0MmRiOTJjZTFhNmVjMTlkOTlmYmY0YjQxMzI0MGYwZDQ3Mjc4ZmQ5YTk2ZWY5ZTM0ZTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRlZjQyZGY1YWQxNzdjZWJiNjY0NmUzYzVkODQ0OTI1NWI3ZGJmMWRiYWZkNGQ1ZjFlMWJiMDk2MjJmOTQyOWQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_cfe38b6c6dd347989840998489b0f1a0",
+      "statement": "test_fifo_pio.py's push_pop_roundtrip test drives STATUS and FIFO_DATA via cocotbext-axi's AxiMaster, using a different AWID/ARID on each of the four transactions (0, 5, 1, 7, 2 in sequence) specifically to exercise the AXI ID field itself (echoed back on B/R), not just the data path.",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel/cocotb/test_fifo_pio.py#L31-L58",
+          "version": "repo-lines-v1:sha256:d4a4b344aef6db3f6a4d6027ea5817b11f69a263028d52a06345a37ce6de3727:eyJzZWxlY3RlZExpbmVDb3VudCI6MjgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU1YmY3MmRlNTVkOTcyNjRlNzRjY2NkYWY0ZGZkNzFkZDE3MDUyMzlkOGZiZWM0NTJlYzcwY2Q3NDdiZWU0NDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc4Yjk0YTc5NTYxNzAyM2I4YmM4MDUxMGQ2MGJlNTVhMDJjNjgxMWYyN2UyNDNkYjhlZjBkZDVhZjYzZmJlNzQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjMxZTI3ZWY4MTYxZTJkY2RlYjM1OGMxOTgzYWZhZWE3MDY1ZTgzODZhNWNlMGNkMzJlZTkwOGYwNDFkYTQzMmEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_ab9622dee0314f8aad5575f28d492fbc",
+      "statement": "run_fifo_pio.py builds an SE-mode System with FifoPioAccel at FIFO_BASE=0x10010000 and requires mem_ranges to stay below that base since SystemXBar routes by address range and an overlapping DRAM range is caught at m5.instantiate().",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel/configs/run_fifo_pio.py#L38-L49",
+          "version": "repo-lines-v1:sha256:e54fe85fd9d34ee995a683bca5c88c895a74d68c3c3c29d174f6d8be832ac4be:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY4ZjJmZmY2NzM0NTkwNDdjYWJmM2E2ZDZmNjE5NDAwMWRkYjc3OGVjYmNmZjIwMjYzZDk0NzRmMTk0NDQ5ZmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc2N2VlMWRiMWU2NmU4ODYyM2NmMWMyYThkMTVkYmE4YTI5ZTRkM2ViOGE2N2NiZTQwMDYyYzJjZWRiMTQ5OTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFlMjViNzk3NjVkOWVmNTQwNzMxODM0ZjM5MzFkMWNkZDMxNTlhOGI2YTBiMTcwZWQwZjI1YzA5M2NlNzY2YTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQwNzU2MzQ0NTkwNGJiOTI4OTYwMmZkMTQyZTMxNDAyYWI1MGRjNzNmNjUyODQ2ZDVlNzI3YzBhMGI1ZDYwYjEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c1d883624ceb4beeb0af6a1e56f5d564",
+      "statement": "run_fifo_pio_linux.py boots RISC-V Linux under gem5's RiscvBoard with FifoPioAccel wired as an off-chip PIO device, using a SimpleSwitchableProcessor to fast-forward boot under ATOMIC and switching to a TIMING core when the disk image signals via hypercall 2, so only the FIFO/PIO interaction runs under detailed timing.",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel/configs/run_fifo_pio_linux.py#L1-L19",
+          "version": "repo-lines-v1:sha256:cb18a8a660a5185c3ee358cca35d60e5447587a1673d437f4e4103a4256fc048:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMDNlY2RkNGE0ZDEwZjE5YzczZmQ0MmZkMTI0MzdmZDMzNTRhODI2ODE2MDVkYTUyNTVhOTdhMzkwNjhkYmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjEwYTY3MTM3NzIwYTVkNDc5NDY1NjM0ZTdhNmI0M2Q1Y2Q2MDA3Njc3YTRmZjUxNTBjNWVmOTFlOWE3ZWNlZTUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYzMjQ5M2NkYzI3NmQyNDY4NTQ3ZjZlNGY0NmYyNTkzNTNjMWQzMGJlZjFmMmFlYjkzYTc4YzEwZThiZGU2ODYifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

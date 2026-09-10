@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:6a11095e5b71f91eb6f5562d197254dd28c4c1529a20f9dd61b1bd5efbdba77b",
+  "claims": [
+    {
+      "id": "claim_355269bdd0da44d8b818bd217a69284c",
+      "statement": "dma_memcopy.sv implements NUM_CH independent copy channels, each using its own channel index as its AXI ID (AWID/ARID) on a shared AXI4 master DMA port, so concurrently-started channels have multiple outstanding transactions tagged by distinct IDs.",
+      "evidence": [
+        {
+          "resource": "repo://examples/dma_memcopy_accel/dma_memcopy.sv#L1-L19",
+          "version": "repo-lines-v1:sha256:27dd19ea88bea8cfc0c5fe14d34a23f49055adae18f77475bbc64c84d2ba6b3f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhZjMzNGI5YzU1MzFiMmE4NTk5NDFiMWRlMjZkM2Y1OTkyYmEzNGEyNjdiMDE2YjYxYmVlNWExNDI4ZDI4NjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRhMGJjOTRmNzZkYjA0NTM0NTczNGQ0NGI1YjI4MWIwOWQ1ODVmNTg5Mjk2NDgxNWM1YTZlODkxODAwMDBhOTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA0NzJkMzA3YWExOTlhNzBiNjczNDJkODk0YmRlYTY0ZDJhNTA4Nzc2OGFlMTgzN2ExMDk4NWRlZDA0MzMwNDMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_8ca431c829e74501bc83c44bf42e30be",
+      "statement": "dma_memcopy.sv's per-channel control/status register map uses a 0x20-byte stride with SRC at +0x00, DST at +0x08, CTRL (write bit0=1 to start) at +0x10, and STATUS (bit0=busy, bit1=done, reading clears done) at +0x18.",
+      "evidence": [
+        {
+          "resource": "repo://examples/dma_memcopy_accel/dma_memcopy.sv#L21-L26",
+          "version": "repo-lines-v1:sha256:823a8495605508bc2ff4d4c36055276cd738fce071014181f3aa3f3a22e91dcc:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGQzYzdlNzQxN2NmMGVlMTFkNjFkNjJlZTIzZmFkZjc4ZDYyNzkzMDMwM2Q1ZmRhNjJlYmRjOGJlZGQ0ZTcwNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTJkY2U2ZTI0Zjk3OTA2MzVmMWI3YWUwMDg3NDMyN2E4YmIwYzRiZjU1MGMxYWQ1M2E0NTFlNzFmYzJiYmYxOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDk1N2ExM2Y5NTg3MjhkNTY2ZWY3NTdhM2Y2MzRmYjEyMjIxYWI3ZjFkZjYwZTM3ZDM3Y2E4MTc5NWYzOTEzZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjk1NzZhYzJlNGU0NWM4YWRlM2I3Y2Y3NjM3NzZkMGEwZjQyOTc3NmRmNzAyMzQwNjk4MGRhN2VkNWY4OGY4MCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_9af68085810d4549ae248e4c9bfed92e",
+      "statement": "AR/AW issuance among dma_memcopy's channels is arbitrated fixed-priority (lowest channel index wins) one grant per cycle, but multiple channels can still have bursts outstanding simultaneously since only issuance is serialized; R/B responses are demultiplexed back to the owning channel purely by AXI ID.",
+      "evidence": [
+        {
+          "resource": "repo://examples/dma_memcopy_accel/dma_memcopy.sv#L14-L20",
+          "version": "repo-lines-v1:sha256:001f0a53269a75f3c3861d444c2402e24b153bbab1ab55cbb2ef3af0c2904d48:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTAxZWFkOTM2YTIyODFkNTNkY2MwNjRiN2UyYTJhYjBkNTNiOTJlZjNlZjdiMzRiNjY4NjczMDA3ODk1Yzg2MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTQyNTk3MWIzZjI4Y2U0MTlkYjBmNjA5ZTEzZWIxYjU4ZTJhOTBiOGNiZDQ2ZjI2ODZkZTZjMGRmYzQyNDcyMyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiOTM5NDdmYjU3ZmU5MzA3YTU2NDgxNWZkYmVhN2I5ZTQ2YTYwNTg5MTBmNTEyMDQ1ZDRiNjhmY2ZhNGEyNWIxOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNWQwYmYxNjZjNWU3MmJhMGM0ZDA1NTNkZDRiOGEwYTlmZTc4OWQ1YmQzMGY3ZjJkNmNlOGM1MjQzOWE1YTQzZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_3c2ace33c4fa453793099a2f32b569b8",
+      "statement": "DmaMemcopyAccel implements both axion::Axi4SlavePins and axion::Axi4MasterPins directly against the Verilator-generated Vdma_memcopy_top with no dlopen indirection, forwarding each pin accessor one-for-one onto the corresponding s_axi_*/m_axi_* field of a VerilatedRtlModel<Vdma_memcopy_top> member.",
+      "evidence": [
+        {
+          "resource": "repo://examples/dma_memcopy_accel/dma_memcopy_device.cc#L1-L27",
+          "version": "repo-lines-v1:sha256:f56105a1da7ce7b2c992608027ee42d9e6a4476ff4262b4e52e9176f6c0ec984:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI0NzVmYjQ4YjAxNmI0MjBiY2EwZGJjMzIwN2M2ZmJkMTg0NDUzOTJjZWNlODAzOGM2M2UxZmNhNzU4ODAwMzYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA0Nzc4ZWZmNjlkNGNjZGY0NGZiYzBjNmEyMzMzZGIyYTk2MjAyOTc3YTZjYjFjZmUzOGRjODVjMmNlY2NjOTUifQ"
+        },
+        {
+          "resource": "repo://examples/dma_memcopy_accel/dma_memcopy_device.hh#L1-L14",
+          "version": "repo-lines-v1:sha256:ef4290a7cad714e8f34ac24c5d6f0955af17d716bd387cc22dd0eb56673134a9:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3MzI3NzVlZWU3NzAwMThkYjdkNzlkMDM1YTAxNjMwMTVhMDE2ZGUxN2ViYmY4ODg0OTAyZWM2ZDFkOWZjZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAwMTc5NjA4MTViNzQ4NWRkNzM2NjdhNzE4NDY4NWNjZjI3ZWE2ZDcxNmE5MGRmM2FjNmEyZWFlMTQxMTRlMGUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjA1NmM3ODVmODJiNTZjYzY2MDMyNmQ2OGU0ZDllM2EwMmM5YmUzMzVkM2Q3Y2U0YTVhNTZmZWM5ZWVmOWRjY2IifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_42bff595ca8d4ea1b7feb2043c93d820",
+      "statement": "test_dma_memcopy.py drives the control/status AXI4 slave port with cocotbext-axi's AxiMaster and services the DMA master port with an AxiRam model handling NUM_CH=3 concurrently outstanding channels tagged by distinct AXI IDs, proving the RTL's ID-based R/B demux, though AxiRam services requests in arrival order so it does not prove literal out-of-order completion.",
+      "evidence": [
+        {
+          "resource": "repo://examples/dma_memcopy_accel/cocotb/test_dma_memcopy.py#L1-L25",
+          "version": "repo-lines-v1:sha256:a13061da069b12e744f0631109ca2ac59522a9585550442879439f10dc5c8366:eyJzZWxlY3RlZExpbmVDb3VudCI6MjUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNmMmZiNWRlZmYyN2ZhZmZmMDBkNzczM2U0MzJlOWRlZWM0ODQ0OTlhODAyYmJiYThiYTYyZjc4OWI4NzU0MGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjAxYmE0NzE5YzgwYjZmZTkxMWIwOTFhN2MwNTEyNGI2NGVlZWNlOTY0ZTA5YzA1OGVmOGY5ODA1ZGFjYTU0NmIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhkZjFhNzY3NjA0YzY3MGJhNmU4MmExZjlkZjBkMWU3YjExNWVmODJlMmQ0ZWEwMjI4N2E1OWQwN2UwY2NjMTkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_082d5eea9ffa4197844a28ce6bd6d220",
+      "statement": "run_dma_memcopy.py builds an SE-mode System with DmaMemcopyAccel's control/status registers based at DMA_BASE=0x10010000 and requires mem_ranges to stay below that base since the SystemXBar routes by address range and an overlap fails at m5.instantiate().",
+      "evidence": [
+        {
+          "resource": "repo://examples/dma_memcopy_accel/configs/run_dma_memcopy.py#L40-L49",
+          "version": "repo-lines-v1:sha256:68c5130f7e52f5e86fbede91a2ac46bce8317a4f5c26654451a013faabc37932:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY4ZjJmZmY2NzM0NTkwNDdjYWJmM2E2ZDZmNjE5NDAwMWRkYjc3OGVjYmNmZjIwMjYzZDk0NzRmMTk0NDQ5ZmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQyZjQyM2UyOTVmOGY0Yzg5MGE0ZjhkODYyNWY0NWMwOWNkNGI2MTZkNDZlNTkwY2U2YmU2MzAzMGQ4YjUzZGUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImFlMjViNzk3NjVkOWVmNTQwNzMxODM0ZjM5MzFkMWNkZDMxNTlhOGI2YTBiMTcwZWQwZjI1YzA5M2NlNzY2YTIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFlNmIwOTc0YjQ3MTdlZWNiMmZhMWZlM2RhYzQzZDJhMWIzNDU4NGNmMmNlMDNhMTRlNjMxZDE0NDVhODJjNDkifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

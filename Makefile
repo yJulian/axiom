@@ -14,27 +14,38 @@ GEM5_DIR   := ext/gem5
 GEM5_BUILD := build/RISCV/gem5.opt
 JOBS       ?= $(shell nproc)
 
-.PHONY: submodules verilate verilate-dma gem5 run-fifo-example \
-        run-dma-example tb tb-dma tb-rtl3 clean help verilate-plugin tb-plugin \
+.PHONY: submodules verilate verilate-dma verilate-pcie verilate-pcie-tlp gem5 run-fifo-example \
+        run-dma-example run-pcie-example run-pcie-linux-example run-pcie-tlp-example \
+        pcie-test-elf pcie-tlp-test-elf \
+        tb tb-dma tb-rtl3 tb-pcie tb-pcie-tlp clean help verilate-plugin tb-plugin \
         cocotb-env
 
 help:
-	@echo "Targets: submodules verilate verilate-dma gem5 run-fifo-example"
-	@echo "         run-dma-example tb tb-dma tb-rtl3 clean verilate-plugin tb-plugin"
+	@echo "Targets: submodules verilate verilate-dma verilate-pcie verilate-pcie-tlp gem5"
+	@echo "         run-fifo-example run-dma-example run-pcie-example run-pcie-tlp-example"
+	@echo "         tb tb-dma tb-rtl3 tb-pcie tb-pcie-tlp clean verilate-plugin tb-plugin"
 	@echo "         cocotb-env"
 	@echo "  make submodules            # git submodule update --init ext/gem5"
 	@echo "  make verilate              # build examples/fifo_pio_accel's RTL"
 	@echo "  make verilate-dma          # build examples/dma_memcopy_accel's RTL"
+	@echo "  make verilate-pcie         # build examples/pcie_template_accel's RTL"
+	@echo "  make verilate-pcie-tlp     # build examples/pcie_tlp_template_accel's RTL"
 	@echo "  make gem5                  # mirror src/ into gem5 + scons build"
-	@echo "                             #   (includes both examples once verilated)"
+	@echo "                             #   (includes every verilated example)"
 	@echo "  make tb                    # cocotb FIFO/PIO AXI4 testbench, no gem5 needed"
 	@echo "  make tb-dma                # cocotb DMA memcopy AXI4 testbench, no gem5 needed"
+	@echo "  make tb-pcie               # cocotb PCIe template testbench, no gem5 needed"
+	@echo "  make tb-pcie-tlp           # cocotb TLP-level PCIe testbench, no gem5 needed"
 	@echo "  make tb-rtl3               # cocotb FleXNNgine2 rtl3 GEMM testbench (RTL"
 	@echo "                             #   pulled from a sibling gem5_cva6 checkout,"
 	@echo "                             #   no gem5 leaf class yet -- see"
 	@echo "                             #   examples/flexnngine2_rtl3_accel/README.md)"
 	@echo "  make run-fifo-example ARGS='--binary <elf>'"
 	@echo "  make run-dma-example ARGS='--binary <elf>'"
+	@echo "  make pcie-test-elf         # build the bare-metal PCIe enumeration test"
+	@echo "  make run-pcie-example      # bare-metal PCIe test on HiFive (builds the ELF)"
+	@echo "  make run-pcie-tlp-example  # same test, TLP-level RTL variant"
+	@echo "  make run-pcie-linux-example ARGS='--disk-image <img>'"
 	@echo "  make verilate-plugin       # build the FIFO DUT as a plugin .so"
 	@echo "                             #   (opt-in dlopen path, see plugin/)"
 	@echo "  make tb-plugin             # standalone plugin-ABI testbench"
@@ -50,7 +61,13 @@ verilate:
 verilate-dma:
 	$(MAKE) -C examples/dma_memcopy_accel
 
-gem5: verilate verilate-dma
+verilate-pcie:
+	$(MAKE) -C examples/pcie_template_accel
+
+verilate-pcie-tlp:
+	$(MAKE) -C examples/pcie_tlp_template_accel
+
+gem5: verilate verilate-dma verilate-pcie verilate-pcie-tlp
 	scripts/build_gem5.sh
 	scons -C $(GEM5_DIR) build/RISCV/gem5.opt -j$(JOBS)
 
@@ -59,6 +76,32 @@ run-fifo-example: gem5
 
 run-dma-example: gem5
 	$(GEM5_BUILD) examples/dma_memcopy_accel/configs/run_dma_memcopy.py $(ARGS)
+
+# Bare-metal PCIe example: unlike the SE-mode ones above this is a real
+# full-system run (PCI needs a Platform for its config space and its
+# interrupt route), but with RiscvBareMetal rather than a Linux image --
+# so it needs no disk image and no gem5 resource download. The guest ELF
+# is built here from riscv_test/ with the host's riscv64-linux-gnu-gcc.
+pcie-test-elf:
+	$(MAKE) -C examples/pcie_template_accel/riscv_test
+
+run-pcie-example: gem5 pcie-test-elf
+	$(GEM5_BUILD) examples/pcie_template_accel/configs/run_pcie_template.py $(ARGS)
+
+# The TLP-level variant of the same device: identical guest test, but the
+# RTL parses PCIe transaction-layer packets itself instead of being handed
+# AXI4. See CLAUDE.md's "The TLP-level PCIe path".
+pcie-tlp-test-elf:
+	$(MAKE) -C examples/pcie_tlp_template_accel/riscv_test
+
+run-pcie-tlp-example: gem5 pcie-tlp-test-elf
+	$(GEM5_BUILD) examples/pcie_tlp_template_accel/configs/run_pcie_tlp_template.py $(ARGS)
+
+# FS-mode Linux variant: Linux enumerates the endpoint over ECAM itself.
+# Needs a riscv-ubuntu disk image passed via --disk-image (several GiB,
+# not fetched by default) -- see the config script's docstring.
+run-pcie-linux-example: gem5
+	$(GEM5_BUILD) examples/pcie_template_accel/configs/run_pcie_template_linux.py $(ARGS)
 
 # Opt-in "plugin" path (dlopen-based, see plugin/rtl_plugin.mk): builds the
 # same fifo_pio_accel DUT into a .so instead of linking it into gem5.opt,
@@ -87,11 +130,24 @@ tb-dma: cocotb-env
 tb-rtl3: cocotb-env
 	PATH="$(abspath $(VENV_BIN)):$$PATH" $(MAKE) -C examples/flexnngine2_rtl3_accel/cocotb
 
+tb-pcie: cocotb-env
+	PATH="$(abspath $(VENV_BIN)):$$PATH" $(MAKE) -C examples/pcie_template_accel/cocotb
+
+tb-pcie-tlp: cocotb-env
+	PATH="$(abspath $(VENV_BIN)):$$PATH" $(MAKE) -C examples/pcie_tlp_template_accel/cocotb
+
 clean:
 	$(MAKE) -C examples/fifo_pio_accel clean
 	$(MAKE) -C examples/dma_memcopy_accel clean
+	$(MAKE) -C examples/pcie_template_accel clean
+	$(MAKE) -C examples/pcie_tlp_template_accel clean
+	$(MAKE) -C examples/pcie_template_accel/riscv_test clean
+	$(MAKE) -C examples/pcie_tlp_template_accel/riscv_test clean
 	$(MAKE) -C examples/fifo_pio_accel_plugin clean
 	rm -rf examples/fifo_pio_accel/cocotb/sim_build examples/fifo_pio_accel/cocotb/results.xml
 	rm -rf examples/dma_memcopy_accel/cocotb/sim_build examples/dma_memcopy_accel/cocotb/results.xml
 	rm -rf examples/flexnngine2_rtl3_accel/cocotb/sim_build examples/flexnngine2_rtl3_accel/cocotb/results.xml
-	rm -rf $(GEM5_DIR)/src/axi $(GEM5_DIR)/src/cpu/rtl $(GEM5_DIR)/src/dev/rtl $(GEM5_DIR)/src/examples
+	rm -rf examples/pcie_template_accel/cocotb/sim_build examples/pcie_template_accel/cocotb/results.xml
+	rm -rf examples/pcie_tlp_template_accel/cocotb/sim_build examples/pcie_tlp_template_accel/cocotb/results.xml
+	rm -rf $(GEM5_DIR)/src/axi $(GEM5_DIR)/src/pcie $(GEM5_DIR)/src/cpu/rtl \
+	       $(GEM5_DIR)/src/dev/rtl $(GEM5_DIR)/src/examples

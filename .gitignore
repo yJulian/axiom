@@ -17,6 +17,7 @@ examples/**/tb_fifo_pio_plugin
 /build/
 ext/gem5/build/
 ext/gem5/src/axi/
+ext/gem5/src/pcie/
 ext/gem5/src/cpu/rtl/
 ext/gem5/src/dev/rtl/
 ext/gem5/src/examples/

@@ -1,0 +1,14 @@
+# SConscript for AXION's TLP-level PCIe engines (no SimObjects here --
+# pcie_tlp_types.hh is header-only, and the two engines are plain C++
+# classes composed into RTLPcieTlpDevice, mirroring how src/axi/'s engines
+# compose into the AXI4-based RTL device bases).
+
+Import('*')
+
+Source('pcie_tlp_engine.cc')
+
+# Same extra objects the AXI4 slave engine's gtest needs: this engine turns
+# PacketPtrs into TLPs, so the test drags in gem5's packet machinery.
+GTest('pcie_tlp_engine.test', 'pcie_tlp_engine.test.cc',
+      'pcie_tlp_engine.cc', '../mem/packet.cc', '../sim/cur_tick.cc',
+      '../sim/bufval.cc')

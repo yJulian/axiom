@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:3d5b1bea401b1ce3b4ebe4ce59ba46e8a0b2d253bec9ccc9c842f8d92580cbd0",
+  "claims": [
+    {
+      "id": "claim_20db95ae6a274745916f03a27cc2e86f",
+      "statement": "scripts/build_gem5.sh mirrors src/{axi,pcie,cpu/rtl,dev/rtl} and examples/ into ext/gem5/src using cp -rs (real directories with individual files symlinked back to this repo) rather than a plain symlinked directory, because gem5's src/SConscript walks with followlinks=False and would not see a symlinked directory at all.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/build_gem5.sh#L1-L24",
+          "version": "repo-lines-v1:sha256:f5c64548147333cfed708a09b906832429d638fb9bf75148de98804377f8364c:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkOTVmYzA0YTgwYzk1MmY0OWNlNDE4ODYyN2M1M2IwZmJlOGM0NDA0MWI5NTJkNTkyYWNkMWRlOTk4NjE0NjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVmY2FkM2Y2NmZhOWUzOTQzOWY5ZWI1NjI3NzRmMGQ2ZjkzMDRlZjY3ZjVlNDcwYzYzMDAzYWEwYjFlOGVjODgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY2MTEyMGY3Y2E4NGExNWQwOWEwZTRhYWFlNzBmMTIyZGJiZWQyMmZhMTc5ZGZmOWU3OGJkM2VlYTJiNjIyZmEifQ"
+        },
+        {
+          "resource": "repo://scripts/build_gem5.sh#L44-L48",
+          "version": "repo-lines-v1:sha256:1e520bf048ce143054d2a496c6085e9b5f07e93e76839033f7b55474631df660:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzQ0NDFlNDAxNDgyNDBiOTIwMjAyNjY0OThmMmRjMzhhMjA1YzM4MzdhMGYyOTE1YTYzZGZkNGE0OTNlZDI0OSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDgyYWU3ZGFkOGNjZDcwYmIwNjhmMDk2M2ZmMzZkM2U0NmU0MTE3MTIwNWUxZTEzMDVkODcyNDlkY2ZkYWNlNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzVmZjkzZDI1NmU4ODA5OGJjMTI3NjgyNDU2NDJlOGJkNmQ0ZmRmNjFkYzhhNjdjNmEyMDJiZTIwMDlkZDhlOCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_bdbede2630484db385abf633ee6a7300",
+      "statement": "Each mirror() call in build_gem5.sh does rm -rf on the destination before cp -rs, so the mirror is rebuilt from scratch every run and a deleted or renamed source file does not linger in the mirror.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/build_gem5.sh#L36-L42",
+          "version": "repo-lines-v1:sha256:00dc1c7a6009f8290c691643a08e6a787dab448a3978cd074575c530c5987185:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNDVlMzZlODhkZDU2MTVmZWJmNmQ1OWY0NzE4MTViMGYyMTMwMzg0OTU5ZmQzNThhNzUyMmEwZmM2YTYwNzFiNCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiODg5ZTY5NjAxYjYxOGZmOTMzNjQ2YzlmNWIzMzI3MWJkMWIzYTg0YjM4MTdkZWY3YTcyZWNiNWVkNDkyNDIwMyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYmIyMmMzYmMxMDZiZTlhMGE5ZDc0MWI1MDk5N2JjODJmOTIyMTVhZGUyNmI3YmU2MmMyYzQ5NGIxZjE2YTljMSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_611d439e43eb40429871753b19de3122",
+      "statement": "Each AXION source subdirectory mirrors at the same relative path it would occupy inside gem5's own src/ tree, which matters because AXION's own headers use gem5-style #include paths resolved against gem5's src/ as the include root, and none of these five paths exist in stock gem5.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/build_gem5.sh#L10-L18",
+          "version": "repo-lines-v1:sha256:cca4f87ee156a007f9c338adac81e3fa1aeabe7972e5045d71dca9292d697a19:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNzRiZTYyM2JiMTgxYTdmNjRiOTQ0ZWI5ZDA4M2FlYmFhZjNhYmFmZWZmNzMzNzA5MWZhMTY0ZmE3MzJhMjk0MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZmIyMWQwMTQ4NzE4MzIyZjdjNTVlMTk3ZTU1ZDIzMmVmYTQwYmY1ODMxMDA0MjkzNTE2NzE5NzdmMjIzOTNjOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTIyYTc1NjFiMTc2ODVlYzY2N2ViMmQ3YzFkZDM2Mzc4YTk4MWI1NWY1Y2RlY2ZmZjc0NTY0MjYyYzQ5YjFmNCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMWVjM2QxZGVjMTdjNzRmZWVkZDdkNWI4NzdmMDc3NmU0MjIwNDVmODNjYWE3ZmY2MzU2YjAwZjQzODI3MGI3ZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_1c67937abaac48e18ad977b22befce74",
+      "statement": "scripts/setup_env.sh performs one-shot environment setup (checking out the ext/gem5 submodule and running a pre-verilate mirror pass) but deliberately does not verilate any example or build gem5 itself.",
+      "evidence": [
+        {
+          "resource": "repo://scripts/setup_env.sh#L1-L23",
+          "version": "repo-lines-v1:sha256:182d7731232a029bd76d9e4c594f8f1d839e4168fc91d31d779bba4bad205a79:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkOTVmYzA0YTgwYzk1MmY0OWNlNDE4ODYyN2M1M2IwZmJlOGM0NDA0MWI5NTJkNTkyYWNkMWRlOTk4NjE0NjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJhMjFjNWIzYmZmMDI5OWMwMTYxNDcwNDY4ZjM1NWU1YjRhZmNmMTdhNWY1OTNhYjY4Mzk0ZWY3YWYzMTljZGMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_e1632ad6075f4a86bdfb25084f1031a4",
+      "statement": "hw/axi4/axi4_pins.sv provides two adapter flavors named after the DUT's own AXI4 role: axi4_pins_slave_port for a DUT-as-slave PIO/register port with flat s_axi_* pins, and axi4_pins_master_port for a DUT-as-master DMA port with flat m_axi_* pins.",
+      "evidence": [
+        {
+          "resource": "repo://hw/axi4/axi4_pins.sv#L10-L20",
+          "version": "repo-lines-v1:sha256:3b1b25a0248a1cc2d47cac3ae47ca250f9ae2c1b49718c5804990879d06acab8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjEwMWVhZDkzNmEyMjgxZDUzZGNjMDY0YjdlMmEyYWIwZDUzYjkyZWYzZWY3YjM0YjY2ODY3MzAwNzg5NWM4NjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlmOGYyOGU4ZDJjZTI4ZTFmMGEzNjhkMGY2YTExODQ4MDliMmE1MzY3ZWI0OWZjZDhjZTY4NDg5ZjUyYmNmZjUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYxNzIxZTExN2VkYTQ0OTlkYjZlZDE0MGM2NTFmYmE5NTg2ODdjYmJhMDhiNDU0YWQ1NmZkZTczNWRkNDA4YTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdjNTdiNDJlYWIzYjZjMDU2NDEwODk1MzFiMGExZDA1YzliYjViYWJkOWI2ODdmODc1OTRmYzgzMzE5NWYwOTMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_2872844c244a4800a4ffe4405ccab969",
+      "statement": "hw/axi4/axi4_pkg.sv defines shared default AXI4 field widths (AXI_ID_WIDTH_DEFAULT=4, AXI_ADDR_WIDTH_DEFAULT=64, AXI_DATA_WIDTH_DEFAULT=64) used by axi4_if.sv and axi4_pins.sv, individually overridable per axi4_if instantiation.",
+      "evidence": [
+        {
+          "resource": "repo://hw/axi4/axi4_pkg.sv#L1-L14",
+          "version": "repo-lines-v1:sha256:90341e538b25750f9933eeb17384b55109dcbb32b49a2350e748e0586aa92741:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFmYTBlY2M0NDg4N2FmN2FhYzQ3OGVlODhmZjgyNDgxMDNhZGEyZjRmYmQwYjZlMmQ3MTBkYmUzM2JmNThkNGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJkNWMxNmE4ZmU5Y2E5Y2UxMWFmYzgyZGI3ZDI0MjcxMmMyN2YxM2IwNDU2YTEzMGVhN2YzMGZmM2Q4MDY0OGEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjhlYWUwZGRjNGU3Y2QyNjk0NTI1MGJkYzdkZmRjYjdmNzkyMGUxMjcxYmYxOWMxOWU2Mjk0NTNlNzRmZGQ4NDQifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

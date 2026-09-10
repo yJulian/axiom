@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:fc4afb22aefc304da998002bee2e77787a2f3247ee24d38c9de2e7392e76f165",
+  "claims": [
+    {
+      "id": "claim_13601d4e22ea492db5c3e9068904b5a0",
+      "statement": "PcieTlpCompleterEngine::issue() takes an explicit BAR-relative tlpAddr placed in the TLP header (analogous to Axi4SlaveEngine's address overload) and returns false if a transaction is already in flight.",
+      "evidence": [
+        {
+          "resource": "repo://src/pcie/pcie_tlp_engine.hh#L47-L59",
+          "version": "repo-lines-v1:sha256:2246b876e3a21242ef9eb740db024d7f65933c428c95432e213e05d2c8d2ad70:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5Y2JiYzY1NDY5ZGIxY2EyODQyZWZkOTdkZjdlZTJjZTZjYzE1NzE0ODJkMDFhMThiNzkwYTEwYzdjNTEwZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA1ZWY1ZGQwYzczN2MyZTg4NzExZjc2YmI2MDNjNzQ2NDRkMmExN2E1YzQ0OGM2YzI2MWZlMjYxNjZlMjkyNWUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM1ZTg2MzJhYTk1YTkxN2ZlNDBhMDEwZTJmMTU5NDgxMjRlNTFkNWY0MWMyMTRmYTg5NGZjMWNiOGQ2MWE1ZTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijk4Mzg1MTVkZmQzMTE0OTU3ZWQ2NjkzMjU4YjhlM2UwYTU0OGZlYzJkYzc1NGU2ZmI2NjVhNTM2NjMxZjY2ZTAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d4a0b80bbd5f4d18a52ba1f1dc92107f",
+      "statement": "A memory write on the TLP completer path is posted: the engine answers the gem5 packet once the last request beat is accepted, since PCIe defines no completion for MemWr, unlike the AXI4 path where every write waits for a B response.",
+      "evidence": [
+        {
+          "resource": "repo://src/pcie/pcie_tlp_engine.hh#L37-L41",
+          "version": "repo-lines-v1:sha256:af3fc7215ac2d51d1ba2d27e7a7bf3c32859bb18b02f4e93afa9d48ee4711eb2:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiY2Q4OWJjZTIxYmZkNDhhOTE1YTAzMjRmM2I3YWQ1M2UxMzQwNTIyOTYwMzY4M2RlZmU5NGJmYzE5ZTVjMDQ5MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTcyYTQyOTM4MmIyZTE0NzE4ZTBlMzdiMDU3MGE4YTE3MDI5OTFmY2Q4NDk4Y2Q4NDA2MGE4YmY0ZjA1MDE3YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzYyYmJlYjc3YTIzNTRmOWU0N2NmNTA5NGNlZDg1Y2RkNjkzNzI3MmJkMzYwMmIzOWE5ZmQwYzdjYTkxMGQ0MCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTQ3NWUxMjkwZWNmMzMzM2E3OWRiNjBhZjEwNGU5MjJjNjZkODExMWVhYWQ4MjI1ZmQzMmY5MDE1MDJiZWRiNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_5d1b853537904e3288d146398489fe4c",
+      "statement": "PcieTlpRequesterEngine tracks outstanding reads per PCIe tag rather than AXI ID; completions are emitted in backend-completion order which may differ from issue order across tags, and reusing an outstanding tag is a fatal error.",
+      "evidence": [
+        {
+          "resource": "repo://src/pcie/pcie_tlp_engine.hh#L106-L117",
+          "version": "repo-lines-v1:sha256:74dcc4540541ee848875b0d740c4bb0e6f4fe7ebe65cd77408ea8837a368a9c4:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImVhZjIyY2YwNzMyNTkyYzI0NzE0MWNiZTYxZWZhMTEwMTI2MTJmNWEzMTIyYjlhZjliYmFmNTJmNTcyNGQxOTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3MmE0MjkzODJiMmUxNDcxOGUwZTM3YjA1NzBhOGExNzAyOTkxZmNkODQ5OGNkODQwNjBhOGJmNGYwNTAxN2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjgyNmExNzA1NTk0YmY5NmExNjdjN2ZmYTA4ODBhMjY5MTgyMDQxZjZjNWYyNTFiMjBmNDZlMzZiNThiNGNmNWIiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijc5ZjhkMmQ2NzNlYzczMjg0YTZlMWU4MzdjYjEyZTQ2MmVlZDU3NDIwYTkzZmZmYzgyODUyMDgwYjJkZjBmODkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_228aaae9738445b18cbb605efa3ed89a",
+      "statement": "PcieTlpCompleterPins/PcieTlpRequesterPins expose only tdata/tlast/tvalid/tready per stream (16 pins total across CQ/CC/RQ/RC) versus AXI4's 88 pins, because TLP streams carry addressing/length/byte-enable information inside the packet rather than on sideband wires.",
+      "evidence": [
+        {
+          "resource": "repo://src/pcie/pcie_tlp_types.hh#L1-L16",
+          "version": "repo-lines-v1:sha256:c63849948bd408d80cf1ba79afc867a706b592340dcf2f2872b8de0069cf9e3d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3MzI3NzVlZWU3NzAwMThkYjdkNzlkMDM1YTAxNjMwMTVhMDE2ZGUxN2ViYmY4ODg0OTAyZWM2ZDFkOWZjZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3MmE0MjkzODJiMmUxNDcxOGUwZTM3YjA1NzBhOGExNzAyOTkxZmNkODQ5OGNkODQwNjBhOGJmNGYwNTAxN2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjVkOTA1NjE4MzdmNzI1OTY1NWQyZjZkYzE2MTBhZTdkMTliODZkYjljMWVkNjQ5ZTJiYTQzYTk1NGUwMjJkMGMifQ"
+        },
+        {
+          "resource": "repo://src/pcie/pcie_tlp_types.hh#L206-L244",
+          "version": "repo-lines-v1:sha256:a2455b8e40e41897870707b325a7d4c5fd8c9f2cb8addceccd7d979b68ac875e:eyJzZWxlY3RlZExpbmVDb3VudCI6MzksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImYxMDY3MGQwZDMxNDZjMDkyMGFjN2ExYzljZDkyZjM0N2RiMDA1MDBmZjIzYmMxYzM3MDlkNjc5MWIzNTllNjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFhMWQxYTYzMzkwMjI5Yzc5ODM0N2U4M2EwNDA1NDQxYzk0MDAwMzUyODRhZDE2OGMxYmY2Y2RmMWQ3MGEzNzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRlZTAwMzc4NGZmMzhkY2EyMWYwNjE3OTM2YzkwZGJhNDIxZTc4NmRlZjQ2NmIxODZlOGFjMGE2ZjgzOTU2NjYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBhMDU4YzAwNTdiOWI3ZjM3MWY2YTgwNTY0MDIzOWZlMDc0NTdjZDVkNmJmYjcyNmI1MDVhOGU4ZjliM2VhODUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_da20cf9abad14e1c9b7ac4050be6f671",
+      "statement": "AXION's TLP engines emit requests using only the 4-DW (64-bit address) header form and the DUT rejects the 3-DW form, so request payload always starts on a beat boundary; completion headers are genuinely 3 DW but padded to 4 DW with one reserved DW to keep completion payload beat-aligned as a stream-packing convention, not a header field change.",
+      "evidence": [
+        {
+          "resource": "repo://hw/pcie/pcie_tlp_pkg.sv#L10-L25",
+          "version": "repo-lines-v1:sha256:74043bbc74a267d5d5a2add8fd796ed26775aab01a94e2ac201e8c91ee3280c1:eyJzZWxlY3RlZExpbmVDb3VudCI6MTYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjEwMWVhZDkzNmEyMjgxZDUzZGNjMDY0YjdlMmEyYWIwZDUzYjkyZWYzZWY3YjM0YjY2ODY3MzAwNzg5NWM4NjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlkN2Y1ZDZmYmIxMmU3MWQ5MTE0NzBhNjNmMTYxOWViN2EwMmI3YWFmNzBmNWExMTk0ZTQ2MWEwZmFkNTc3OTkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjM4OWE3ODE5M2ZlMTg4NDM0Zjk2YzRiZGVjNmQ2NWMwNDJkOWY0NzU3NDFjZWZkYzc1MTM5MzhjNTVlNTFiMDUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI4YzMzY2VkNTUwMDBjNmY3NDEzYjZkY2QzMTIyMDc1ZjgwNDg3YzcwZWVmZGI3YzM5ZGM5YjRlNWU5ZDZiYTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1b1ff26f55d84cb48bdb704ad4c3aafc",
+      "statement": "The four PCIe TLP streams in hw/pcie/pcie_tlp_if.sv carry no TKEEP signal, deliberately, because it would be a second source of truth duplicating what the TLP header's length field plus byte enables already state exactly.",
+      "evidence": [
+        {
+          "resource": "repo://hw/pcie/pcie_tlp_if.sv#L14-L22",
+          "version": "repo-lines-v1:sha256:a1b6a7e2dad2b8ac9115f814c4ddc138a83d12885b2bac599a90d7effa93d797:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTlhZjM5Nzk3YWEyYmZkZjZlYjJlYmUxNDM1Mzg0YjgzZDEwN2JjM2Q3ZmU0MTY4OWE3MGJmMGI3YTQ3MDE1MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTAxZWFkOTM2YTIyODFkNTNkY2MwNjRiN2UyYTJhYjBkNTNiOTJlZjNlZjdiMzRiNjY4NjczMDA3ODk1Yzg2MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMjUzZjUyZDNiYmYxYzQzYjkwNGRjMTlkYTBiYWZlYmQ5ZmYzNmQxZjU3OTBkZmFmZjZkM2UzODEwNmFlYzMxYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiYjExMTA5NGNiZjgxMjMyODE1NzgxYTM5ODE0YzZiNjM0ZDYwN2NjZDk4OWIxYjJjZWZkZWU4MTA1Y2U4Y2M0MSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_512a4e18d2b54c33956c99d8ecae0134",
+      "statement": "RTLPcieTlpDevice is structurally near-identical to RTLPciDevice (same RtlPioPort, same range-forwarder pattern, same interrupt-edge sampling, same idle clock gating), differing only in which engines it uses, by deliberate design so the two worked examples compare abstraction levels rather than unrelated implementations.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_pcie_tlp_device.hh#L1-L26",
+          "version": "repo-lines-v1:sha256:e0c3742be71b89c61afeab637696250ef179b24b887aaa63b64498b0bfa113bf:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3MzI3NzVlZWU3NzAwMThkYjdkNzlkMDM1YTAxNjMwMTVhMDE2ZGUxN2ViYmY4ODg0OTAyZWM2ZDFkOWZjZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBjOTY0NDM5YmI5ZTE3NmU4NjhkNjE5NGMyNGZiYWFhNTU0NTAyYzgyMjQ1OGU5NjRiYjA3OGJlYTAyZGJhNTgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE0Nzk5ZjdhMTE0ODAxYjY2NGRlZWI5ZDRjYzU0YWE2MTA4NTVmOTI0NmJiZDE0YTM3ZTE5ZGFhMzFjMTJlNzAifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

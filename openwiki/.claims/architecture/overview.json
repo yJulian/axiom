@@ -1,0 +1,94 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:676b35f94ba8d8d8b551207404209e056f6af49e2bb55655606fa2456d4404bd",
+  "claims": [
+    {
+      "id": "claim_ede8f4e6eb5b4e8fadb30f31b463cbd0",
+      "statement": "AXION defines five abstract C++ base classes giving real gem5 inheritance: RTLBaseCpu:BaseCPU, RTLPioDevice:PioDevice, RTLDmaDevice:DmaDevice, RTLPciDevice:PciEndpoint, and RTLPcieTlpDevice:PciEndpoint.",
+      "evidence": [
+        {
+          "resource": "repo://src/cpu/rtl/rtl_base_cpu.hh",
+          "version": "repo-file-v1:sha256:e82dc7ed089d036e2544f857c975f3e7330bd41979849e473ebc882b7081ba37"
+        },
+        {
+          "resource": "repo://src/dev/rtl/rtl_dma_device.hh",
+          "version": "repo-file-v1:sha256:e4851b1ea18504ae1fa3c919ce3ac86f7075ccf7cb1781bb0cb4076c47299520"
+        },
+        {
+          "resource": "repo://src/dev/rtl/rtl_pci_device.hh",
+          "version": "repo-file-v1:sha256:ca3f27e0c0d505dc2d1d2c7fc34ce5865686faa3e2aaf47a36541c72c370adf4"
+        },
+        {
+          "resource": "repo://src/dev/rtl/rtl_pcie_tlp_device.hh",
+          "version": "repo-file-v1:sha256:2042578b080635fdd7b368d34ed589dd64cf09ad018921a49308daec9fb4ef2c"
+        },
+        {
+          "resource": "repo://src/dev/rtl/rtl_pio_device.hh",
+          "version": "repo-file-v1:sha256:a6d980eb131bef4e804bf57be2326e4912a2e2edf17117595177089f7e0c98c1"
+        }
+      ]
+    },
+    {
+      "id": "claim_39f9ef0ba529454c95dba52f76a2057b",
+      "statement": "RTLDmaDevice does not multiply-inherit from RTLPioDevice because gem5's own DmaDevice already extends PioDevice, making RTLDmaDevice transitively a PioDevice.",
+      "evidence": [
+        {
+          "resource": "repo://CLAUDE.md#L14-L17",
+          "version": "repo-lines-v1:sha256:4291ed3880114cdb208ca424891417b8a68e8e4bd5f1d2cc6628c21e83bca6ac:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzk1ZmUxMGI0ZjRmOGUzMGUzZDI5ZDZhZTAyNWU5MzYwYjllNDI1YTIyMzY4OTBiYzI4MzU0MDg3NzU2MzRmYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzZlNGQ3YmU0ZGYxNjUxZmZlNTg3M2Y0NDlkM2E2MzU3MWFlOTM2M2EzMjE1ZWE4ZmM0YTZkYmRiMzdjMTFkMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmEyN2UzOWY3YzQ2NDdmZjMxMjMxNzhjYzFlYjk5ODYxM2Y4NTVhMzVlYTdkNjg3OTBjNGViMDAyOTE2MDI5NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTc5NDhjNDU4N2YxNDQ2MTRhZGFjNjQ2OTcxMzRiMGI0MTJhZDE5MDY3OGM4YWM1Y2JhZThjZjRmNmQyOGZjNiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_86511a09ee03464e828f0b6a5e223df7",
+      "statement": "Shared behavior across the RTL base classes is implemented via composed helper classes (Axi4SlaveEngine, Axi4MasterEngine, VerilatedRtlModel) rather than a fourth shared inheritance layer, because a common base would either duplicate PioDevice through multiple inheritance or not fit RTLBaseCpu at all.",
+      "evidence": [
+        {
+          "resource": "repo://CLAUDE.md#L145-L150",
+          "version": "repo-lines-v1:sha256:cb54a9a12fde58b8b9a19a930576c8bc802a3412664152d96f4721cb10f2e0ec:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNmY4ZWUwYzI1OGEyMmFkMDhkZGY5MzI4NGFjNzNjNWM1OTNmZmFjNmFlOGNjZGNmOGFiNzI2YzUwOTZjZDA2MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMGYzYTI5NTAzNTg5YzI1NTdhZWQ0ZjAxNTllOWMxYjk5ZmEzOGQxOWI2YmE5ZjA5MTkwZTQ5M2UwOGE3YjQzNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYjM4YzhjMzVlNjIwYTdmOGViNzYyNzM3ZWI5ODA3OGU2MGMyOTdjOTg3YTBlOTM4N2Y4MjcwNzg4OWQ3MzZmMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmU1ZWI3MWE1OWQxZjFjNTU5NjRkZjEzZDFiODIwYmY0NTk5NTZkZGY4YmYzN2JhNDI3OTdmMTYwN2UwN2E2YSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_4e43944e1fae409fbf14c93de3649fe8",
+      "statement": "The direct-link path has a leaf class #include its Verilator-generated Vxxx_top.h directly with no dlopen/abstract-backend indirection, a deliberate simplification versus prior art on this machine.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L26-L34",
+          "version": "repo-lines-v1:sha256:c501f730f3bd8f0fe6dec42a718aa46b590e22b39b38e0586c43ee1d985553ce:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZmQ2ZDMwNzRiYmQ5ZjA2ODk1OGM5NDkzN2RjNmRiNTA4ODM5ZTljMGY5ZGI4NzZmNjg3YWE0MGFhMzc3YmU2OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDdjMDZjNTYxZDVjMzI3MzQzNjg1MjY4YTQ2YjMzOTFmMzk5OGVlZTg5MGQyYmU1MWYwZDIxY2M0YTUzYWU2ZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDAxZjJlYzE3NTkzYzEwNTRlYjQ2MzY3ZDg0NTNlZjI0YTE3M2NlOTZiNzExN2Q5MWY5YTY4ZDQ0ZmVmOGIwMSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDllMmZiMzdmZjM0NGQwMmJhYjk0NTM0MTA2OWYzNWE2YzFhYmEyZGEwYzI0Njk1ZTY1NDM5ZWQzZjlmODNkZSJ9"
+        },
+        {
+          "resource": "repo://src/axi/verilated_model.hh#L1-L8",
+          "version": "repo-lines-v1:sha256:f3c8a23199d546f2423d07aa29445b16889d66c3ef74dbee3288e7875851a136:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiODczMjc3NWVlZTc3MDAxOGRiN2Q3OWQwMzVhMDE2MzAxNWEwMTZkZTE3ZWJiZjg4ODQ5MDJlYzZkMWQ5ZmNmMiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTcyYTQyOTM4MmIyZTE0NzE4ZTBlMzdiMDU3MGE4YTE3MDI5OTFmY2Q4NDk4Y2Q4NDA2MGE4YmY0ZjA1MDE3YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODZlODIyZWU0MmVhNjJiZjE2MGM3NGNlMmQ5YTA4M2I5NzdkOTA4NTRmMzhiMmYyZTRhOTdlOTg2NTA2Y2ZmNSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_fbec178cad3842bd9f557b05c7f396ef",
+      "statement": "The plugin path (RTLPioDevicePlugin/RTLDmaDevicePlugin) is additive and opt-in: it dlopens a .so through the plain-C axi4_plugin_abi.h interface instead of requiring a new C++ leaf class or .py SimObject file per model, and does not change the direct-link default path.",
+      "evidence": [
+        {
+          "resource": "repo://CLAUDE.md#L18-L21",
+          "version": "repo-lines-v1:sha256:8325b07b72f3015eb25845b30b5ede2eca074d3b691f3ede0df662f59cd4e078:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDk4Mjg4ZWUyNTlhZDNhMzg2ZGQ5MzZkNGJiODYzZTc2YWQ1Y2U1MTc4NzMzZTllMWI3OGMyYmZhZjU3MDdlZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDJlMmZkY2IyZDk0MGQwYzI5YmRjMmY0NmEwM2IyYjAxNWYwZDg3MjA0ZmI5NWYwYzQ0ZGMwMmRjNTZkZTM2ZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMDExNTQwZDgzOTcwY2QyNGJkYzc0ZjJhZTE1ZDg0YmJmNWUxNzAwMzU2YjQ1MjMyY2FhZWEzMWQyMzFlNGYyNSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2RlMjMzYmZjMDQxZDAxOTZiOTI3MjUwNmQ3NzY0YzY0Y2M3MTdhNmZhMjdlMjY0NDM3M2ZjNzJjNTlmZjNmOCJ9"
+        },
+        {
+          "resource": "repo://README.md#L36-L43",
+          "version": "repo-lines-v1:sha256:adfaf963439a00212dcd736b0de2dc2e662a0b78e28413bad6d8f9540f0fa106:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNTJmN2RhMDAyNjQ4MzlmY2ZkNTlhOGRlZDNkNDRmNDVhNTQ2M2FiYTY2ODhjZDMwNWIxMzdjNWFkZTNiNDFlYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWIyN2ZmZmY3OGE0NDg5ZTIwNTA5YWJiMzQwN2YzZWI0OThhOTAyNTUzODc1NGVmODA5NTY1MGM4MTA5YTNhNiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDIwZDE3MDQ5ZTdiY2Y2YTdjMWUzMjk3YmQzMjZhYzlhY2RlNDZiODk0NTNmZjg1Nzk2NGEwODVhZmFlN2U1NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDAxZjJlYzE3NTkzYzEwNTRlYjQ2MzY3ZDg0NTNlZjI0YTE3M2NlOTZiNzExN2Q5MWY5YTY4ZDQ0ZmVmOGIwMSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a57e04ac4bb248bc921ec86ffe0dfef4",
+      "statement": "hw/axi4/axi4_pins.sv provides flat-port adapters axi4_pins_slave_port and axi4_pins_master_port, the only form Verilator's generated C++ model exposes to code, and hw/pcie/ mirrors this one protocol layer up for the TLP-level PCIe path with pcie_tlp_pkg.sv, pcie_tlp_if.sv, and pcie_tlp_pins.sv.",
+      "evidence": [
+        {
+          "resource": "repo://CLAUDE.md#L26-L36",
+          "version": "repo-lines-v1:sha256:70fcd77cac6047827f6dbd518a2306eefb55c357dc8a44813688dccf2731316c:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU1NGJkNjc2MTkwMWU5ZjcwMDgwYzA5NTU2MmUxOWQ1OTc5YWE4YzMyZjYwYzk4NTY1NWFjMzMxYjg2NmNlODYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJiNjIyYTA3ODllYjdjMGRmZjExYmYxY2Q4YmI3ZjI0MWU1NTAwOWZlNGVlYjUxMWRlNmY0OTc2YWM4N2YwOGUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAzNDllZWNlODEyNjhjZDQ4MTc4NDAwMDA0N2MxODNkZDRkY2RiMTM2YzQ3MTMwNDEzY2JmMTYwMzIxM2NiOTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFmZmY1NzNmNTIzY2RhZmQ2NjkwMGE4YmNjYTk1M2JjOTBiODEzN2YyZTNiN2UwOTQ0ZDUzY2ZhMmE2ZWE2YjcifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

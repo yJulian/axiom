@@ -1,0 +1,131 @@
+{
+  "schemaVersion": 1,
+  "pages": {
+    "/openwiki/architecture/axi4-bridge-engines.md": {
+      "pageVersion": "sha256:de2127cb827584561e89ba7f1091b68a0a9f85d5978a02f051a150965ac32d84",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/architecture/overview.md": {
+      "pageVersion": "sha256:676b35f94ba8d8d8b551207404209e056f6af49e2bb55655606fa2456d4404bd",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/architecture/pcie-integration.md": {
+      "pageVersion": "sha256:73dbcf624880f7b6f083f11a6dc8d82e807668a407c8917d97498be2ca42fd4d",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/architecture/pcie-tlp-integration.md": {
+      "pageVersion": "sha256:fc4afb22aefc304da998002bee2e77787a2f3247ee24d38c9de2e7392e76f165",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/architecture/plugin-abi.md": {
+      "pageVersion": "sha256:155b6ff17077bb4c596fd62e4db87bb12b69dda4b7503f1e2ae1a0864cd52dd0",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/architecture/source-layout-and-mirroring.md": {
+      "pageVersion": "sha256:3d5b1bea401b1ce3b4ebe4ce59ba46e8a0b2d253bec9ccc9c842f8d92580cbd0",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/examples/dma-memcopy-accel.md": {
+      "pageVersion": "sha256:6a11095e5b71f91eb6f5562d197254dd28c4c1529a20f9dd61b1bd5efbdba77b",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/examples/fifo-pio-accel-plugin.md": {
+      "pageVersion": "sha256:13e47155d0a3cd52924f5f0d97b5741b5c7247089d6c54fca329ae44e7368fef",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/examples/fifo-pio-accel.md": {
+      "pageVersion": "sha256:7bde9cf3ef4998c751da455dcaf1be2fcb94340e354295ff5377e4d122014afd",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/examples/flexnngine2-rtl3-accel.md": {
+      "pageVersion": "sha256:8274f1f6f6c69b87f5fb6a0e5cbdba08471ad19e737a97047a9d829e7a67bb86",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/examples/pcie-template-accel.md": {
+      "pageVersion": "sha256:ff9dec5321cf34b1d2b2396f1a59c94fc95239a48b0be1c64b7abe56190a89c1",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/examples/pcie-tlp-template-accel.md": {
+      "pageVersion": "sha256:e629884732fc4135d9c0d6781464b3ba1d838aa9911bbd28cf6a47f018f9428f",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/quickstart.md": {
+      "pageVersion": "sha256:2fbc34c5b3f87ccf10439371641db9881f6fbe2eafa854a378b05de7648a73cd",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/reference/axi4-signal-coverage.md": {
+      "pageVersion": "sha256:c4d169416a84e3d7f4893d69fd9ccdbe43795860de4177777266172adfce6b97",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/reference/prior-art.md": {
+      "pageVersion": "sha256:c46601cccb2a1cf46a152d1427cc1ad8cd7e2f11f56d043cb80f48edc7adc691",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/reference/rtl-device-classes.md": {
+      "pageVersion": "sha256:bf26795c9d31d0a36f12094353d7a0fa03e268cddc4b43c351fdb13023629c61",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/workflows/build-and-verilate.md": {
+      "pageVersion": "sha256:7a9c43c2e1a632f475362aa2238698aa455d94ea37d9469645a99ee15fdebaf0",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    },
+    "/openwiki/workflows/testing-without-gem5.md": {
+      "pageVersion": "sha256:3bd90735e5abc1641cfab23feda966d09f6bd6295a7e3aa73b18f365d2b0c107",
+      "completedBy": "claude-code",
+      "completedRunId": "8404e594-61a9-41f8-b9b2-e22a0a29c485",
+      "gitHead": "86080c1f42dfe265ab238d2f57448dd1163fe094",
+      "sourceFingerprint": "sha256:e83c8d833bd355665c0eba45f930852671b55ff3405600450ca83f8f546ebe0c"
+    }
+  }
+}

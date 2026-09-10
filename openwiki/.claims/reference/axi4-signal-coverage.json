@@ -1,0 +1,58 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:c4d169416a84e3d7f4893d69fd9ccdbe43795860de4177777266172adfce6b97",
+  "claims": [
+    {
+      "id": "claim_72df746fe35b4418be5b0c02f906e215",
+      "statement": "AXI4_signals.md tracks a 34-row table of every AW/W/B/AR/R channel signal (ID, ADDR, LEN, SIZE, BURST, LOCK, CACHE, PROT for address channels; DATA/STRB/LAST for write data; RESP/VALID/READY handshakes), each annotated with its source (master/slave) and direction.",
+      "evidence": [
+        {
+          "resource": "repo://AXI4_signals.md#L1-L35",
+          "version": "repo-lines-v1:sha256:23b64e29c81a76e75788ec8d381d5f6dc450ecaf651dd5b7aa4d04a67965b112:eyJzZWxlY3RlZExpbmVDb3VudCI6MzUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdlMTBiZmMwNGRjZGM2MGMxYTE4MzI2MTZiNTdmYTMzMGM3NGI2M2U0NmQxN2M2M2IwOThmMzYzMDcwMTAzYzMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjZlMjU3MWFkMmQ4YzUxYWUxY2Y1ZGYxNTA5MTM5MzZjMTUxMjRjMWRkODA3YmE2Mjk1M2Q3ODU4ODIyZWY2NGMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_270bffafe4ee414a855a74bfea10303d",
+      "statement": "RTLPioDevice/RTLDmaDevice and their plugin-path counterparts have been audited to drive AWLOCK/AWCACHE/AWPROT/AWQOS/AWREGION (and AR equivalents) end-to-end across the SV interface, pins adapter, C++ pin contract, both engines, the fifo_pio_accel example, and the plugin ABI.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L47-L58",
+          "version": "repo-lines-v1:sha256:cbbe88ca171e6ba0ced8b36c869d00ff6a410b8d3024fbc1e105d45e2b25cf84:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA0MjJhZGFkMTE0ODViNTFkNjJkNGI0YTVkOGRjMjJkM2FjM2VjM2M0M2NiNzMwNjRiZTU3YTNmMjg5OWJkMWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY0MDA1OWZlNDU3OTExMjEyYzIxNmU1YmYwMTVmZmUxNWE2ZWJjNmZmMWNmMDllNWQyNTdhNWZkNGQyMTg2NmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjAwMWYyZWMxNzU5M2MxMDU0ZWI0NjM2N2Q4NDUzZWYyNGExNzNjZTk2YjcxMTdkOTFmOWE2OGQ0NGZlZjhiMDEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFkZDY5OTlhNjJhODg1OGIxMmMzOWVlNTM5M2Q1MDM4NmI4ZjJlMzc2NzRjN2M5Y2Y5NDdmYWI5NDhlZTg0YmYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a523b0b6861e480d9491186c11f0d089",
+      "statement": "RTLBaseCpu has not been covered by the AXI4 signal-completeness audit and is an explicit follow-up, because its inst/data ports have the RTL core as AXI4 master on both, the reverse role split from RTLDmaDevice's DMA port.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L60-L64",
+          "version": "repo-lines-v1:sha256:2e2e62130785d74fc8049473347e842689021918d857e3cfeb49c17a131d65a2:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMmEzZjNjZWYwNjRkMzk3MmJjYzc4OTEyYjA0NmUzNzYwYjk5Y2ZlYzRjMjRjOGQ3MGViNTBkNzczMDg2YTY1MiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGUzNDMwMTQ3YjYwOGQ3MmVhOGU2YjViNmRkZTBlNjlkMGZiZjRlYzllM2JjZDFlMDMxZWY5YzNkODljNmEyMCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMWI3ZDM4ZjhkMzMxMzU0MGYwMjg4ZTRlM2Q5YWQ3MmRkOTBiYzFkNzk2ZjhlMTVkNjk1MWMzMWVlOGUyY2U2NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZjQ2ZTFmYWFmODdhZTVjZWViN2YwYmRmMjllMTE4ZTAzNGJiZDY1OTQwY2I5NTUxMjU5ODJjZTEwOTY2NDk3MCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_84fe2f44690e476d82e847370ee998e8",
+      "statement": "Axi4MasterEngine always drives BRESP/RRESP as OKAY and panics on FIXED/WRAP multi-beat bursts rather than executing them; both gaps are documented as deliberately not fixed because gem5's DmaDevice::dmaRead()/dmaWrite() convenience API only takes a completion Event* and never exposes packet/error status back to the caller.",
+      "evidence": [
+        {
+          "resource": "repo://README.md#L66-L78",
+          "version": "repo-lines-v1:sha256:287f15dea85482b1ecc57444f37f330ee9e75b41ab7fa659ba6bc6a1b7e77174:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE5MDQ5NzUzMjdhZjBhYjI1ZThmYjkwZjA0NzQzYmZlMmFlNGU3OGFkYmFhYjhhZjBmMTZhYTBiOWQ5YzExNDMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVkMTEwZWI5ZDZhNTc4ZGE4NWNkZjEzODcwMDc5OGFkMzRhYWNlMTMzOWVjMzhlMmY5MzE0MGFkNThiNTVhMDgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjU0ZmJkNjg2NjMxYmQ3MjMxZjhlZTJmZDQ4NDdhYzE5NDFkNmZkNGVmZTI5NDFkMGUyYjk5NmJlZTAwZGUzNWQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        },
+        {
+          "resource": "repo://src/axi/axi4_master_engine.cc#L219-L219",
+          "version": "repo-lines-v1:sha256:e3f6b3bc7b05791312839d20094a8110c003cc629be85058b90ea3530a944f88:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZTNmNmIzYmM3YjA1NzkxMzEyODM5ZDIwMDk0YTgxMTBjMDAzY2M2MjliZTg1MDU4YjkwZWEzNTMwYTk0NGY4OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZTNmNmIzYmM3YjA1NzkxMzEyODM5ZDIwMDk0YTgxMTBjMDAzY2M2MjliZTg1MDU4YjkwZWEzNTMwYTk0NGY4OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTRlNmNhYTBlZmY4MzViN2E1ZDZkM2NiNjlkNGFlNmZiMjg5MTkzOWIyN2MzOTY1MjZiODkwMjMyYzgxZjA4ZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDhhYjMyOGU1ZjJjNWY0MzAxOWIzNGM2MWFiOGI4YjVkNDU2MmIxYmRlMjA5ZTllZGE4NWMxNmJiYTAxN2EyZSJ9"
+        },
+        {
+          "resource": "repo://src/axi/axi4_master_engine.cc#L246-L246",
+          "version": "repo-lines-v1:sha256:11caddea5e33a584ec8bc7b2f33ca628acd4bd67a7494f0fa7171229aab3f61c:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTFjYWRkZWE1ZTMzYTU4NGVjOGJjN2IyZjMzY2E2MjhhY2Q0YmQ2N2E3NDk0ZjBmYTcxNzEyMjlhYWIzZjYxYyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTFjYWRkZWE1ZTMzYTU4NGVjOGJjN2IyZjMzY2E2MjhhY2Q0YmQ2N2E3NDk0ZjBmYTcxNzEyMjlhYWIzZjYxYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiN2I5Y2IwYTkxNzY0YmI2MjA1ZGQyZjNlNzQ1NjI4YjUyYmJhOTUxZjFkYTIyZjZiZWFmZGZkMWJmMGM0ZTNlMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjAyOGY3MjI1M2IxOWM0ZjgyOTYxMGQwZDU1YjEzNjYwNmVlZTJiMzU2ZjBkNTI2NWMzMDk0ZmM5MzkwYTlkNyJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}
