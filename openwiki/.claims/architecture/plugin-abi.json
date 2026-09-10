@@ -1,0 +1,82 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:155b6ff17077bb4c596fd62e4db87bb12b69dda4b7503f1e2ae1a0864cd52dd0",
+  "claims": [
+    {
+      "id": "claim_02f7dc982f4c46278cdc2fe38d96d2ff",
+      "statement": "axi4_plugin_abi.h defines a plain-C (not C++) ABI because C++ vtable/ABI layout isn't guaranteed stable across an independently-compiled dlopen boundary, deliberately deviating from gem5_cva6's AccelInterface which dlopens a C++ vtable.",
+      "evidence": [
+        {
+          "resource": "repo://src/axi/axi4_plugin_abi.h#L12-L18",
+          "version": "repo-lines-v1:sha256:8b8a67416653c98f01e893029229597e3c9ec8f7710c45119a05051641e635fe:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjIzY2I0YzEzZDY3NzU5ZDU0Zjc2NzFkNDQwMzQ5NzJkMDkwM2EzOWQwOGFmYWU3M2JiOTgxZWI5YWIwZGNmMyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTg3ZjE3MTY4MjBiYTgxMjAyMzYzNzNmNjVkMTFiYmJkZTQyZTJmOGEwYTRkNmZiNjIxMzAxZjZhYTVjYjk3NiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNzBkZGFhOTU0NjY4ZjRkZWQ1OTg1MzYxOWRhYmYzODJjMjBiOTIzNjVkMmY5ZDIxMmViNzk0MDc0ZWRlMTRiZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDBiZjBjYzVjYTExM2MyMWFhNGYwMTZhY2QzZTI5MGMyYjAyNWQ3MmU3N2EwYmMwMDhiNDNjNTdjMjhmMGE1OSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_0a2399cef719456895d66fc68462ff34",
+      "statement": "axi4_plugin_abi.h defines AXION_RTL_PLUGIN_ABI_VERSION (currently 2) and an axion_rtl_abi_version() query; the plugin device classes reject a .so reporting a mismatched version rather than driving it with stale struct-layout assumptions.",
+      "evidence": [
+        {
+          "resource": "repo://src/axi/axi4_plugin_abi.h#L191-L191",
+          "version": "repo-lines-v1:sha256:94736f8bcabdf839a4b17005bad5d80df89f87ab98045e844722805b64f76c47:eyJzZWxlY3RlZExpbmVDb3VudCI6MSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiOTQ3MzZmOGJjYWJkZjgzOWE0YjE3MDA1YmFkNWQ4MGRmODlmODdhYjk4MDQ1ZTg0NDcyMjgwNWI2NGY3NmM0NyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiOTQ3MzZmOGJjYWJkZjgzOWE0YjE3MDA1YmFkNWQ4MGRmODlmODdhYjk4MDQ1ZTg0NDcyMjgwNWI2NGY3NmM0NyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZDJiMzA5MmM3NTI4MGVlYjRiYzdmOWI1MzE0NDBiYmU1MTA5YzliMTBjYmU4ZjU5MDkwYjlkNjM3NmJlODg1YSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNThlZWQyODAxODZjY2E5ZTcwMTJhOTVjYTQwMWFlNWE5YTliZTRkODE2YWQ1ZDM4MTVjNzMwZGIwMzZhZWU1MSJ9"
+        },
+        {
+          "resource": "repo://src/axi/axi4_plugin_abi.h#L35-L38",
+          "version": "repo-lines-v1:sha256:17e7673e633c095cec4c642583b2d8c865e4e429582285220125f5b0c7455f2f:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGM4MzhhYTBlZmYyMDRjNzkzOTg3NTA3NGY5NWI5NjRlNDJhYWZmMjY0ZWFjOWY5ZTVjZjcyYjdiN2RmMDY0NCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWE3OWExZmM4MzJhNzdjMWMyYjZjMGRiNWQzZmFjZWQwZDg3MDVkZjE5YTliMzFiNDdhZjhkY2Y2NzY1NjQzYSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTc4NWU3MTIxMzcxYmU3MWNjNTAzMDM2NTY5MmQzZjRhMDgwY2Q0ZGVkMDM4YjcxMzQyNzI3YzRkMTM4YmYwZCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjM5YWNhNzY4YWQxOTdkZWFlMjJhZTJkMTkxMTI3MWQ2ZWJhNzNkNjI1OWEwMTUxNTQwZGJmZWRiMGM5ODcxZiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_1f7f1c3771454d988df5378130b527c5",
+      "statement": "Every Axi4SlavePins Set*/Get* call on RTLPioDevicePlugin writes into or reads from a locally cached POD struct (in_/out_); the dlopen ABI boundary is crossed only once per role per axiEval(), via axion_rtl_slave_drive() + axion_rtl_eval() + axion_rtl_slave_sample().",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_pio_device_plugin.cc#L93-L99",
+          "version": "repo-lines-v1:sha256:0a7469a4a611ca1528dccd6197eae88f67640c1293a3156a2070a4642ab52539:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGU4MjFhMDdiOGJiMmE2OGZkNGFiZmQzYmZmODlhYzUyOTcyYTFiNTM1MGE1YzAxNTUxMDI0ODk1OWM2NmY1YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTRiMjhlZDQ1ZmE4NGQxMjcyYTNkMWQ4MTJkNWE0ZTI3YWQwYzMyMWFiYTViMmI0ZTM3MzNjYmJlMWZiNTYxYSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODUyZDM1MDE2NDEwN2Q4YjcwNTJlMjc4MjAwMjg1MmY1YzE1YzVlYzYzMDI3YTY0NThiOWQ1OTRiOTQzNmE3ZSJ9"
+        },
+        {
+          "resource": "repo://src/dev/rtl/rtl_pio_device_plugin.hh#L10-L17",
+          "version": "repo-lines-v1:sha256:eee6bb2ce7b8b144da605344e1455f4c344aea16777481a578ab0c6707d75826:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDYwMDE1NzI3N2UzMTc2ZjZkN2VkM2FlMzMwYWI3ZTNkNWNlNzY2N2NjMTgxYWFjODYzYTcyNzY3NmMyMmNjYSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzYxOTA2ZDhjOWU4NGQ4ZWI0OWVjYjc2OGFmOGMyNmE2NTk2NzY0ZDlmMjQwZTg0ZDA3MTc2ZDlmN2UwOGVlNCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMThhODBkNDNiOGEwMzUxZDI1MjI4YjU2NDAzNjA2MGQ4ZGRiZTQ1YWUwOWU1YTNiZWJjZTZhMWUzZTJhODA0MSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNDQ0MWM4NTk5NDA2N2Q5MzVjNjgzOGE1ODgzMDE0OWM2NGRlNWNhMTc4ZDIwYWVlYmU4ZjEyYzM5OGMyMjU1OCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_40f6091579d54f39b1861c849d2f5d95",
+      "statement": "RTLPioDevicePlugin's constructor dlopens the .so named by the rtl_library param immediately (not deferred to init()), resolves every axion_rtl_* symbol via dlsym with fatal() on any missing symbol, and fatal_if()s on an ABI version mismatch or a missing required slave-port capability.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_pio_device_plugin.cc#L28-L79",
+          "version": "repo-lines-v1:sha256:0b7ebb8ba9a75aa61fcff60ea81ee81f1be21468693c4393552ae390505599b0:eyJzZWxlY3RlZExpbmVDb3VudCI6NTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImZiY2QwZDQ5ZDgyZjZlZDkxZmFkNjZlMDNlOWMwNGM4ODY1OGNiZmRlNDIxNzBkMmU5NWQ1ZWViMTdkNzI0MjAiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNhNTc3Y2JjNmE4ZDY3MzE2ZmVmOWEwZDdmNTVkMzMxNzliOGY2ODg5ZDQxYWRlNzk5YmFjOGFjNzg0NjllZDUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYyOGY2NGYyNGJjNzE3MWI0MjNiYzhjMmIyODNhZGIxYzFlYTBmYWQxYmRmMzcyMDJjN2Q3ZDc3MjdlNzU4ODAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_62250aa324944acabd12fa6a628d001a",
+      "statement": "plugin/rtl_plugin.mk requires callers to set TOP_MODULE and PLUGIN_SOURCES, prepends hw/axi4's three shared SystemVerilog files, and builds a .so via verilator --cc + make -f Vxxx.mk + a manual g++ -shared -fPIC link of rtl_plugin_shim.cc, verilated.cpp, and verilated_threads.cpp against the Verilated model archive.",
+      "evidence": [
+        {
+          "resource": "repo://plugin/rtl_plugin.mk#L52-L74",
+          "version": "repo-lines-v1:sha256:56966a1776e21a9d2d14301564d3552688fe2cf94903ebc29bcd416833b5ac47:eyJzZWxlY3RlZExpbmVDb3VudCI6MjMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI3ZjE2ZTgyY2NjNmU1OWM5MDdhOGJiMTg1OWZlMGE2OTU0NDFmNDM5ZjY5YjIwN2Q2NTg5NjZkMjA5YjBiNDQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE0NGQ5YzUzNGFkNTQ2MzM1MWRhZmRmYWRiYmJiNWJiNWY2OTQ2ZTRiZDRjODk2NjdmOWVlYTkyMGJjYzM0NjMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjlhMGE0ZjJjZjAzM2IwOGRiMzhmZDVmYWE1NmJhNGM3Yjk1ZDc2NWZlNDM5Mzk0YjYxMGU2MzAyNzcxMjQ5NTEiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImYyMzg2NzVlODEzYzNhZjBkYmExMzMxMGFhNjc5MjFjZDQxYWU1YjBhNWI3NWY3M2Q3ZGM1ODk3NWEwNWYwNmEifQ"
+        },
+        {
+          "resource": "repo://plugin/rtl_plugin.mk#L9-L17",
+          "version": "repo-lines-v1:sha256:87959eb8c2ed43be5e9c285e202db3db797fbbdaa0fd0f82ec044311ab68dc2e:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNGFiNDc5YTJhNjkyMDc2YTBjNzliNmM4ODE0YmVhMTk2MDFkZDIyMzgzNTU3ODdmZTNiYWUyMWE2NzNiNGUzZiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMzJjNDg1OGUyMmNjMmM5NjdiNDIxNTBmYTU1MDU2MmEyYzgzOWMyY2ViY2FhYjkxY2FiZGY2ZjRkYTAyMDAyMiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGMyNTQzNmY1MjE1NGMyOTU4ODIxZTRmYTI3OWFlZTg2NDY0N2E3ZmRlMGViNmMwZjE1MGQzOTc2MDRiNTgyMiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODJhNjk3OGQxY2IwMDE2MDJkMGMyNGYyYzVjMDhiNDVjMWE3ODc3ZjgwZmYyYmIwZTA1MmI0MDZjNGIxZGQzMiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_a1b7d2d8264e4a32b3f7fb195a9b4ceb",
+      "statement": "plugin/rtl_plugin_shim.cc is a single non-templated file compiled once per DUT via -D/-include compiler flags (AXION_TOP_CLASS, AXION_PLUGIN_HAS_SLAVE, AXION_PLUGIN_HAS_MASTER) rather than requiring any hand-edited per-model source.",
+      "evidence": [
+        {
+          "resource": "repo://plugin/rtl_plugin_shim.cc#L1-L27",
+          "version": "repo-lines-v1:sha256:17469f2c250b0fde2ce4a84beac88b2668a7255ce6518e09b8f41bd6df552957:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjI2ZjI2Y2M5MDNhYjNhYzA4Y2Q4ZDhiOGFmZGNkYjUwMGVhZDc5OTY1MjE3YjIyMDQ5MDYzMTBlOTRhYTJlMGYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjlhMzQ5YmJkMWEyMTEwNGYwNTFlMzRiMmM4YTllNzBjYzdmYmI1MGJjMTlhNjc3ODFmMmExNDBjMzg2ZDk0MzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjNhMWEyY2RmZmNjZmQyZWMxMWVjM2M1ZjhjZDVlNDBiZmY3M2I2Y2ExZmE5ZmRkNWFiOWExY2M4OGQxMTc3Y2IifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

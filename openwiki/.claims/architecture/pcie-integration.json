@@ -1,0 +1,88 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:73dbcf624880f7b6f083f11a6dc8d82e807668a407c8917d97498be2ca42fd4d",
+  "claims": [
+    {
+      "id": "claim_b1d0754c0c8d4ce98a26f470cf3d6d5f",
+      "statement": "RTLPciDevice::pioStart() translates the guest-visible BAR address to a BAR-relative offset via PciDevice::getBAR() and issues it through Axi4SlaveEngine's explicit-address overload, panicking if getBAR() fails.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_pci_device.cc#L135-L163",
+          "version": "repo-lines-v1:sha256:d75801e6e93eccc01e8a0253e911b9533ab088141fecacbb2595103f99263da7:eyJzZWxlY3RlZExpbmVDb3VudCI6MjksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRlODIxYTA3YjhiYjJhNjhmZDRhYmZkM2JmZjg5YWM1Mjk3MmExYjUzNTBhNWMwMTU1MTAyNDg5NTljNjZmNWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjYyNWZhZGMwOGFiOTkyZWIzNTE1YTY1ODRmNGFlOTA3MzhhZDA0OTg4Yjg2YzEwYTEzMzc4YjZmZDk2OTFlMDgiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjYyYWQ3NWFmYmYxZTRkN2ZhNWQ2M2RjY2Q5M2NkZDQxZDU4NDE3NTQ5MjI1ODcwMjBkZjlmZGYzNjc3OGU1ZDEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a6bb0c27a0fb4cda96b0850b5911e6ef",
+      "statement": "RTLPciDevice's RtlPioPort answers config-space accesses synchronously out of PciDevice's own header state without involving the RTL, but panics on atomic/functional BAR accesses since those require running the RTL clock via the timing-only tick loop.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_pci_device.cc#L63-L99",
+          "version": "repo-lines-v1:sha256:4864d0043dfbc1640a1f926f66d200c8ac8a5db309f0389aba5ce24fdc1d5960:eyJzZWxlY3RlZExpbmVDb3VudCI6MzcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImExNDBkNjEzY2Y0MmJiYjc0MWJhZTlhYjVhN2U0MzAzYzYwNGFkYjU2OTc2NGYxMDQzMjdlMjAyODYzMjc3MDYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjgzZTJkMDY1Y2UyNTNiZjQ1OTIzZjY5ZTk2ZjUzM2ZjZjg3ZWE4MzIxNTEyNDU0YzBjZmJjMmMwM2U0MGVjNzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU1MTA4MTk0OGNhMmMyOGVhY2UwN2U0YWQ5NGUxOTljZTNiNzM0MzBkZmJmYzg3NzY5Njk4OWMwNzM5NzU1NTAifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_b09307090b02420480ef7e9164b44490",
+      "statement": "RTLPciDevice's issueRead/issueWrite translate RTL-driven PCI bus addresses through pciToDma() before calling gem5's dmaRead()/dmaWrite(), a no-op under HiFive's default pci_dma_base of 0 but not in general.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_pci_device.cc#L165-L197",
+          "version": "repo-lines-v1:sha256:032571e26e9a9a5df592a8456f879d8e45a3d79ee14d93ce8b48eb698aff4f6c:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRlODIxYTA3YjhiYjJhNjhmZDRhYmZkM2JmZjg5YWM1Mjk3MmExYjUzNTBhNWMwMTU1MTAyNDg5NTljNjZmNWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRmYWI3MTBkZGY3ODU5ZTU3NTc2NGE5MTNhMDAyYzc0NTg1ZmZhNzAwMTUxMGNiODgxMWRhODNkMmNmNzRiMzQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImY4MWViZWQ1MzY5OTRhZTVmMzE0ZDI0YjJiYTQzNTI1OWM5MDE0ZGY3NjdmNGFhY2U4YjdlZmFhMTQ1ZGFhNDgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_926e00a3cc7c4d87962c5200fc0c1706",
+      "statement": "RTLPciDevice::sampleIrq() only calls intrPost()/intrClear() on a 0->1 or 1->0 edge of rtlGetIrq(), not every cycle it is held, and RISC-V PLIC routing for the interrupt is derived from the device's PCI slot via GenericRiscvPciHost::mapPciInterrupt(), not its InterruptLine param.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_pci_device.cc#L199-L211",
+          "version": "repo-lines-v1:sha256:5a068b5a639026b9abab4e6da3d8229625f46606018f5eb81e65357325474881:eyJzZWxlY3RlZExpbmVDb3VudCI6MTMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRlODIxYTA3YjhiYjJhNjhmZDRhYmZkM2JmZjg5YWM1Mjk3MmExYjUzNTBhNWMwMTU1MTAyNDg5NTljNjZmNWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE2ZTAyMDdiMmQyNjMwMmI4MTA0ODVmY2ZlMTJkYzFkOTBlMzFjN2MxYmJhZmMwZWFlNzE3YTY2OGU0NTQ0M2EiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI4MDVkODk5YjcyMjI5YWYwZmQ5MDJhZTlhMDNhMjcyNDQ5N2YzYTNhM2M0YmZmMmVkOGVhNjZmNGU1N2FhMDcifQ"
+        },
+        {
+          "resource": "repo://src/dev/rtl/rtl_pci_device.hh#L169-L178",
+          "version": "repo-lines-v1:sha256:a68db3c38e000d6ef30f81195f3b0fb1a0c3ee9dd7e0757420e9c99a395ad466:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5Y2JiYzY1NDY5ZGIxY2EyODQyZWZkOTdkZjdlZTJjZTZjYzE1NzE0ODJkMDFhMThiNzkwYTEwYzdjNTEwZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNkMWUxZTI2MGJkYTc3MmZhYTk4MTU1ZDM4MDhmMDk1YzhiZDJhN2U5YTUzNmNiNzdiOWE0N2M3MTQ0NjE2NzgiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImNjOWNhNDcwODY4ZWIxNjI5NTIwNjA4NDBmODMxNTY5MjBkNmE3YjhlYzg3ZjIyY2Q1YTU0ZjFkY2Y4ZDZlNjAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI2Y2Q1OGNjNmVhN2Q4NjAwYjNjOTg4Njk1ODQwMjVlMjE4ZTIxNDMyYzE4YTQ1MTcxMDU3NmIyZmU4MjE5OTYifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_daa4981ff79f4c37abd6addcd8344c22",
+      "statement": "RTLPciDevice::init() binds the inherited pioPort to a RangeForwardPort stub whose recvRangeChange() forwards to rtlPio.sendRangeChange(), because getPort(\"pio\") hands out rtlPio and leaves pioPort unbound while gem5's PciDevice/PciEndpoint writeConfig() call pioPort.sendRangeChange() directly on BAR and COMMAND writes; with the stub bound, RTLPciDevice::init() calls up to PciEndpoint::init(), unlike RTLPioDevice/RTLDmaDevice.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_pci_device.cc#L31-L49",
+          "version": "repo-lines-v1:sha256:86f90cebdf724f34f5aad09c3a0d056a151a5959434b24131b70e841cbfe4d4f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRlODIxYTA3YjhiYjJhNjhmZDRhYmZkM2JmZjg5YWM1Mjk3MmExYjUzNTBhNWMwMTU1MTAyNDg5NTljNjZmNWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImI2MjA2YzljYmM3ODZmOTU3NTY3ZDRlMWNiNDAyOGFlNTgyYjQzMjY2MGEyNThlZTFlYTEzYTY3MTI1MzM2NTAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImFkNjA0OGZhMDkxM2RkZWE2MjYyZDUxYmIxZjBhMTg3MzdlMzVkYTAwNGM2OGYzZDgwYTkxMjM5NGVkMzJjNDgifQ"
+        },
+        {
+          "resource": "repo://src/dev/rtl/rtl_pci_device.hh#L86-L130",
+          "version": "repo-lines-v1:sha256:b07223686e4cd8652936f55655175ae895ad4e6562de36047780906548d95863:eyJzZWxlY3RlZExpbmVDb3VudCI6NDUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjM5Y2JiYzY1NDY5ZGIxY2EyODQyZWZkOTdkZjdlZTJjZTZjYzE1NzE0ODJkMDFhMThiNzkwYTEwYzdjNTEwZjMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFkOWUxMjU0NjQyNTU3NmQzZGVhZThjOWI5ZGJmMTI4ZDVkNmRkYWY1ZDdmZTg1NzkzNDkyN2RlZmZhM2I5ZGQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjEzN2U3NGE3NDZmM2U0ZmE5OGQ3Y2I5OGRiMDdkMzBiZmY2NWNlZjY3NmYxN2FiMWVhNDkzYWM0ODQ5MDY4MTQiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU4NzRjNmFiMWYyNmU0MWYzY2JjNTA3ODE1YjAwNWNjZDYzM2Y4NWViOTM0MDZhODk2ZjM2OGU3OGM2MDY3NGQifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_04779a6780784b0398eace7ea5d323a0",
+      "statement": "RTLPciDevice::tick() calls slaveEngine.tick() then masterEngine.tick(false) so the shared Verilated model's clock pin is toggled exactly once per gem5 cycle, and idle-gating additionally requires !irqAsserted (beyond RTLDmaDevice's conditions) so a pending interrupt deassertion edge stays observable.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/rtl_pci_device.cc#L213-L253",
+          "version": "repo-lines-v1:sha256:2f414cd0f5ea93ab77f360cff245c3bad82f954c647abc821ba5e399a9d1ec02:eyJzZWxlY3RlZExpbmVDb3VudCI6NDEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRlODIxYTA3YjhiYjJhNjhmZDRhYmZkM2JmZjg5YWM1Mjk3MmExYjUzNTBhNWMwMTU1MTAyNDg5NTljNjZmNWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjQxMmNhMzQ1Y2NmNzViZjljMDgwNmJjZTY5NWJlOGRlODA4Yjc5OTg0MjUxYTdhNTRkMjAyY2Y2MTAxZGQ0NTEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjFkMzc5NjViYTlmMzZmYzU0ZTI3YWUyMWEzMTVjNWQwODQ4OGM1OWZhMDkwOWI1MGJkMzAwM2I4MTA0NWI5MjciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjoyLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI0YTk1MDMzZmI0ZTY0YWViOTQ5Y2ZiNDkyY2ZjY2U4Yjk0YmI5NzE5NDY0MGEwNGVkYjRkOTdiMDZhNmEzMzUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_1fd833fb7d6544c59c56d6bb5d09383d",
+      "statement": "RTLPciDevice.py defines rtl_pio_latency (default 0ns, extra device-side overhead distinct from PciDevice's own pio_latency), reset_cycles (default 10), and idle_gate_cycles (default 16, 0 disables gating), and has no pio_addr/pio_size param since the BAR defines the address range.",
+      "evidence": [
+        {
+          "resource": "repo://src/dev/rtl/RTLPciDevice.py#L20-L45",
+          "version": "repo-lines-v1:sha256:f752420e3ffc3b5a823d6226c8e2d429559a40e9b057e7fdcf911d62056e8a06:eyJzZWxlY3RlZExpbmVDb3VudCI6MjYsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImJiNmQzYjE2NzU5N2NjY2FhNTViMjcwOTU2ZmFkMWNlNGYzNjI2MzAzYjllOWQ3N2E2ZDNiNjhkNTMxNmJmNjQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMwYzFmMTg4ZjE0MmVkN2E4MjQ2ODBiMjA3MTcyYzU1MTliYzYxNGE0OGZkYTdjZjE2N2VkYjhkZGY3OTk1NmMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjVjOThlNzRlN2Q0ZDZiZDk0Mzg3YWViOWFmNTBhN2NiYWRmNTg2MDU2Y2Q1Y2QwY2NiOTEwODI4MTI4OTkzZTciLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

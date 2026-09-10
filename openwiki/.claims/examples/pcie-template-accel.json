@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:ff9dec5321cf34b1d2b2396f1a59c94fc95239a48b0be1c64b7abe56190a89c1",
+  "claims": [
+    {
+      "id": "claim_ce0538da83fd4dfd83c074eb20f6f4c1",
+      "statement": "pcie_template_accel.sv exposes a BAR0 register map with every register on an 8-byte stride (ID at 0x0000, VERSION 0x0008, SCRATCH 0x0010, COUNTER 0x0018, DMA_SRC 0x0020, DMA_DST 0x0028, DMA_LEN 0x0030, CTRL 0x0038, STATUS 0x0040, IRQ_ACK 0x0048) plus a 4KiB scratchpad RAM at 0x1000-0x1FFF, because Axi4SlaveEngine is LSB-aligned while a strict AXI4 requester is byte-lane-aligned and the two conventions only agree on beat-boundary-aligned accesses.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_template_accel/pcie_template_accel.sv#L18-L44",
+          "version": "repo-lines-v1:sha256:7d080e7887fd38ac7e68158246d4878b618180472b056f1fadd66119f32bdbfd:eyJzZWxlY3RlZExpbmVDb3VudCI6MjcsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjExZjBlYmI2ZmFhOWZmZWE1ZWUxZDhkNDMxYzJmZjMwOWUxY2VjNTU2ZTI1NDQ4Y2FkMzY4ZTNjNTMyMTJiY2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNkOTg2MTc5ODc4ODBhMGU4OGI0OWVlODNiNTYwMjBjMmU5NjJjMTNiMzk5YjVmYzhhODM3YjUwNmFkMGZlNDkiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjIwYzVjNmY5ZTFkZjZjOGNjYjBjZTY1YjYwZjBlNWEwYzRlYzUyZDY5NTVlY2NmZTExOGVkZWUwYTM5YjA2NzAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjIyMmJmYzI1M2FkYTQxYWE4Njk1YjY4YzM0NGQyODg5N2FlMzA5ZWU5OTU1MjE3Nzg2ZTYzNmVjYzA0NDcxNDgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_25344194f20445c1ab702f837e4fc07d",
+      "statement": "pcie_template_accel.sv's DMA engine copies DMA_LEN bytes SRC->DST as single-beat 8-byte read/write pairs tagging reads with AXI ID 0 and writes with AXI ID 1, specifically to exercise both of Axi4MasterEngine's per-ID queues, with a trailing partial word written via a masked WSTRB.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_template_accel/pcie_template_accel.sv#L45-L48",
+          "version": "repo-lines-v1:sha256:c78b95ab40aa403c3605f762fcd615a086f07b8c1a8e3ad8f45546f760f07b3d:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDAwMDBlZTFhMzM3ZWQwMTdmNDg3ODJkZmQ3MmUwNDU5ZWI5OTQ4ZjE5MDExMWU5ODQyNDI3OTMyNmUxODgxNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMTAxZWFkOTM2YTIyODFkNTNkY2MwNjRiN2UyYTJhYjBkNTNiOTJlZjNlZjdiMzRiNjY4NjczMDA3ODk1Yzg2MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMGJkYzk4MzI0YjI2OGI3ODdiY2I0ZTUwZDIzMzYyYzQ2MGY5NzcwN2EwNDA2ZmYyM2JhZDE5YjM3NTZkYjE0MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZmJkODU5NGRlMDI4NTVhYmY4ZGFhMzI4NDYwZWIwMTg2MTYzNjI1MTdmMDJiNDUzYTEyYWNmN2UwOGI4ZmY0NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_bac83d4c021340bb9dba5156fc4f9558",
+      "statement": "PcieTemplateAccel.py sets VendorID=0x1DE5/DeviceID=0x0001 (a made-up, non-PCI-SIG pair kept out of any real driver's bind range), BAR0 as a 64KiB PciMemBar, and InterruptLine=0x11/InterruptPin=0x01, and deliberately defines no generateDeviceTree() since a PCIe endpoint is discovered via ECAM rather than a device-tree node.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_template_accel/PcieTemplateAccel.py#L1-L50",
+          "version": "repo-lines-v1:sha256:f07c718bdc278fd2ab591beede763b3a26bd369bcf8bad66c6c058a046ae2910:eyJzZWxlY3RlZExpbmVDb3VudCI6NTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjgxNDViMmM1YzhmNDUwZDczY2ViM2UzZGYyNzEzZWIwNjY4YjM4MDc0ODIzNjlhMjk4YzkyNmNmNmE0N2I4MWYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRhMTVjZjVmNWEwYzUyM2IzNDBmY2RlNTNmYmJlZDZiZjIxZTJkNTNmNjlhMjY0NjRlNTBiNTk3YmNhODcxNjMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_cfef4f9c7e0a48eda8ba3c375af43e21",
+      "statement": "PcieTemplateAccel implements axion::Axi4SlavePins (BAR0 window), axion::Axi4MasterPins (bus-master DMA), and the two sideband RTLPciDevice hooks rtlGetIrq() and isIdle() directly against Vpcie_template_top, with no dlopen indirection.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_template_accel/pcie_template_device.hh#L1-L10",
+          "version": "repo-lines-v1:sha256:7d195e226f61b5cff5fc96d1bb95daa5253681ae5443c10d1bdca858c33e50c0:eyJzZWxlY3RlZExpbmVDb3VudCI6MTAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3MzI3NzVlZWU3NzAwMThkYjdkNzlkMDM1YTAxNjMwMTVhMDE2ZGUxN2ViYmY4ODg0OTAyZWM2ZDFkOWZjZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk3MmE0MjkzODJiMmUxNDcxOGUwZTM3YjA1NzBhOGExNzAyOTkxZmNkODQ5OGNkODQwNjBhOGJmNGYwNTAxN2IiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjMxZjgyYzlhODAxZDM3MGVhY2VjZWUwZDBjMTg2ZWE3YWM4NTQ2NDg0Y2FjMjY4N2YyM2ZmNDJiNWFiYzIyMTkifQ"
+        },
+        {
+          "resource": "repo://examples/pcie_template_accel/pcie_template_device.hh#L124-L129",
+          "version": "repo-lines-v1:sha256:80e604b46c222f55da7803afba58a1dadeec10c065afe6942991cf1fac65765d:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiN2YyN2QwMTgyN2U4YjVmZmVjYzg3ZTkzZTZlMGY0MGQyMzRlY2EzMjA3MmMzNDA0OTk2ZmVmNmI4ZDBjMmE2NiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDMyMDBiNDdkYjM2ZTg5NGE5YzA2ZDk0Y2U2MWRmYjIwMDU2MjFiZmQ0ZjA1ZWJjYjcyNTM4YzNjYTI3NmYzYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2EwMDRkMTM5Y2Y0NDBmNGYxMTlhMzJiNWIzZDg0OTg5YWU3NDcyM2ZmN2M3MTRjN2Y5MzliMGQyMDczZGFjYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODA3ZDIzY2FjMTdkYmQ2NmM5NDk1OWJmMGI1ZWEyY2NjYjMxZGYwMDY2YWIyMTc4ZDE3MWJhYzUzZjhmYjI2NSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_99821097145d439c95f9c53816ec51dc",
+      "statement": "test_pcie_template.py drives the BAR0 AXI4 slave port with an AxiMaster and plays host memory on the bus-master DMA port with an AxiRam model, entirely independent of gem5, since config space/BARs/INTx are gem5's responsibility and only ordinary AXI4 behavior is under test.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_template_accel/cocotb/test_pcie_template.py#L1-L15",
+          "version": "repo-lines-v1:sha256:f2c376dcd58bdafa5556599213c92ff06742dcf96c836c56ae6a5a018f256149:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdiOWE3ODhhOGJjOTk5YTBiZmMxYWQ3YzQ3N2Y2ZmMwYjJlZjI3ODVhZjEzODlmZDlmYjU0MDk2NjljZDcwMmQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjUyM2FkY2VjNDE2Njg0YTBkZjViNDYxNWE4N2E1NDdhY2E0YmNhYzE4YzJmMjE2OGI4OTA2MjJlMGNiNDAxOTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjBlNDgwNTMwMzY2ZTVjZGUzNjM2Mzk5OWQxNjkwNmIyYmI4ZjY4NWZmMzU5ODJlY2FmYmIwMzNjOGZjMzJjYWEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6e00af3c8fca4e18a59853a8a51828fe",
+      "statement": "run_pcie_template.py runs the bare-metal RISC-V test ELF under RiscvTimingSimpleCPU against gem5's HiFive platform in full-system (RiscvBareMetal, no kernel/disk image) mode rather than SE mode, because a PCI device has no fixed address for Process.map() and needs a Platform for config space, which only exists in FS mode.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_template_accel/configs/run_pcie_template.py#L1-L18",
+          "version": "repo-lines-v1:sha256:b99089f171b519dd96eae090f0a1310d3f2095012a34908d600f18ca250625ba:eyJzZWxlY3RlZExpbmVDb3VudCI6MTgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMDNlY2RkNGE0ZDEwZjE5YzczZmQ0MmZkMTI0MzdmZDMzNTRhODI2ODE2MDVkYTUyNTVhOTdhMzkwNjhkYmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImU5ZmEzZmM1NDQwY2ZiMDg0ZWY2MTQ1YzMwZjVlOTA2YzQwMjEzMzAyMTIxMDMzOTRjNmE2YzI2YmM2NmJiNzAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjQ0ZDExYWI4ZDMzZDQ2YWJjMTI5YWVjMzU2ZjMxYjkyOWY5NWI4YmQ5NTExNmQ0MTY5OWY1ZjQxNjgyZGI0YWMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d503f19094504de69761d000ea7e61fb",
+      "statement": "run_pcie_template_linux.py boots Ubuntu under RiscvBoard and lets Linux's own PCI subsystem enumerate ECAM, size and assign BAR0, and publish it via sysfs, with the guest program mmap()ing /sys/bus/pci/devices/0000:00:01.0/resource0, requiring no device-tree node for the endpoint itself.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_template_accel/configs/run_pcie_template_linux.py#L1-L20",
+          "version": "repo-lines-v1:sha256:9f36a68fc54f05a4602b244bec1e0f3669f7aba6f1aa041320c567a9d04d7461:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMDNlY2RkNGE0ZDEwZjE5YzczZmQ0MmZkMTI0MzdmZDMzNTRhODI2ODE2MDVkYTUyNTVhOTdhMzkwNjhkYmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjNjY3MTNhMjljMzUzMjEwODgyNTU0OTdhZDA3MmZhNjZkOTFkODY3NTNmMTg4MjI3ZjJlYjgxZWQwNzEyMzMiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjUxNmEyYmQyN2M3ZjE4N2EzMjY1MGNmMTE5NmE1NWU5NjE2YmFlMjFiMDg2MjVlMzdmYjlmNTNhMDA5NWUzY2YifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

@@ -1,0 +1,8 @@
+# Files
+
+- [AXI4 Bridge Engines](axi4-bridge-engines.md) - How Axi4SlaveEngine and Axi4MasterEngine translate gem5 PacketPtrs into pin-level AXI4 bursts against Verilator RTL, and how VerilatedRtlModel wraps the underlying Verilated model.
+- [AXION Architecture Overview](overview.md) - How AXION bridges gem5's event-driven SimObjects to Verilator-simulated RTL over a pin-level AXI4 bus, the five abstract base classes that give the bridge a real gem5 class hierarchy, and the two ways to attach a DUT.
+- [PCIe Path: AXI4-Bridge Endpoint](pcie-integration.md) - How RTLPciDevice splits a PCIe endpoint between gem5 (config space, BAR decode, INTx) and RTL (ordinary AXI4 user logic), including BAR-relative addressing, DMA address translation, interrupt edges, and the RangeForwardPort fix.
+- [PCIe Path: TLP-Level Endpoint](pcie-tlp-integration.md) - The deeper PCIe path where RTL parses genuine transaction-layer packets on four AXI4-Stream channels itself, via PcieTlpCompleterEngine/PcieTlpRequesterEngine, including posted-write and tagged-completion semantics and the two documented header simplifications.
+- [Plugin Path (dlopen ABI)](plugin-abi.md) - The opt-in runtime-generic RTL loading path — the plain-C axi4_plugin_abi.h contract, RTLPioDevicePlugin/RTLDmaDevicePlugin's dlsym-and-cache mechanics, the rtl_plugin.mk build template, and the generic rtl_plugin_shim.cc.
+- [Source Layout and the gem5 Mirror](source-layout-and-mirroring.md) - Why AXION's own sources under src/{axi,pcie,cpu/rtl,dev/rtl} and examples/ must never be edited under ext/gem5/src, the cp -rs mirroring trick that makes gem5's build see them, and the shared hw/ SystemVerilog layer.

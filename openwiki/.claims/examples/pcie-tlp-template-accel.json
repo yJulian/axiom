@@ -1,0 +1,74 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:e629884732fc4135d9c0d6781464b3ba1d838aa9911bbd28cf6a47f018f9428f",
+  "claims": [
+    {
+      "id": "claim_baaa44747ba14fe4a8ede00076ae5bc6",
+      "statement": "pcie_tlp_template_accel.sv is functionally the same register/DMA/interrupt device as pcie_template_accel.sv, differing only in VERSION (0x00020000 vs the AXI4 variant) and in receiving raw PCIe TLPs on a completer-request stream (parsing fmt/type/length/requester-ID/tag/byte-enables/address itself) instead of an AXI4 slave port.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_tlp_template_accel/pcie_tlp_template_accel.sv#L1-L33",
+          "version": "repo-lines-v1:sha256:119059feb32a329fcf0656bf3cd412c4a50109051934b9b63f0b1d4faf5825bd:eyJzZWxlY3RlZExpbmVDb3VudCI6MzMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImNjZmU1YWUwYjJkNDliODFlOTVkYjFlNzgyYTg3YzZmZGFiYjllMTQ5ZTkxNTI5MmVlMzRmMzAzNGE3OTZmM2YiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjRjMzcyYTU4MmQ4OWQ4ZjkwYzEzOWFhMDM1NmMyZGYyYTllYmY3MWIwNThjYmVkNWYwZjc3Mjg0NjJhMTE1NGYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImQxZDQ1NDZkOWNmYjhjMjJmZTExZTU2OGFkMTIzMTcxYzE5NTRhMzc4YWM2ZWFiYzU1NGE4MDMyMTQ4MjEzYzkifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_f5e0d59b90954ccdb8c9a1bb91007979",
+      "statement": "pcie_tlp_template_accel.sv keeps its registers on an 8-byte stride for a TLP-specific reason: a TLP carries payload as DWs with per-DW byte enables, so beat alignment lets a 64-bit access be one beat and a 32-bit access be the low DW of one beat with no DW-level shifting.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_tlp_template_accel/pcie_tlp_template_accel.sv#L35-L39",
+          "version": "repo-lines-v1:sha256:19917a7bc33635e42a6b30b1fccd3dc855c269ac7b83089c586644ccb77e35e7:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTAxZWFkOTM2YTIyODFkNTNkY2MwNjRiN2UyYTJhYjBkNTNiOTJlZjNlZjdiMzRiNjY4NjczMDA3ODk1Yzg2MCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWE4NGYzYWZkYjYzM2M4NDYwZjc3ZTUwMzE0ZDc3MDg3MDkzOTkzMjdiNzA0MzUyOGI0NGMxODk1YzgxNDdjMSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiM2NiZjYwYmM1YzUyYzYzYjY1MGYzNGI0N2ZmMDQ5ZmMyOGE3ZGQxZWIzYTNmODI2NjU3MDVjODdlYjNhYzcxNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiM2M1YmZmOTFiYmEzYzcyNTc2Mjk4ZTNkNjE2YWU4YWI2ZmUzNzY2Y2E2ZTUyMWM4OGI1YzAyNzA1N2QxZTk1YiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_4d4c0cef1e1846b8ac1a603ad2f5a1d9",
+      "statement": "PcieTlpTemplateAccel.py sets DeviceID=0x0002 (distinct from PcieTemplateAccel's 0x0001, so a guest can distinguish the two) and completer_id=0x0008 matching the DUT's hardcoded COMPLETER_ID, while keeping VendorID, ClassCode, BAR0, and InterruptLine/InterruptPin the same as the AXI4 variant, and likewise defines no generateDeviceTree().",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_tlp_template_accel/PcieTlpTemplateAccel.py#L1-L48",
+          "version": "repo-lines-v1:sha256:227959cc21a35c24409e429f6a26e18ccb818c198fbab423bf4fe8aa7550b628:eyJzZWxlY3RlZExpbmVDb3VudCI6NDgsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE3ZTY2Y2U4MTFjMTcxOGE2MGEwMjlkZTkxMjI3M2EyZGU4NTlmMTQ5ZDliZmE4OGQwZDJhZjA2MjM3MjNmOWMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImRlZDAwMzYwMWRiMWNkZDgxNmQyNmY2MDRmOWI3YTc0NjcwNzA2MmM0OTkyNmYyYzIxMmM3NjQ2ODUxNWRmNjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_a7e7093369b04504b5fb01beebf3fa42",
+      "statement": "PcieTlpTemplateAccel implements PcieTlpCompleterPins, PcieTlpRequesterPins, and the two sideband hooks (rtlGetIrq, isIdle) directly against Vpcie_tlp_template_top with no dlopen indirection, using 16 pin accessors total versus the AXI4 examples' 88.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_tlp_template_accel/pcie_tlp_template_device.hh#L1-L21",
+          "version": "repo-lines-v1:sha256:bc4807ffbf2a2d89b1b4d008e3217d5e14c2826ea3084bb25db4824bb076d7c8:eyJzZWxlY3RlZExpbmVDb3VudCI6MjEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijg3MzI3NzVlZWU3NzAwMThkYjdkNzlkMDM1YTAxNjMwMTVhMDE2ZGUxN2ViYmY4ODg0OTAyZWM2ZDFkOWZjZjIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijk4YTQyZWY4MWE0NzEzMzk3NjkwNTI0OWM2YzJiNDk0ZGU5ODlhMzA3ZDYyYjE4ZmNiYmNmNzcxMzA2MDAxNmYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjRlZjQyZGY1YWQxNzdjZWJiNjY0NmUzYzVkODQ0OTI1NWI3ZGJmMWRiYWZkNGQ1ZjFlMWJiMDk2MjJmOTQyOWQifQ"
+        },
+        {
+          "resource": "repo://examples/pcie_tlp_template_accel/pcie_tlp_template_device.hh#L59-L61",
+          "version": "repo-lines-v1:sha256:4a8a85a37ecaf755d898502abef031df9f4e7172dd40a8ff27d60f6e6fdd08c4:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWY5MTFmN2RmMTE1ODM0ZTMyYzQ5Mjk2OTFlYWYxMmRiNmVkMDkwZGU3ZGUxNDY4OTk2MDFhYzZhYzU4NDdhOSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM4OGQxNWZiOWVjNDk0ZTdmOGE1MDhiYTM0ODVmMGQ4MzVlMzliZDZjYzRjZjY3NDE5ZmMxNDQ4ZDQ3MTZjZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZGMxMWU4MDE5NGFlMmMzMDY3YmEyNDk1MzIzNjU2ZTEyMGRhMDJlNWVmMDg4NzM2NGM1OWQyMGQ4NjNkMDA0OSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjFlY2M0NzM4YzdhZWYyNzg0NDExZDAwNGI4MmViNWMzZjI0NTRhMzQ5NzRkNWEyZjZmOGIwNTViMjk5Y2RjNyJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_89cd1ead3a304dab96db8af458ab5048",
+      "statement": "test_pcie_tlp_template.py hand-builds real PCIe TLP packets rather than reusing src/pcie/pcie_tlp_engine.cc's own encoder, deliberately, so the test exercises an independent second implementation of the header layout and thus actually tests the RTL's parser rather than agreement between two copies of one helper.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_tlp_template_accel/cocotb/test_pcie_tlp_template.py#L1-L15",
+          "version": "repo-lines-v1:sha256:0990d032476199551ebad479eeff546a5408755f146c968469c31b33a8abe25d:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImQ5NDgxODMwMjZiYmY3MTc2ZjYyZGQyNWZkZjQ3OGM0MTY4ZWFiZDQ0MDc2MjY1YWVkZDJiMTQ1NjgxZmVlZGEiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjkzZjRjMTRlYmEzM2ZlNDU5ODdiNzIxYTFlZjg4ZTMyNDZhMmM2ODNmYTIxMDViYWU3OWViMDFkZjkwNTZhNjIiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJmZjA0NDc1ZjcyMTQzYjYzYWExMjM5ODEwNmFiMzU3NGMyYjE2NGRhYTVlNTYwY2MzNDZhOThmOWVlOGUzYjcifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_6f0d09250e724ad98c41b24a69b004b0",
+      "statement": "run_pcie_tlp_template.py is identical in shape to run_pcie_template.py but plugs in PcieTlpTemplateAccel instead of PcieTemplateAccel, and runs the same guest test program as the AXI4 variant, demonstrating identical software-visible behavior between the two PCIe abstraction levels.",
+      "evidence": [
+        {
+          "resource": "repo://examples/pcie_tlp_template_accel/configs/run_pcie_tlp_template.py#L1-L15",
+          "version": "repo-lines-v1:sha256:20d694f5f63d5527965edf5734794a2c0602fabf08e2f87778200d56b9164a8f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTUsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImEzMDNlY2RkNGE0ZDEwZjE5YzczZmQ0MmZkMTI0MzdmZDMzNTRhODI2ODE2MDVkYTUyNTVhOTdhMzkwNjhkYmIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE0OTVjNzY5MzhmNDI1MDkxMTA2Y2I0YjI2MjEwYmE4MzUyYWU4NjBhZjZmOGJmOGRiYmE2OWExYjU2M2NiNjAiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg2NjllMTllMTg2MzBhOGMyMGVmZDcwODZkMmQwMWNkNzQxNzgyZDkyYThkMGFlNGYwNWY5NGJkNWFjNDY1OTkifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

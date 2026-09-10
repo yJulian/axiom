@@ -1,0 +1,34 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:2fbc34c5b3f87ccf10439371641db9881f6fbe2eafa854a378b05de7648a73cd",
+  "claims": [
+    {
+      "id": "claim_88cc140fb1854d1abc19d3394b2534de",
+      "statement": "AXION defines five abstract C++ base classes (RTLBaseCpu, RTLPioDevice, RTLDmaDevice, RTLPciDevice, RTLPcieTlpDevice) giving real gem5 inheritance roots, with RTL linked directly by default and an additive opt-in dlopen-based plugin path also available.",
+      "evidence": [
+        {
+          "resource": "repo://CLAUDE.md#L1-L24",
+          "version": "repo-lines-v1:sha256:d9194b363aaa50e889914e7127a0222f3f570b2689ff7a0b2cb01d2032cf379a:eyJzZWxlY3RlZExpbmVDb3VudCI6MjQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU2MTIyYmYyYmM2MmQ0OWZlYzRlYTBmMzU1YmIwMDBjYWJlZjJlMzk2ODc3OGI1MGMwNWVjMjNjOTc4YTY5NWIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlZWI5ODQyZGUzNDY3OTMzZmNmNGQyZGUyNWNmOTkxYmNkMDlmMWFlYTUzYjQ4NDIyMmMxMWIxYTExNDhiMmEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImI3NDVhZTJlMjJjYTczNDY5OTcxMDlmOTAwOWIwODc3ZWFmMDc3YmVmNTQyNDAwYmY5YmY2NTkxZjkxYzdjY2MifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_f2e69b414307472b91d40db8711648b3",
+      "statement": "The fastest no-gem5 verification path is scripts/setup_env.sh, make cocotb-env, then make tb, which verifies fifo_pio_accel's RTL via cocotb without requiring gem5 or a RISC-V ELF.",
+      "evidence": [
+        {
+          "resource": "repo://Makefile#L106-L110",
+          "version": "repo-lines-v1:sha256:983c0058bba1c11d4899f5acfeafae4e506a225c6da9ca6cab30639071db2d51:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDRkM2Q5NGQ3Yzc0YWIwNDUwYjc4MDAzYmM5OTQzNTgzYjRmZDI4ZGJjZjlhMDg2OWY3NWY3MzVjZTJkMmYzYiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZDBkZWVlMjc1NzE0MGM4MGI1MTJjYTU3ZmFiMjg0ZGZhMjk5OGVmNjEzNTAxNTlmMzM5YmUxYTdlOGJmYmQ1ZCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTkzZWUwNjE5NGNmMjRjMTk5MDMwZGE0YjMzZWU3MDc4OTNhZGI5MmIzMGYyYzM2M2M1ODgwMWQ1ZjBjNjllYyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMmYyMGYyMDdjYjYzNmNhNzBiNzg1ZGNiZTY1NGVmNmE4YmIxYWE2OGZjYmU3MDg5Njc4ZmY1MzhkNmVjNmE5NSJ9"
+        },
+        {
+          "resource": "repo://scripts/setup_env.sh#L17-L23",
+          "version": "repo-lines-v1:sha256:8144dc13743c4875fef46a2cb9fb1ee58a28ad408c00a687ffd9f86014534749:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYzI0MmJjMGE5YTc4YzQ5MzU4Y2VhYTcwYTVjNDc4YzU5ZDJkZGU5OWI3NTFiODJjMzY1MDI1NWYzNWU5OTNjNSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMmEyMWM1YjNiZmYwMjk5YzAxNjE0NzA0NjhmMzU1ZTViNGFmY2YxN2E1ZjU5M2FiNjgzOTRlZjdhZjMxOWNkYyIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMmYzOWIzYzY5MWY4NWEwMTlkNGY4MDA3YTIyN2MxZWYwNWQ5NGZhMWJjZDU4MjViMmExMGY2MDE5ODAwYTY1MiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

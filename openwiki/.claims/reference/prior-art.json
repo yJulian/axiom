@@ -1,0 +1,44 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:c46601cccb2a1cf46a152d1427cc1ad8cd7e2f11f56d043cb80f48edc7adc691",
+  "claims": [
+    {
+      "id": "claim_a6184f24b3e9434b9e09202c7777d9bb",
+      "statement": "gem5_cva6's RtlAccelerator (a DmaDevice) and src/accel/dma_master_engine.cc's pickOldestEligible() are the direct models for RTLDmaDevice and Axi4MasterEngine's same-ID-in-order/cross-ID-out-of-order completion arbitration respectively.",
+      "evidence": [
+        {
+          "resource": "repo://CLAUDE.md#L377-L384",
+          "version": "repo-lines-v1:sha256:e075aa4258046d0d9c41b5720b07eda531f43121372a129fd3ac95a146ca6421:eyJzZWxlY3RlZExpbmVDb3VudCI6OCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWI4NGZlYjMyN2EzNTM5YzExMTZlODE2N2YxMDY4MmRkYjhiNjQxN2E2MmE0MWU5MjBmYTdkZmRhYzNmZDQ2MyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiN2QwMWZkYjYxNzAxYjc0MzM5ZGNkNDZkOTVjYTI2ODc0OTFlOGQyYzdiNjVjMTFhMDk1OWJlN2QzNzA2ZWQ4OCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNTM2NTQ5MDcxYzVkYjNmZWI5OGZmMTg0ZjRmYWY0NTUzYzA0NDk0MGZhZjlmNTNjYzc5NDhkMWNhMjAwZTg4OCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMjY3MmZjNmNmMGE5MWE2NDRiYWUyNjEwMzQ2MDJhMmQyMmZkN2EyZWE3ZWMyZTczZWNhNTM3OGEzNDdmY2RlNiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_6e85dd8748c54987924b3858b0c594e1",
+      "statement": "AXION's plugin path directly models gem5_cva6's AccelInterface/RtlAccelerator dlopen mechanics, with one deliberate deviation: a plain C ABI instead of a dlopen'd C++ vtable, because C++ ABI layout is not guaranteed stable across an independently-compiled shared-library boundary.",
+      "evidence": [
+        {
+          "resource": "repo://CLAUDE.md#L20-L23",
+          "version": "repo-lines-v1:sha256:ea3962ce87c84c8ce13126f847f988ad07616417271767152322bf5ca7de8467:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMTkxNzc1Y2M0MmYwZmMzYWM0NWNmMzlmYWU5NzE5YWJiYTUwYzc2N2I0YmJhMGViNzA3N2EwZTQxNmNhNTQ3OCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiYWE2MGUzNzY2ODY2YmU0NTk4OTUwNGIyZWJmMjJhZjllZTUyZjc1YTM1MjkyMzEwNTMyZDdlYjU5YWJhMzk0MCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjU2OTUzYmU3YWUyZGI5ZTk0YjA4MTJkMGE4ZDNhZmNiNWMwZTUxODAyMDM1NzIxM2YyODkxOWUxODAxYTE0ZiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODVjMTI1ZjlhMzJmYTRkZmFmNWNkMGUwZjQ3MGQwNjU5OThiMzE4NTdlM2Y2MDk5MzVkNDUzZGRkNjRjZjFlYiJ9"
+        },
+        {
+          "resource": "repo://CLAUDE.md#L385-L389",
+          "version": "repo-lines-v1:sha256:b5650cc993eb2bc73a3a977d898a3c5c8fa93dfb826999eb2208bcc40c96eb37:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZWFiNmUzYTkyM2UwMzliOWE4ODk4ZDVjYjQ4ZTNjYmY4NWUwYWNiYmJjMGZmYzNjNDMxMzJmM2I4NGRkMDZkNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNGJiNzUzZWRkOTEzNzA4NDQ1NjNlNDdkNzExNmVhZTU1NTdhMDgyNWZjNmRjMDhhN2ZkMDU2ODIzNTYxMzZiOCIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMzgzMzcwNzBmMmE1ZDU0OTBjMzdkZjQwYmUxNzcxOGJiYTNhOWRmMzE1MjY1ZDRlODk4MzFiNmViZDU2MWZmNiIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiNjExOTNkYWM0NjFkN2ZlZmI2YzgzYmJkMWYxYjA5MmNiMjU5YzNmYzdjODFhNDZkMTdlN2Y3YjY3YjA3MTgzZSJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_ff5ebd0a6d2c41b9ad6b99a242a756e8",
+      "statement": "gem5-verilator-ghdl's central design of flattening AXI inside the RTL and crossing the C++ boundary with scalars is explicitly what AXION does not do because it loses AXI ID/out-of-order semantics, but its cp -rs mirroring trick and its verilated_fst_c.cpp FST link fix are worth remembering if AXION's RTL build breaks similarly.",
+      "evidence": [
+        {
+          "resource": "repo://CLAUDE.md#L390-L395",
+          "version": "repo-lines-v1:sha256:1f19b5cbae33c47b8473a83792f339b23079f2ebdd610c9b5595ffda7c3d7847:eyJzZWxlY3RlZExpbmVDb3VudCI6NiwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWI4NDRiMzYwN2Y2ZDgwMTJlMmYyMDJhNjhkZDhmOGI1ZTMzNzAxMWJkNTA2MjkxMmRmMjM2ZjFlM2FmYmE0MSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNmFjOTZmMGY1ZDBjOTI0ZTYyYjUxOWFhY2YxMGIzNTNlOTU5MTBiM2Q2ZWQ4NzhhZTZjZjNlY2FmYzcxNjljYiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYWI0ZDk2MTM3YmViNGQ2MDQ2ZDE0ODY3YzQ3YjcyMmY5NDY2ZTRkNDZiYmQ1ZGE0ZGQ2ZDEyNTVmMzJiZjE4NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZWIxYmM1YmM0YTIzN2Y1NzhlNmFmNGE0MTVkMDY0N2Y5OTEwYjAzYjM2NGUxZTI3YzFmMWRiYWE3NDNkMDNiYSJ9"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

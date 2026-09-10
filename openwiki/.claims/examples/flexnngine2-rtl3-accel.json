@@ -1,0 +1,64 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:8274f1f6f6c69b87f5fb6a0e5cbdba08471ad19e737a97047a9d829e7a67bb86",
+  "claims": [
+    {
+      "id": "claim_d2277eb04b7e4e66a90d33b459917b5f",
+      "statement": "rtl3's own sources are not vendored into the axiom repo; every Makefile/SConscript in examples/flexnngine2_rtl3_accel pulls them from a sibling gem5_cva6 checkout via a GEM5_CVA6 variable defaulting to /home/julian/gem5_cva6.",
+      "evidence": [
+        {
+          "resource": "repo://examples/flexnngine2_rtl3_accel/README.md#L1-L11",
+          "version": "repo-lines-v1:sha256:77ec1bfb6921458325f8367977195fb81f030d3661217856097d8b123eaebc73:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY5NzVhYjgxMWRjMzA3OTZkMjU3ODkwYjU3ZDc5ZTIwM2QyZDAwMmM2NTk4OGJlNDllZTY2ZGUzMGZkMzU3N2UiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBiZDhjMDI1Y2E4YzBlMGVkYTM5ZjAxMTJjZWI4ODVmNWQ3MDQ5NzA0Mjg5NzY1YTFkMmRhOGY3MzU4ZGQ2OTYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjFiNjVkM2U4NDVlODA2ODdkZDUzZjI1MzA4MGEwMjk1NjBmOTg5MDA5MjBmYjg1YjA2OTE3ODE4YzZmOTBhMmMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_c7d5f760fbde4b88b7c73314dc18b70a",
+      "statement": "flexnngine2_rtl3_accel's config reuses gem5_cva6's own precompiled test ELF unmodified and runs it under a full-system bare-metal RiscvTimingSimpleCPU rather than SE mode, because the ELF signals completion via a tohost write rather than an OS syscall.",
+      "evidence": [
+        {
+          "resource": "repo://examples/flexnngine2_rtl3_accel/README.md#L21-L34",
+          "version": "repo-lines-v1:sha256:d1871c4ca31ca25347d06bf281eeccb81baa41a6227716a44e9f5b7767810d8f:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjA2MmRmNjY5ZjM3MzI0ZjVhMTkxOTRlNzEzZjUwZTQ4ODU1OTY1ZDk4OGE5YTU2YTQ5YzBlMjdmYTVkYzdlZGMiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjMxNTg5MjEyYzY1OTVkNmY3MDExNDQ3YTQyZTA3ZjM2ZjcwMWY3ZjdiZTgyYWQwMjA0NmM4OTNlYjhkYTZiNmUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImM5MjRlM2I4NmFjM2M2MzUzYzdiOTgyNDFiNDI5ZGQ4NTJhZjc3Njk0NjhlMWY5NTRkZDZhNWI2ZjVmMmJkYTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjI3MjA5ZjFmMTIxYzYxZWM4Y2QzMjYxNjZjZGViOTVmNjM3Mzc0YTc4NDU1YmIyM2RlNTZkZWY0OTc5OTVmOTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_7ef215ff28e448d8983d044305b75bf6",
+      "statement": "Flexnngine2Rtl3Accel::isIdle() overrides RTLDmaDevice's idle-gating hook by reading the DUT's own dma_busy_o pin rather than inferring idleness from AXI activity, because dma_busy_o stays high through the compute phase where neither AXI port has traffic in flight.",
+      "evidence": [
+        {
+          "resource": "repo://examples/flexnngine2_rtl3_accel/flexnngine2_rtl3_device.cc#L30-L34",
+          "version": "repo-lines-v1:sha256:cd0e8a069be731d1164d6949032f318e62b50574012be4622796374c7c7e6991:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiYTE0MGQ2MTNjZjQyYmJiNzQxYmFlOWFiNWE3ZTQzMDNjNjA0YWRiNTY5NzY0ZjEwNDMyN2UyMDI4NjMyNzcwNiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNDEyY2EzNDVjY2Y3NWJmOWMwODA2YmNlNjk1YmU4ZGU4MDhiNzk5ODQyNTFhN2E1NGQyMDJjZjYxMDFkZDQ1MSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiNjI0ZTY0ZGUyMjg1NWI1MTc1MjA3MWY2ZDg4OWUyYTk1NGQ0YjAyNDJkZTE5NmY4M2NmNjlkZGQ3NzM2YWMwNyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMTQ1ZjI0YmE0MjI2ZDUzNjgyZTZmNTJjZDY2MmNhOTMyYTFlMTM0MmEwMTdlNzM4MWFlNDE1ZDg4NzQ0M2IxMCJ9"
+        },
+        {
+          "resource": "repo://examples/flexnngine2_rtl3_accel/flexnngine2_rtl3_device.hh#L35-L41",
+          "version": "repo-lines-v1:sha256:36d01f1b57ae49ec075a3526e7e648e107bc65162bdcbd9dee82c5d395be36b2:eyJzZWxlY3RlZExpbmVDb3VudCI6NywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiZDJmMDUzNzBiMmZhNzFiZDg2NjJhMmFjNjdkNzc4ZTNkMTRlNzI2YzljNGYyNDk5OWI5ZGMxZTVlZDgzNjUyOCIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMWM4OGQxNWZiOWVjNDk0ZTdmOGE1MDhiYTM0ODVmMGQ4MzVlMzliZDZjYzRjZjY3NDE5ZmMxNDQ4ZDQ3MTZjZiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYTlhMzI2YzU4YjhkOTA4NzQ3NWFjNWMxYzRlODU3YjQ3MzhkNTA4ZTUzMjc4YzVmYWI2Yjg3MWQ0MjhiNmU4NCIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiODE0MjhhNmM2Yzk3MjMxN2IzNDhkODM3NGVhZjQxMTU4MDdkZDI4MjI4MWNmZWY1ZWUwYjY1NTE4NjJhYzIyNiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_0e8cad40817941b9a4e3b80227146212",
+      "statement": "Running flexnngine2_rtl3 under a real gem5 CPU (the first such end-to-end RTLDmaDevice run) found and fixed two real framework bugs: RTLDmaDevice::tick() rescheduling itself unconditionally every cycle with no idle gating, and a double clock-edge deadlock from both slaveEngine.tick() and masterEngine.tick() toggling the shared Verilated model's clock pin (fixed via masterEngine.tick(false)).",
+      "evidence": [
+        {
+          "resource": "repo://examples/flexnngine2_rtl3_accel/README.md#L42-L84",
+          "version": "repo-lines-v1:sha256:832cf2976db60fff5968ea55728e8b11b7faf493d3366abfe2879f61482674ea:eyJzZWxlY3RlZExpbmVDb3VudCI6NDMsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNlOTU5NzAwMGY3YjI2NmY4MTgxODE0OWI2YTkwNGZkZmJmMjNlYjg5ODJlNjM0MmFmNGQ5ZmEwYjc0MjM0ZjkiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImFlYTQxODQ0ZGNiNDI3M2UzN2E5MzBiNDczNTMxOWMyYzdmYmNjY2Q0YWUzNWYxYzFmM2QxMDhmYjVlMTM5ZWEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImRkNjJhY2RmZWY3YjZkN2MzZGM0MzBiNzg4OWJhZDAyOWVmYTAxNDVlMWFkNTIxNTJmMGYxYzEyY2E0MjJmNGUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6Ijg4ZWVmZjQ3ZTNhYjg1NTMxYzE5NzU4NzkwNGJiZWI3YTI5YzQzYWNlOGEzMTIxZDZiNjUxN2E2NGJmYjZkODgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_9f816ba8f0f34ca3ab5c87fc04602d6a",
+      "statement": "With both framework fixes applied, an open issue remains where the GEMM job's DONE bit never sets even though STATUS/BUSY reads complete correctly and Axi4MasterEngine reports both operand-load AR/R bursts fully delivered; the same DUT passes cleanly under cocotb's AxiRam-driven master port, suggesting a timing-sensitive interaction specific to Axi4MasterEngine's delivery pattern.",
+      "evidence": [
+        {
+          "resource": "repo://examples/flexnngine2_rtl3_accel/README.md#L86-L107",
+          "version": "repo-lines-v1:sha256:2132352830c679876665e612c890a34d9355b0e7037cff40f4df3dbe7c50f3f8:eyJzZWxlY3RlZExpbmVDb3VudCI6MjIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjVhMTk3ZGQzNzc5NjEwY2I5ZGEwNDBlMTRlYWUyYWI3YjEwNDYwZjMzMmQzNGM4Y2ZkZTVmMmY1MzlmNzAzOTYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjdhZTdmMjVlYzBlOGQ0ZDk1MDdhZDAxYTZlYmEwMmVhMTYwNThmMTBhODBkNmJjMzJkZDBmMDg3YTNkMTBlZWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjhhZDQ2MmNjZGEzOGVmYWY3YTgyOGQwMDM3NGNhYjYzM2FhODZjZTJlYmNkNzQ0OTQ0NjRmMzc3Yzc3MzgzY2UiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

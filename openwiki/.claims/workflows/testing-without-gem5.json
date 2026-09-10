@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:3bd90735e5abc1641cfab23feda966d09f6bd6295a7e3aa73b18f365d2b0c107",
+  "claims": [
+    {
+      "id": "claim_7f05ad1cc7fa4e1d82dc46bce27b02d1",
+      "statement": "scripts/setup_cocotb_env.sh creates or reuses a Python venv at .venv/ and installs requirements-cocotb.txt (cocotb==2.0.1, cocotbext-axi==0.1.28) into it, never system-wide, and is independent of scripts/setup_env.sh which handles the gem5 submodule/mirror step instead.",
+      "evidence": [
+        {
+          "resource": "repo://requirements-cocotb.txt#L1-L5",
+          "version": "repo-lines-v1:sha256:fd623c922f2606f7d2c34cdd18716a87d8950169a5480dd66e31d4ec7524c872:eyJzZWxlY3RlZExpbmVDb3VudCI6NSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMGZiNDgxMmRhOWQxYjhiNTcyNjE3YWU5Njc4MmIwOWEzZWVjNWM1MDBmNzcyMTk2YWJlZmJiYTI4MDllZDI5NSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiZGVhMTRlZWUwZWU1ZGFiYTE2MGU2M2JiMDFmZThlNjI1YmZkYzZhOTY2MTNjYjMxMmI5MjE0Nzc2MmYxYWYxOSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjAsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSJ9"
+        },
+        {
+          "resource": "repo://scripts/setup_cocotb_env.sh#L1-L19",
+          "version": "repo-lines-v1:sha256:f198aebf0ef0797b888bd4817ab5e818818a270fd87292de0c583373ce0bfb86:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjFkOTVmYzA0YTgwYzk1MmY0OWNlNDE4ODYyN2M1M2IwZmJlOGM0NDA0MWI5NTJkNTkyYWNkMWRlOTk4NjE0NjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE0NjMxOGMzMTdhMWJmNmUxNzdjYTE0YjhjNjNhMzlhYjU0YmY2NTQwOTAwNzI1ZWRkZDZmYTUzNjljOGFiYWQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjowLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_83ec25abc60d4242b846234f7190120c",
+      "statement": "Every make tb* target in the top-level Makefile depends on cocotb-env and runs the example's cocotb Makefile with .venv/bin prepended to PATH, so make tb* alone is sufficient with no prior manual environment setup.",
+      "evidence": [
+        {
+          "resource": "repo://Makefile#L116-L134",
+          "version": "repo-lines-v1:sha256:595b08da999cc2e01ed5dc865eb58d179c5d73c87f99d5e0397f6f955ff2e180:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY4N2E1MTZmNWJmODExYTkxNzkwMjk3ZWU0ZmRkODJlYThjMDRhMDA3ZTYxYmVhYmE1OTliMjg4ZDExOTc2MjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlZDU5YmZiMzBlMDZlZWM4Yzk2NzQ3ZTQ4N2NmNzAwMTBhMDMyZWIwNTM5YzM3M2MyMTcyNTc1NmE4ODRjODEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVkYjJhODhjYmE5M2ViMmE5MWM2M2I4MTY1NmUzYTBkY2U4Y2QyMGI2YTNhMDYxY2NhMTAzMDAxM2JmMTU4NDYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVmMjI4MWYzYTg1MjZiZjM1OGRkOWExMGJhMzJhYjRjZWU3N2QxMmY4N2NhNWVlMmZkMGYxMmJmMTIxYzc1ZDgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_0219e0d41e864af7977a62929b1c345e",
+      "statement": "test_fifo_pio.py drives fifo_pio_top's AXI4 slave pins directly via cocotbext-axi's AxiMaster, exercising a full multi-beat AW/W/B write burst and AR/R read burst with distinct AWID/ARID values in a push/pop round-trip.",
+      "evidence": [
+        {
+          "resource": "repo://examples/fifo_pio_accel/cocotb/test_fifo_pio.py#L1-L9",
+          "version": "repo-lines-v1:sha256:811aec1b240bf793b73cfa5c1ae99c745e1fdc7838b12020fd62367d949be20a:eyJzZWxlY3RlZExpbmVDb3VudCI6OSwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiNjM2YjA4NzBhMDI0ZTNjOTUxNWRlZjVkOGI3ZTIzMTNhMGRjNjBhNDk4ZTRhNzMzNDdjOTUzNmEzOWI1MDc4ZSIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjAsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiZTNiMGM0NDI5OGZjMWMxNDlhZmJmNGM4OTk2ZmI5MjQyN2FlNDFlNDY0OWI5MzRjYTQ5NTk5MWI3ODUyYjg1NSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiN2FhOGM3OWY0MTY5NmEyNWFkODU1NmJhYzdhNjhiMjNmYjhjNGJjNDYwNDUwNzVmZjc2NjE4ZjZmMzE0MmYxNiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_5a6eb0b5024845c1bb40ce324174ec16",
+      "statement": "test_dma_memcopy.py drives the control/status AXI4 port with AxiMaster and plays gem5's role on the DMA AXI4 master port with an AxiRam model handling three concurrently-outstanding channels tagged by AXI ID, though AxiRam services requests in arrival order rather than proving literal out-of-order completion.",
+      "evidence": [
+        {
+          "resource": "repo://examples/dma_memcopy_accel/cocotb/test_dma_memcopy.py#L1-L14",
+          "version": "repo-lines-v1:sha256:f1957a4228a6e41348e84fafa1594511078a42dbc11746ab0fb49873d7458a49:eyJzZWxlY3RlZExpbmVDb3VudCI6MTQsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjNmMmZiNWRlZmYyN2ZhZmZmMDBkNzczM2U0MzJlOWRlZWM0ODQ0OTlhODAyYmJiYThiYTYyZjc4OWI4NzU0MGQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImI2Y2Q0MDQ2MDhlMGZkN2Q2YTY5OWNmZmUzN2NlZjQzYTIyZGViZjBhMDc0MWNmMDJhZmVjYTk5NzA4NTI1N2MiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjowLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImUzYjBjNDQyOThmYzFjMTQ5YWZiZjRjODk5NmZiOTI0MjdhZTQxZTQ2NDliOTM0Y2E0OTU5OTFiNzg1MmI4NTUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjE0OGQ4YmM3MmFhODgxMDk1YzBjN2QzNTdlMTg2YTk1MzQ2OGNkYmVhOTE4MjVmYzQxYmFjZmViMmFjMjdlOWQifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}

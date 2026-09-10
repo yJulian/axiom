@@ -393,3 +393,11 @@ designing AXION -- worth checking if something here seems to be reinventing a wh
   gotchas (the `cp -rs` mirroring trick this repo also uses, the
   `verilated_fst_c.cpp`-must-be-compiled-in-not-`--whole-archive`d FST link fix) are
   real and worth remembering if the RTL build ever breaks in a similar way.
+
+<!-- OPENWIKI:START -->
+
+## OpenWiki
+
+See [AGENTS.md](AGENTS.md) for OpenWiki agent instructions.
+
+<!-- OPENWIKI:END -->

@@ -1,0 +1,70 @@
+{
+  "schemaVersion": 1,
+  "pageVersion": "sha256:7a9c43c2e1a632f475362aa2238698aa455d94ea37d9469645a99ee15fdebaf0",
+  "claims": [
+    {
+      "id": "claim_463ec2c9101848a7852dbffb233e1c09",
+      "statement": "The top-level Makefile's gem5 target depends on verilate, verilate-dma, verilate-pcie, and verilate-pcie-tlp (verilating every worked example, not just fifo_pio_accel), then runs scripts/build_gem5.sh followed by scons -C ext/gem5 build/RISCV/gem5.opt -j$(JOBS).",
+      "evidence": [
+        {
+          "resource": "repo://Makefile#L69-L72",
+          "version": "repo-lines-v1:sha256:793b6793cd528d028fdbcd361b5e70d7aee2aed0091e8334cc930d6a916f7cbd:eyJzZWxlY3RlZExpbmVDb3VudCI6NCwiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiNzA1YmMyMDUwZTk2Yjc5M2JjYWI2MDEzZjE1YTJiODdkNWM0NjEzMjJiODQxODY2OWFkYWY0OTZhNjZiOGFiNSIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiYmVjOGVmODY1NTk0OTdjMGU3ZWMzMDQ3NDU3YjU1ZDdkOTMyMWVjODdmZmI2NjRkMDA2MWQ5ZTc0ZjYxMjFmOSIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiMDBlOTYzYWVkMWNlMDFiZjlkNmQ4ZWM3YTY0YTYxZjMzNDdjOWFhMzY2Njc1ZDE1OWY5YTI0YjFiZDdlYzMzMCJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_52a96d20ff3c4df88b2f646400ac101f",
+      "statement": "scons -C ext/gem5 build/RISCV/gem5.opt places build/ at the directory scons was invoked from (this repo's root) rather than inside the ext/gem5 submodule, the same convention gem5_cva6 documents and relies on.",
+      "evidence": [
+        {
+          "resource": "repo://Makefile#L14-L16",
+          "version": "repo-lines-v1:sha256:8e1e3bdbf64b507a6373a52491e4feacb75b94cbe09fed516c5c0c2af3b16b87:eyJzZWxlY3RlZExpbmVDb3VudCI6MywiZmlyc3RTZWxlY3RlZExpbmVIYXNoIjoiMWEwZWNmYjFiNzM1NGRlY2VmMjZkOWZjMjdjYjYxNDg3YTI1MjE2ODdlODhhNTkxMTFiNGE3NTY4YjQzNjZhNyIsImxhc3RTZWxlY3RlZExpbmVIYXNoIjoiMDFiYTQ3MTljODBiNmZlOTExYjA5MWE3YzA1MTI0YjY0ZWVlY2U5NjRlMDljMDU4ZWY4Zjk4MDVkYWNhNTQ2YiIsInByZWNlZGluZ0NvbnRleHRMaW5lQ291bnQiOjMsInByZWNlZGluZ0NvbnRleHRIYXNoIjoiMWI1MGYyOWJhN2VmYTRjYTIxZjhjMzZlYWQxMDk1MzhhM2Y1NmRkM2ZlNTI1MzQxZjkzMmRmNDBiYTIyYjU2NyIsImZvbGxvd2luZ0NvbnRleHRMaW5lQ291bnQiOjMsImZvbGxvd2luZ0NvbnRleHRIYXNoIjoiZDdmMjk1MzZjY2EzNTFmYTdjNzY1MWE3YjgwMGJhOWEwYjQ1MDFjYjI4ZTEzMjM1OGYwMmJiM2ZlZGVhNGM1YiJ9"
+        }
+      ]
+    },
+    {
+      "id": "claim_5ce59889f2ef409b9da922c8b25e0af3",
+      "statement": "make pcie-test-elf and make pcie-tlp-test-elf build the bare-metal guest test ELF via $(MAKE) -C examples/<name>/riscv_test, and run-pcie-example/run-pcie-tlp-example depend on both gem5 and their respective test-elf target, while run-pcie-linux-example depends only on gem5 since its guest program comes from a caller-supplied disk image.",
+      "evidence": [
+        {
+          "resource": "repo://Makefile#L83-L102",
+          "version": "repo-lines-v1:sha256:31645bef203e637f84f5c3e643557eb73302f7f4078a41997f3dd932b0e7c73f:eyJzZWxlY3RlZExpbmVDb3VudCI6MjAsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6Ijc5NDMxMjJiZjI2M2RiYTdlODkwMjYwNjcxOWFjODg1MWIwYjUyOTgwZmJlOTBjYzk3ODU2NWFmYmNhZjMwYzIiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6ImY5YmUzNWNiZGJiNjRkODAyYzRiNjE3MWZkZGRlNmI3NmZkZmU1NzU1MDlmNGE4MDIzYTA1MTkzNDYzYWE3ZDQiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6IjE5YmY5ZGE5YjczYTZlMzZlYjFlZWJmMjE3ODU2N2VjNjAyNDEzZDZjYjY4ZDUyMDRhNjUwMmMwMzkzNGUwYjAiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImU5M2VlMDYxOTRjZjI0YzE5OTAzMGRhNGIzM2VlNzA3ODkzYWRiOTJiMzBmMmMzNjNjNTg4MDFkNWYwYzY5ZWMifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_622106a098654a60a2d97e8a30d8b977",
+      "statement": "make verilate-plugin and make tb-plugin build/run the FIFO DUT through the opt-in plugin path via plugin/rtl_plugin.mk, independent of both the verilate/gem5 targets and of each other.",
+      "evidence": [
+        {
+          "resource": "repo://Makefile#L104-L114",
+          "version": "repo-lines-v1:sha256:ee05c6613232c9194b9e5acb25d33bfc79b40863e5f97bfd955c40915d285342:eyJzZWxlY3RlZExpbmVDb3VudCI6MTEsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjE5NDRiMzNmYzQ2MTkyZTFkY2RjYzFjNmYyNDZhNDNjNjk1MzZiMDQ5MmE1ZGRiYjI4OGJjOTdkMzIxMDVhNDUiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjJlNTc2MjQ4N2U4Yzg5ZGE3YTFmYzM3OWIwYjI0NzNjMzA2OTk3ZWUxNWFjZWIzYmU0MjY4NmJhNGI3NGE4ZjYiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImYyNjYzZDg3ODE0MWY1YTQ4NTNjYTAzM2Y4ZTZmYjAxNDRhYTBiODk2NzI0NDcyYzY1NzliNTA1OWExYzYzOWYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImJkYWNiMWM4Mjk2YTI2ZmZlMjg5NTY0ZDZjNTBiZDE2NGZkY2U3ODQ2NzIzMzBmMjhhYTlkYjczYWZlYzNhODEifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_d724e9f6df794787bbf38e99d7b4f538",
+      "statement": "Each cocotb testbench target (tb, tb-dma, tb-rtl3, tb-pcie, tb-pcie-tlp) depends on cocotb-env and runs $(MAKE) -C examples/<name>/cocotb with the .venv/bin directory prepended to PATH.",
+      "evidence": [
+        {
+          "resource": "repo://Makefile#L116-L134",
+          "version": "repo-lines-v1:sha256:595b08da999cc2e01ed5dc865eb58d179c5d73c87f99d5e0397f6f955ff2e180:eyJzZWxlY3RlZExpbmVDb3VudCI6MTksImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY4N2E1MTZmNWJmODExYTkxNzkwMjk3ZWU0ZmRkODJlYThjMDRhMDA3ZTYxYmVhYmE1OTliMjg4ZDExOTc2MjYiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjBlZDU5YmZiMzBlMDZlZWM4Yzk2NzQ3ZTQ4N2NmNzAwMTBhMDMyZWIwNTM5YzM3M2MyMTcyNTc1NmE4ODRjODEiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImVkYjJhODhjYmE5M2ViMmE5MWM2M2I4MTY1NmUzYTBkY2U4Y2QyMGI2YTNhMDYxY2NhMTAzMDAxM2JmMTU4NDYiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6ImVmMjI4MWYzYTg1MjZiZjM1OGRkOWExMGJhMzJhYjRjZWU3N2QxMmY4N2NhNWVlMmZkMGYxMmJmMTIxYzc1ZDgifQ"
+        }
+      ]
+    },
+    {
+      "id": "claim_588ea4a86b6547f08a58313ad39f3b35",
+      "statement": "make clean runs clean in every example directory including the PCIe riscv_test/ subdirectories and the plugin directory, removes each cocotb testbench's sim_build/results.xml, and removes the gem5-side mirrors under ext/gem5/src/{axi,pcie,cpu/rtl,dev/rtl,examples} without touching the ext/gem5 submodule checkout itself.",
+      "evidence": [
+        {
+          "resource": "repo://Makefile#L136-L147",
+          "version": "repo-lines-v1:sha256:35cc9e856327ba1f88670a30bbdb241fe938c04b799f1d1264d4d7adb47756e8:eyJzZWxlY3RlZExpbmVDb3VudCI6MTIsImZpcnN0U2VsZWN0ZWRMaW5lSGFzaCI6IjY1MDllMmZhMmUyNGFjODkwZDY2YTM4NzgzNGJiMGUxMDYyZWY2N2FhNzU4OWI4OTVjZWI4NGQ2OTViODFiMTQiLCJsYXN0U2VsZWN0ZWRMaW5lSGFzaCI6IjU3MTk5N2EwMGQ4NmQ2OGRmZGVkNjVlZjRiZmQ3MDYxMWMwZGMzNDAzY2RmZmU5OGViOGNlMzc4NTYzMWY3OTUiLCJwcmVjZWRpbmdDb250ZXh0TGluZUNvdW50IjozLCJwcmVjZWRpbmdDb250ZXh0SGFzaCI6ImEwNGE5OGI0ZTg2Y2Q3MGFiNjdlZmI2OWYwMGNkMGM1MDNkN2FkZDc5ZjVjMWQxMWE4MjVhMTk4ODY4NDA3YjUiLCJmb2xsb3dpbmdDb250ZXh0TGluZUNvdW50IjozLCJmb2xsb3dpbmdDb250ZXh0SGFzaCI6IjdmYzVlZTZlZmU5ZTQwYjJhNzQ3ZTMxZTNjNTMxZDhjNDgxOWY2ZTE2YjdjNTFiNTBhMmY3NDkyY2NjYTBhZmYifQ"
+        }
+      ]
+    }
+  ],
+  "verification": {
+    "by": "openwiki/0.5.1",
+    "at": "2026-09-10T13:13:27.916Z"
+  }
+}
